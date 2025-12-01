@@ -1,0 +1,576 @@
+/* ========================================
+   VENETIAN ARTIST PORTFOLIO - DESIGN SYSTEM
+   ======================================== */
+
+/* Import Handwritten Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Caveat:wght@400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* ========================================
+   CSS VARIABLES - DESIGN TOKENS
+   ======================================== */
+:root {
+  /* Venetian Color Palette - inspired by lagoon and watercolors */
+  --color-lagoon-blue: #5a8aa8;
+  --color-lagoon-deep: #3d5a6c;
+  --color-sunset-orange: #d4876f;
+  --color-sunset-pink: #e8b4a0;
+  --color-mist-gray: #b8c5cc;
+  --color-fog-light: #e8eef1;
+  --color-ink-dark: #2a2a2a;
+  --color-paper-cream: #f9f6f0;
+  --color-paper-white: #fefdfb;
+
+  /* Typography */
+  --font-handwritten: 'Dancing Script', cursive;
+  --font-casual: 'Caveat', cursive;
+  --font-serif: 'Crimson Text', serif;
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 3rem;
+  --spacing-xl: 5rem;
+
+  /* Shadows */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.18);
+
+  /* Transitions */
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ========================================
+   RESET & BASE STYLES
+   ======================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-serif);
+  background-color: var(--color-paper-cream);
+  color: var(--color-ink-dark);
+  line-height: 1.6;
+  overflow-x: hidden;
+
+  /* Background Image */
+  background-image: url('background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* ========================================
+   HEADER & NAVIGATION
+   ======================================== */
+header {
+  text-align: center;
+  padding: 0.5rem var(--spacing-sm);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(90, 138, 168, 0.1);
+  position: relative;
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right,
+      transparent 0%,
+      var(--color-lagoon-blue) 50%,
+      transparent 100%);
+  opacity: 0.3;
+}
+
+.logo {
+  max-width: 80px;
+  height: auto;
+  margin: 0 auto 0.3rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: var(--transition-smooth);
+}
+
+.logo:hover {
+  transform: scale(1.02);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+nav {
+  margin-top: 0.3rem;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+nav a {
+  font-family: var(--font-handwritten);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-lagoon-deep);
+  text-decoration: none;
+  position: relative;
+  transition: var(--transition-smooth);
+  padding: 0.3rem 0.6rem;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(to right,
+      var(--color-sunset-orange),
+      var(--color-lagoon-blue));
+  transition: var(--transition-smooth);
+}
+
+nav a:hover {
+  color: var(--color-lagoon-blue);
+  transform: translateY(-2px);
+}
+
+nav a:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+nav a.active {
+  color: var(--color-lagoon-blue);
+}
+
+nav a.active::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* ========================================
+   MAIN CONTENT CONTAINER
+   ======================================== */
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-lg) var(--spacing-md);
+}
+
+/* ========================================
+   PAGE TITLES
+   ======================================== */
+h1,
+h2,
+h3 {
+  font-family: var(--font-handwritten);
+  color: var(--color-lagoon-deep);
+  margin-bottom: var(--spacing-md);
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+/* ========================================
+   MASONRY GALLERY LAYOUT
+   ======================================== */
+.gallery {
+  column-count: 3;
+  column-gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.painting-card {
+  break-inside: avoid;
+  margin-bottom: var(--spacing-md);
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  background: var(--color-paper-white);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.painting-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-strong);
+}
+
+.painting-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: var(--transition-smooth);
+}
+
+.painting-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Painting Info Overlay */
+.painting-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top,
+      rgba(42, 42, 42, 0.95) 0%,
+      rgba(42, 42, 42, 0.85) 70%,
+      transparent 100%);
+  padding: var(--spacing-md);
+  transform: translateY(100%);
+  transition: var(--transition-smooth);
+  backdrop-filter: blur(8px);
+}
+
+.painting-card:hover .painting-info {
+  transform: translateY(0);
+}
+
+.painting-info h3 {
+  font-family: var(--font-casual);
+  font-size: 1.6rem;
+  color: var(--color-paper-white);
+  margin-bottom: var(--spacing-xs);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.painting-info p {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  color: var(--color-fog-light);
+  margin-bottom: var(--spacing-sm);
+  font-style: italic;
+}
+
+.painting-info .btn-inquiry {
+  font-family: var(--font-handwritten);
+  font-size: 1.1rem;
+  background: linear-gradient(135deg,
+      var(--color-sunset-orange),
+      var(--color-sunset-pink));
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  box-shadow: 0 4px 12px rgba(212, 135, 111, 0.3);
+  display: inline-block;
+  text-decoration: none;
+}
+
+.painting-info .btn-inquiry:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(212, 135, 111, 0.5);
+}
+
+/* ========================================
+   LIGHTBOX / MODAL
+   ======================================== */
+.lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(42, 42, 42, 0.97);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.3s ease;
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.lightbox-content {
+  max-width: 90%;
+  max-height: 90%;
+  position: relative;
+  animation: zoomIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-info {
+  background: rgba(249, 246, 240, 0.95);
+  backdrop-filter: blur(20px);
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: var(--shadow-medium);
+}
+
+.lightbox-info h2 {
+  font-family: var(--font-casual);
+  font-size: 2.2rem;
+  color: var(--color-lagoon-deep);
+  margin-bottom: var(--spacing-sm);
+}
+
+.lightbox-info p {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--color-ink-dark);
+  margin-bottom: var(--spacing-sm);
+  font-style: italic;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  font-family: var(--font-casual);
+  font-size: 3rem;
+  color: var(--color-paper-white);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(90deg);
+}
+
+/* ========================================
+   CONTENT SECTIONS
+   ======================================== */
+.content-section {
+  background: var(--color-paper-white);
+  padding: var(--spacing-lg);
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: var(--spacing-lg);
+  border: 1px solid rgba(90, 138, 168, 0.1);
+}
+
+.content-section p {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-ink-dark);
+}
+
+/* ========================================
+   CONTACT FORM
+   ======================================== */
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  font-family: var(--font-casual);
+  font-size: 1.3rem;
+  color: var(--color-lagoon-deep);
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: var(--spacing-sm);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  border: 2px solid var(--color-mist-gray);
+  border-radius: 4px;
+  background: var(--color-paper-white);
+  transition: var(--transition-smooth);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-lagoon-blue);
+  box-shadow: 0 0 0 3px rgba(90, 138, 168, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.btn-submit {
+  font-family: var(--font-handwritten);
+  font-size: 1.4rem;
+  background: linear-gradient(135deg,
+      var(--color-lagoon-blue),
+      var(--color-lagoon-deep));
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  box-shadow: 0 4px 16px rgba(90, 138, 168, 0.3);
+  display: block;
+  margin: var(--spacing-md) auto 0;
+}
+
+.btn-submit:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(90, 138, 168, 0.4);
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+footer {
+  text-align: center;
+  padding: var(--spacing-lg) var(--spacing-md);
+  background: linear-gradient(to top,
+      var(--color-paper-white) 0%,
+      var(--color-paper-cream) 100%);
+  border-top: 2px solid rgba(90, 138, 168, 0.1);
+  margin-top: var(--spacing-xl);
+  font-family: var(--font-serif);
+  color: var(--color-mist-gray);
+  font-style: italic;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 1024px) {
+  .gallery {
+    column-count: 2;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+  }
+
+  nav a {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .gallery {
+    column-count: 1;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  nav ul {
+    gap: var(--spacing-md);
+  }
+
+  nav a {
+    font-size: 1.3rem;
+  }
+
+  .logo {
+    max-width: 200px;
+  }
+
+  main {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .lightbox-content {
+    max-width: 95%;
+  }
+
+  .lightbox-close {
+    top: -40px;
+    font-size: 2.5rem;
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+.text-center {
+  text-align: center;
+}
+
+.mt-lg {
+  margin-top: var(--spacing-lg);
+}
+
+.mb-lg {
+  margin-bottom: var(--spacing-lg);
+}
