@@ -57,18 +57,30 @@ html {
 
 body {
   font-family: var(--font-serif);
-  background-color: var(--color-paper-cream);
+  background-color: #5c5c5c;
   color: var(--color-ink-dark);
   line-height: 1.6;
   overflow-x: hidden;
-
-  /* Background Image */
-  background-image: url('background.png');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  position: relative;
 }
+
+/* Background che scorre con il contenuto */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: url('images/sfondoQuadro2.png');
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: repeat-y;
+  opacity: 0.8;
+}
+
+
 
 /* ========================================
    HEADER & NAVIGATION
@@ -76,9 +88,6 @@ body {
 header {
   text-align: center;
   padding: 0.5rem var(--spacing-sm);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border-bottom: 2px solid rgba(90, 138, 168, 0.1);
   position: relative;
 }
 
@@ -196,108 +205,98 @@ h2 {
   font-weight: 600;
 }
 
-h3 {
-  font-size: 1.8rem;
-  font-weight: 500;
-}
-
 /* ========================================
-   MASONRY GALLERY LAYOUT
+   GALLERY - MASONRY LAYOUT ARTISTICO
    ======================================== */
 .gallery {
   column-count: 3;
-  column-gap: var(--spacing-md);
-  margin-top: var(--spacing-lg);
+  column-gap: 4rem;
+  margin-top: 3rem;
 }
 
+/* Card */
 .painting-card {
-  break-inside: avoid;
-  margin-bottom: var(--spacing-md);
   position: relative;
-  cursor: pointer;
-  transition: var(--transition-smooth);
-  background: var(--color-paper-white);
-  border-radius: 4px;
   overflow: hidden;
-  box-shadow: var(--shadow-soft);
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  break-inside: avoid;
+  margin-bottom: 2rem;
+  display: inline-block;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .painting-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-strong);
+  transform: translateY(-8px) rotate(0.5deg);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 }
 
 .painting-card img {
   width: 100%;
   height: auto;
   display: block;
-  transition: var(--transition-smooth);
-}
-
-.painting-card:hover img {
-  transform: scale(1.05);
-}
-
-/* Painting Info Overlay */
-.painting-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top,
-      rgba(42, 42, 42, 0.95) 0%,
-      rgba(42, 42, 42, 0.85) 70%,
-      transparent 100%);
-  padding: var(--spacing-md);
-  transform: translateY(100%);
-  transition: var(--transition-smooth);
-  backdrop-filter: blur(8px);
-}
-
-.painting-card:hover .painting-info {
-  transform: translateY(0);
-}
-
-.painting-info h3 {
-  font-family: var(--font-casual);
-  font-size: 1.6rem;
-  color: var(--color-paper-white);
-  margin-bottom: var(--spacing-xs);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.painting-info p {
-  font-family: var(--font-serif);
-  font-size: 0.95rem;
-  color: var(--color-fog-light);
-  margin-bottom: var(--spacing-sm);
-  font-style: italic;
-}
-
-.painting-info .btn-inquiry {
-  font-family: var(--font-handwritten);
-  font-size: 1.1rem;
-  background: linear-gradient(135deg,
-      var(--color-sunset-orange),
-      var(--color-sunset-pink));
-  color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: var(--transition-bounce);
-  box-shadow: 0 4px 12px rgba(212, 135, 111, 0.3);
-  display: inline-block;
-  text-decoration: none;
-}
-
-.painting-info .btn-inquiry:hover {
-  transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(212, 135, 111, 0.5);
 }
 
 /* ========================================
-   LIGHTBOX / MODAL
+   OVERLAY — INFO SU HOVER
+   ======================================== */
+.painting-info {
+  position: absolute;
+  inset: 0;
+  background-image: url('images/sfondoQuadro.jpg');
+  background-size: cover;
+  background-position: center;
+  color: var(--color-ink-dark);
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  transition: opacity 0.35s ease;
+}
+
+.painting-card:hover .painting-info {
+  opacity: 1;
+}
+
+.painting-info h3 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  color: var(--color-lagoon-deep);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.painting-info p {
+  font-size: 1rem;
+  margin-bottom: 1.3rem;
+  color: var(--color-ink-dark);
+}
+
+.btn-contact {
+  background: var(--color-lagoon-blue);
+  color: white;
+  padding: 0.7rem 1.6rem;
+  border-radius: 25px;
+  font-family: var(--font-handwritten);
+  font-size: 1.3rem;
+  text-decoration: none;
+  transition: var(--transition-bounce);
+  display: inline-block;
+}
+
+.btn-contact:hover {
+  background: var(--color-lagoon-deep);
+  transform: scale(1.05);
+}
+
+/* ========================================
+   LIGHTBOX
    ======================================== */
 .lightbox {
   display: none;
@@ -306,26 +305,14 @@ h3 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(42, 42, 42, 0.97);
-  z-index: 9999;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(10px);
-  animation: fadeIn 0.3s ease;
 }
 
 .lightbox.active {
   display: flex;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
 }
 
 .lightbox-content {
@@ -364,21 +351,6 @@ h3 {
   box-shadow: var(--shadow-medium);
 }
 
-.lightbox-info h2 {
-  font-family: var(--font-casual);
-  font-size: 2.2rem;
-  color: var(--color-lagoon-deep);
-  margin-bottom: var(--spacing-sm);
-}
-
-.lightbox-info p {
-  font-family: var(--font-serif);
-  font-size: 1.1rem;
-  color: var(--color-ink-dark);
-  margin-bottom: var(--spacing-sm);
-  font-style: italic;
-}
-
 .lightbox-close {
   position: absolute;
   top: -50px;
@@ -389,18 +361,6 @@ h3 {
   background: none;
   border: none;
   cursor: pointer;
-  transition: var(--transition-smooth);
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.lightbox-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: rotate(90deg);
 }
 
 /* ========================================
@@ -454,38 +414,9 @@ h3 {
   transition: var(--transition-smooth);
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: var(--color-lagoon-blue);
-  box-shadow: 0 0 0 3px rgba(90, 138, 168, 0.1);
-}
-
 .form-group textarea {
   resize: vertical;
   min-height: 150px;
-}
-
-.btn-submit {
-  font-family: var(--font-handwritten);
-  font-size: 1.4rem;
-  background: linear-gradient(135deg,
-      var(--color-lagoon-blue),
-      var(--color-lagoon-deep));
-  color: white;
-  border: none;
-  padding: 1rem 2.5rem;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: var(--transition-bounce);
-  box-shadow: 0 4px 16px rgba(90, 138, 168, 0.3);
-  display: block;
-  margin: var(--spacing-md) auto 0;
-}
-
-.btn-submit:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 24px rgba(90, 138, 168, 0.4);
 }
 
 /* ========================================
@@ -499,69 +430,41 @@ footer {
       var(--color-paper-cream) 100%);
   border-top: 2px solid rgba(90, 138, 168, 0.1);
   margin-top: var(--spacing-xl);
-  font-family: var(--font-serif);
   color: var(--color-mist-gray);
   font-style: italic;
 }
 
 /* ========================================
-   RESPONSIVE DESIGN
+   RESPONSIVE
    ======================================== */
 @media (max-width: 1024px) {
   .gallery {
     column-count: 2;
-  }
-
-  h1 {
-    font-size: 2.8rem;
-  }
-
-  nav a {
-    font-size: 1.5rem;
+    column-gap: 1.5rem;
   }
 }
 
 @media (max-width: 640px) {
   .gallery {
     column-count: 1;
+    column-gap: 0;
   }
 
   h1 {
     font-size: 2.2rem;
   }
 
-  h2 {
-    font-size: 2rem;
-  }
-
-  nav ul {
-    gap: var(--spacing-md);
-  }
-
-  nav a {
-    font-size: 1.3rem;
-  }
-
   .logo {
     max-width: 200px;
   }
 
-  main {
-    padding: var(--spacing-md) var(--spacing-sm);
-  }
-
-  .lightbox-content {
-    max-width: 95%;
-  }
-
-  .lightbox-close {
-    top: -40px;
-    font-size: 2.5rem;
+  .painting-card {
+    margin-bottom: 1.5rem;
   }
 }
 
 /* ========================================
-   UTILITY CLASSES
+   UTILITIES
    ======================================== */
 .text-center {
   text-align: center;
