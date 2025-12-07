@@ -53,6 +53,7 @@
 
 html {
   scroll-behavior: smooth;
+  cursor: url('images/cursor-brush.png') 0 0, auto;
 }
 
 body {
@@ -62,6 +63,7 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   position: relative;
+  cursor: url('images/cursor-brush.png') 0 0, auto;
 }
 
 /* Background che scorre con il contenuto */
@@ -82,94 +84,104 @@ body::before {
 
 
 
+
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #b8b8b3;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #203456c0;
+  /* Navy Blue */
+  border-radius: 6px;
+  border: 3px solid rgba(0, 0, 0, 0);
+  /* Creates padding effect */
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #294677c0;
+  /* Darker Navy */
+}
+
 /* ========================================
    HEADER & NAVIGATION
    ======================================== */
 header {
-  text-align: center;
-  padding: 0.5rem var(--spacing-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
   position: relative;
+  background: transparent;
+  z-index: 10;
+  padding-top: 2rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
-header::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(to right,
-      transparent 0%,
-      var(--color-lagoon-blue) 50%,
-      transparent 100%);
-  opacity: 0.3;
+.signature-container {
+  flex-shrink: 0;
 }
 
-.logo {
-  max-width: 80px;
+.signature-img {
+  max-width: 170px;
   height: auto;
-  margin: 0 auto 0.3rem;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   transition: var(--transition-smooth);
 }
 
-.logo:hover {
+.signature-img:hover {
   transform: scale(1.02);
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
 nav {
-  margin-top: 0.3rem;
+  margin: 0;
 }
 
 nav ul {
   list-style: none;
   display: flex;
-  justify-content: center;
-  gap: var(--spacing-sm);
-  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.5rem, 3vw, 2.5rem);
+  /* Distanza proporzionale: min 0.5rem, preferita 3% larghezza, max 2.5rem */
+}
+
+nav li {
+  display: flex;
+  align-items: center;
 }
 
 nav a {
-  font-family: var(--font-handwritten);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-lagoon-deep);
+  display: block;
   text-decoration: none;
-  position: relative;
-  transition: var(--transition-smooth);
-  padding: 0.3rem 0.6rem;
-}
-
-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 80%;
-  height: 2px;
-  background: linear-gradient(to right,
-      var(--color-sunset-orange),
-      var(--color-lagoon-blue));
   transition: var(--transition-smooth);
 }
 
-nav a:hover {
-  color: var(--color-lagoon-blue);
-  transform: translateY(-2px);
+.nav-icon {
+  height: clamp(40px, 5vw, 75px);
+  /* Altezza proporzionale: min 40px, pref 5% larghezza, max 75px */
+  width: auto;
+  display: block;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-nav a:hover::after {
-  transform: translateX(-50%) scaleX(1);
+nav a:hover .nav-icon {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
 }
 
-nav a.active {
-  color: var(--color-lagoon-blue);
-}
-
-nav a.active::after {
-  transform: translateX(-50%) scaleX(1);
+nav a.active .nav-icon {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+  /* Reset or custom for active */
 }
 
 /* ========================================
@@ -178,7 +190,9 @@ nav a.active::after {
 main {
   max-width: 1400px;
   margin: 0 auto;
-  padding: var(--spacing-lg) var(--spacing-md);
+  padding-left: var(--spacing-lg);
+  padding-right: var(--spacing-lg);
+  padding-top: var(--spacing-sm);
 }
 
 /* ========================================
@@ -211,7 +225,6 @@ h2 {
 .gallery {
   column-count: 3;
   column-gap: 4rem;
-  margin-top: 3rem;
 }
 
 /* Card */
@@ -425,22 +438,100 @@ h2 {
 footer {
   text-align: center;
   padding: var(--spacing-lg) var(--spacing-md);
-  background: linear-gradient(to top,
-      var(--color-paper-white) 0%,
-      var(--color-paper-cream) 100%);
+
   border-top: 2px solid rgba(90, 138, 168, 0.1);
   margin-top: var(--spacing-xl);
-  color: var(--color-mist-gray);
+  color: var(--color-lagoon-deep);
   font-style: italic;
 }
 
 /* ========================================
    RESPONSIVE
    ======================================== */
+/* ========================================
+   RESPONSIVE & MOBILE MENU
+   ======================================== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 25px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 20;
+}
+
+.hamburger span {
+  width: 100%;
+  height: 3px;
+  background: var(--color-lagoon-deep);
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: 1px;
+}
+
+/* Hamburger Animation when Active */
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+
 @media (max-width: 1024px) {
   .gallery {
     column-count: 2;
     column-gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 100%;
+    max-width: 300px;
+    background-image: url('images/sfondoQuadro2.png');
+    background-size: cover;
+    background-position: center;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    transition: right 0.4s ease-in-out;
+    z-index: 15;
+    padding-top: 150px;
+  }
+
+  nav.active {
+    right: 0;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .nav-icon {
+    height: 60px;
+    /* Fixed robust size for mobile menu */
   }
 }
 
