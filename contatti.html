@@ -4,12 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Contatti - Pittore Veneziano. Richiedi informazioni sui dipinti o invia un messaggio">
-    <meta name="keywords" content="contatti pittore veneziano, acquisto dipinti, informazioni arte">
-    <meta name="author" content="Artista Veneziano">
+    <meta name="description" content="Contatti - Davide Rosa. Richiedi informazioni sui dipinti o invia un messaggio">
+    <meta name="keywords" content="contatti Davide Rosa, acquisto dipinti, informazioni arte">
+    <meta name="author" content="Davide Rosa">
 
-    <title>Contatti - Pittore Veneziano</title>
+    <title>Contatti - Davide Rosa</title>
 
     <link rel="stylesheet" href="styles.css">
 
@@ -21,74 +20,106 @@
 <body>
     <!-- Header with Logo and Navigation -->
     <header>
-        <img src="images/signature.png" alt="Firma Artista Veneziano" class="logo">
+        <div class="signature-container">
+            <img src="images/firmaPapi.png" alt="Firma Artista Veneziano" class="signature-img">
+        </div>
 
-        <nav>
+        <!-- Hamburger Menu Button -->
+        <button class="hamburger" aria-label="Menu" id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav id="main-nav">
             <ul>
-                <li><a href="index.html">Galleria</a></li>
-                <li><a href="chi-sono.html">Chi Sono</a></li>
-                <li><a href="contatti.html">Contatti</a></li>
+                <li><a href="index.html"><img src="images/galleria2.png" alt="Galleria" class="nav-icon"></a></li>
+                <li><a href="chi-sono.html"><img src="images/chisono2.png" alt="Chi Sono" class="nav-icon"></a></li>
+                <li><a href="contatti.html"><img src="images/contatti2.png" alt="Contatti" class="nav-icon"></a></li>
+                <li><a href="materiali.html"><img src="images/materiali2.png" alt="Materiali" class="nav-icon"></a></li>
             </ul>
         </nav>
     </header>
 
     <!-- Main Content -->
     <main>
-        <h1>Contatti</h1>
-
         <div class="content-section">
-            <p class="text-center">
-                Sono sempre felice di rispondere a domande sui miei dipinti,
-                discutere di commissioni personalizzate o semplicemente condividere
-                la passione per l'arte veneziana.
-            </p>
 
-            <p class="text-center">
-                Compila il modulo qui sotto e ti risponderò al più presto.
-            </p>
 
-            <form class="contact-form mt-lg">
+            <form class="contact-form mt-lg" id="contact-form">
                 <div class="form-group">
-                    <label for="name">Nome</label>
+                    <label for="name">Nome *</label>
                     <input type="text" id="name" name="name" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">Email *</label>
                     <input type="email" id="email" name="email" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="message">Messaggio</label>
+                    <label for="painting">Quadro di Interesse (opzionale)</label>
+                    <div class="collapsible-selector">
+                        <button type="button" id="toggle-selector" class="toggle-btn">
+                            Seleziona un quadro <span class="arrow">▼</span>
+                        </button>
+                        <div id="selector-content" class="selector-content collapsed">
+                            <p style="font-size: 0.9rem; color: var(--color-mist-gray); margin-bottom: 1rem;">Clicca su
+                                un quadro per selezionarlo</p>
+                            <div id="painting-grid" class="painting-grid">
+                                <!-- Paintings will be dynamically inserted here -->
+                            </div>
+                            <div class="pagination-controls">
+                                <button type="button" id="prev-page" class="btn-page" disabled>Indietro</button>
+                                <span id="page-num">1</span>
+                                <button type="button" id="next-page" class="btn-page">Avanti</button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="painting" name="painting" value="">
+                    <div id="selection-feedback" class="selection-feedback"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Messaggio *</label>
                     <textarea id="message" name="message" required></textarea>
                 </div>
 
                 <button type="submit" class="btn-submit">Invia Messaggio</button>
             </form>
 
-            <div class="mt-lg text-center">
-                <h2>Informazioni di Contatto</h2>
-                <p>
-                    <strong>Email:</strong>
-                    <a href="mailto:info@pittore-veneziano.it"
-                        style="color: var(--color-lagoon-blue); text-decoration: none;">
-                        info@pittore-veneziano.it
+            <!-- Social Media Section -->
+            <div class="social-section mt-lg">
+                <h2 class="text-center">Seguimi sui Social</h2>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/davide_rosa_watercolors" target="_blank"
+                        rel="noopener noreferrer" class="social-link">
+                        <img src="images/instagram.png" alt="Instagram">
+                        <span>Instagram</span>
                     </a>
-                </p>
-                <p style="font-style: italic; color: var(--color-mist-gray); margin-top: var(--spacing-md);">
-                    Venezia, Italia
-                </p>
+                    <a href="https://www.facebook.com/daviderosa.art" target="_blank" rel="noopener noreferrer"
+                        class="social-link">
+                        <img src="images/facebook.png" alt="Facebook">
+                        <span>Facebook</span>
+                    </a>
+                    <a href="mailto:davide.rosa@example.com" class="social-link">
+                        <img src="images/email.png" alt="Email">
+                        <span>Email</span>
+                    </a>
+                </div>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Artista Veneziano - Tutti i diritti riservati</p>
+        <p>&copy; 2025 Davide Rosa - Tutti i diritti riservati</p>
     </footer>
 
     <!-- JavaScript -->
+    <script src="paintings.js"></script>
     <script src="script.js"></script>
+    <script src="contact.js"></script>
 </body>
 
 </html>
