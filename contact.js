@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial Render
     if (typeof paintings !== 'undefined') {
         renderGrid(currentPage);
-        updatePagination();
+
         updateFeedback();
     }
 
@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            console.log('--- Form submit event triggered ---');
 
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
@@ -133,13 +134,18 @@ document.addEventListener('DOMContentLoaded', function () {
             // Data to send
             const data = {
                 _subject: `Nuovo messaggio da ${name} - Sito Acquerelli`,
-                _template: "table",
+                _template: "box", // 'box' invia una mail più ordinata rispetto a 'table'
                 _captcha: "false",
-                name: name,
-                email: email,
-                message: message,
-                quadri_selezionati: paintingsList
+                _replyto: email, // Fondamentale per far funzionare il tasto "Rispondi" se rinominiamo il campo email
+
+                // I nomi di queste proprietà saranno le "etichette" nella mail che ricevi
+                "Nome Cliente": name,
+                "Indirizzo Email": email,
+                "Messaggio": message,
+                "Quadri Selezionati": paintingsList
             };
+
+            console.log('Preparing to send data:', data);
 
             fetch("https://formsubmit.co/ajax/gabrielerosa1783@gmail.com", {
                 method: "POST",
@@ -149,8 +155,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify(data)
             })
-                .then(response => response.json())
+                .then(response => {
+                    console.log('Server responded with status:', response.status);
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Response body parsed:', data);
                     console.log('Success:', data);
                     alert('Messaggio inviato con successo! Riceverai una risposta presto.');
 
@@ -162,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.querySelectorAll('.painting-grid-item').forEach(item => item.classList.remove('selected'));
                 })
                 .catch((error) => {
-                    console.error('Error:', error);
+                    console.error('Fetch error:', error);
                     alert('C\'è stato un errore nell\'invio del messaggio. Per favore riprova o scrivi direttamente a gabrielerosa1783@gmail.com');
                 })
                 .finally(() => {

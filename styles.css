@@ -67,7 +67,14 @@ body {
 }
 
 /* Cursor interaction states */
-a, button, input, select, textarea, .painting-card, .toggle-btn, .checkbox-container {
+a,
+button,
+input,
+select,
+textarea,
+.painting-card,
+.toggle-btn,
+.checkbox-container {
   cursor: url('images/cursor-brush-active.png') 0 32, pointer;
 }
 
@@ -246,6 +253,7 @@ h2 {
   display: inline-block;
   width: 100%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
 .painting-card:hover {
@@ -344,9 +352,21 @@ h2 {
 
 .lightbox-content {
   max-width: 90%;
-  max-height: 90%;
+  max-height: 95vh;
   position: relative;
   animation: zoomIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  /* Enable scrolling if content is tall */
+  background: transparent;
+  /* Scrollbar hiding for cleaner look */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.lightbox-content::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes zoomIn {
@@ -363,7 +383,9 @@ h2 {
 
 .lightbox-content img {
   max-width: 100%;
-  max-height: 80vh;
+  max-height: 45vh;
+  /* Further reduced height (45%) to ensure fit on small screens */
+  object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   /* Consistent natural look for full screen */
@@ -378,15 +400,66 @@ h2 {
   border-radius: 8px;
   text-align: center;
   box-shadow: var(--shadow-medium);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.lightbox-nav-fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  z-index: 1010;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  pointer-events: none;
+  /* Allow clicking through the background */
+}
+
+.lightbox-nav-fixed button {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.lightbox-nav-fixed button:hover {
+  background: white;
+  color: var(--color-lagoon-deep);
+  transform: scale(1.1);
 }
 
 .lightbox-close {
   position: absolute;
-  top: -50px;
-  right: 0;
+  top: 10px;
+  right: 15px;
   font-family: var(--font-casual);
   font-size: 3rem;
   color: var(--color-paper-white);
+  z-index: 1010;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  /* Fixed in relation to the viewport so it's always reachable? 
+     Actually, better inside content but sticky or just cleanly at top right of image.
+     Let's try fixed for reliability on mobile */
+  position: fixed;
+  top: 20px;
+  right: 20px;
+
   background: none;
   border: none;
   cursor: pointer;
@@ -573,39 +646,6 @@ h2 {
 .selector-content.collapsed {
   max-height: 0;
   opacity: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  pointer-events: none;
-}
-
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-md);
-}
-
-.btn-page {
-  padding: 0.5rem 1rem;
-  background: var(--color-lagoon-blue);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: var(--font-casual);
-  font-size: 1.1rem;
-  transition: var(--transition-smooth);
-}
-
-.btn-page:disabled {
-  background: var(--color-mist-gray);
-  cursor: not-allowed;
-}
-
-.btn-page:not(:disabled):hover {
-  background: var(--color-lagoon-deep);
-  transform: scale(1.05);
 }
 
 .selection-feedback {
@@ -723,7 +763,7 @@ footer {
   border: none;
   cursor: pointer;
   padding: 0;
-  z-index: 20;
+  z-index: 110;
 }
 
 .hamburger span {
@@ -783,7 +823,7 @@ footer {
     justify-content: flex-start;
     align-items: center;
     transition: right 0.4s ease-in-out;
-    z-index: 15;
+    z-index: 100;
     padding-top: 150px;
   }
 
@@ -817,17 +857,44 @@ footer {
   }
 
   .painting-card {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: none;
+    background: transparent;
   }
+
+  .painting-card:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Show info below image on mobile - No hover needed */
+  .painting-info {
+    position: relative;
+    opacity: 1;
+    background: transparent;
+    padding: 1rem 0;
+    text-align: left;
+    height: auto;
+  }
+
+  .painting-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-lagoon-deep);
+  }
+
+  .painting-card .painting-info p,
+  .painting-card .painting-actions {
+    display: none;
+  }
+
 
   /* Painting grid 1 column on mobile */
   .painting-grid {
     grid-template-columns: 1fr;
   }
 
-  .painting-grid-item img {
-    height: 200px;
-  }
+
 
   /* Contact page responsive */
   .social-links {

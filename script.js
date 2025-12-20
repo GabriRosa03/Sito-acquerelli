@@ -1,9 +1,16 @@
 // Caricamento dinamico della galleria
+
+// Lightbox state
+let currentPaintingIndex = 0;
+
+
+
+
 function loadGallery() {
   const galleryGrid = document.getElementById('gallery-grid');
   if (!galleryGrid) return;
 
-  paintings.forEach(painting => {
+  paintings.forEach((painting, index) => {
     const card = document.createElement('div');
     card.className = 'painting-card';
 
@@ -31,7 +38,7 @@ function loadGallery() {
 
     // Click per aprire lightbox
     img.addEventListener('click', () => {
-      openLightbox(painting);
+      openLightbox(index);
     });
 
     galleryGrid.appendChild(card);
@@ -39,7 +46,10 @@ function loadGallery() {
 }
 
 // Lightbox
-function openLightbox(painting) {
+function openLightbox(index) {
+  currentPaintingIndex = index;
+  const painting = paintings[currentPaintingIndex];
+
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxTitle = document.getElementById('lightbox-title');
@@ -47,13 +57,39 @@ function openLightbox(painting) {
 
   if (!lightbox || !lightboxImg || !lightboxTitle || !lightboxInfo) return;
 
-  lightboxImg.src = painting.src;
-  lightboxImg.alt = painting.alt || painting.title;
-  lightboxTitle.textContent = painting.title;
-  lightboxInfo.innerHTML = `<p>${painting.description}</p>`;
+  updateLightboxContent(painting);
 
   lightbox.classList.add('active');
   document.body.style.overflow = 'hidden';
+}
+
+function updateLightboxContent(painting) {
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxTitle = document.getElementById('lightbox-title');
+  const lightboxInfo = document.getElementById('lightbox-info');
+
+  lightboxImg.src = painting.src;
+  lightboxImg.alt = painting.alt || painting.title;
+  lightboxTitle.textContent = painting.title;
+  lightboxInfo.innerHTML = `
+    <p>${painting.description}</p>
+    <div class="painting-actions" style="justify-content: center; margin-top: 1.5rem;">
+        <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">Richiedi Informazioni</a>
+    </div>
+  `;
+}
+
+function navigateLightbox(direction) {
+  currentPaintingIndex += direction;
+
+  // Wrap around
+  if (currentPaintingIndex < 0) {
+    currentPaintingIndex = paintings.length - 1;
+  } else if (currentPaintingIndex >= paintings.length) {
+    currentPaintingIndex = 0;
+  }
+
+  updateLightboxContent(paintings[currentPaintingIndex]);
 }
 
 function closeLightbox() {
@@ -80,6 +116,24 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.target === lightbox) {
         closeLightbox();
       }
+    });
+  }
+
+  // Navigation Buttons
+  const prevBtn = document.getElementById('lightbox-prev');
+  const nextBtn = document.getElementById('lightbox-next');
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent closing lightbox when clicking button
+      navigateLightbox(-1);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent closing lightbox when clicking button
+      navigateLightbox(1);
     });
   }
 
@@ -110,16 +164,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ESC key
+  // Keys navigation
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeLightbox();
-      // Also close menu
-      if (hamburger && hamburger.classList.contains('active')) {
-        hamburger.classList.remove('active');
-        nav.classList.remove('active');
-        document.body.style.overflow = '';
+    if (document.getElementById('lightbox').classList.contains('active')) {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      } else if (e.key === 'ArrowLeft') {
+        navigateLightbox(-1);
+      } else if (e.key === 'ArrowRight') {
+        navigateLightbox(1);
+      }
+    } else {
+      // Allow escape for menu even if lightbox not active
+      if (e.key === 'Escape') {
+        if (hamburger && hamburger.classList.contains('active')) {
+          hamburger.classList.remove('active');
+          nav.classList.remove('active');
+          document.body.style.overflow = '';
+        }
       }
     }
   });
 });
+
