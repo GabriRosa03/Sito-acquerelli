@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log('Preparing to send data:', data);
 
-            fetch("https://formsubmit.co/ajax/gabrielerosa1783@gmail.com", {
+            fetch("https://formsubmit.co/ajax/drixtrb@gmail.com", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
