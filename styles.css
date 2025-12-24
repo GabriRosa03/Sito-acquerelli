@@ -69,6 +69,9 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* Prevent font scaling on mobile */
+  text-size-adjust: 100%;
 }
 
 body {
@@ -78,6 +81,9 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   position: relative;
+  width: 100%;
+  /* Ensure body doesn't overflow */
+  margin: 0;
 }
 
 /* Cursor interaction states */
