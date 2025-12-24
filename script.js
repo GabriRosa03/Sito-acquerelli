@@ -67,10 +67,15 @@ function updateLightboxContent(painting) {
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxTitle = document.getElementById('lightbox-title');
   const lightboxInfo = document.getElementById('lightbox-info');
+  const lightboxCounter = document.getElementById('lightbox-counter');
 
   lightboxImg.src = painting.src;
   lightboxImg.alt = painting.alt || painting.title;
   lightboxTitle.textContent = painting.title;
+
+  if (lightboxCounter) {
+    lightboxCounter.textContent = `${currentPaintingIndex + 1} / ${paintings.length}`;
+  }
   lightboxInfo.innerHTML = `
     <p>${painting.description}</p>
     <div class="painting-actions" style="justify-content: center; margin-top: 1.5rem;">
@@ -139,14 +144,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Hamburger Menu Toggle
   const hamburger = document.getElementById('hamburger-btn');
-  const nav = document.getElementById('main-nav');
+  const mobileNav = document.getElementById('mobile-nav');
 
-  if (hamburger && nav) {
+  if (hamburger && mobileNav) {
     hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('active');
-      nav.classList.toggle('active');
+      mobileNav.classList.toggle('active');
       // Prevent body scroll when menu is open
-      if (nav.classList.contains('active')) {
+      if (mobileNav.classList.contains('active')) {
         document.body.style.overflow = 'hidden';
       } else {
         document.body.style.overflow = '';
@@ -154,11 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Close menu when clicking a link
-    const navLinks = nav.querySelectorAll('a');
+    const navLinks = mobileNav.querySelectorAll('a');
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
         hamburger.classList.remove('active');
-        nav.classList.remove('active');
+        mobileNav.classList.remove('active');
         document.body.style.overflow = '';
       });
     });
@@ -176,14 +181,67 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       // Allow escape for menu even if lightbox not active
+      const hamburger = document.getElementById('hamburger-btn');
+      const mobileNav = document.getElementById('mobile-nav');
       if (e.key === 'Escape') {
         if (hamburger && hamburger.classList.contains('active')) {
           hamburger.classList.remove('active');
-          nav.classList.remove('active');
+          mobileNav.classList.remove('active');
           document.body.style.overflow = '';
         }
       }
     }
+  });
+
+
+  // ========================================
+  // BACK TO TOP BUTTON & SMART HEADER
+  // ========================================
+
+  // Inject Back to Top Button
+  const backToTopBtn = document.createElement('button');
+  backToTopBtn.id = 'back-to-top';
+  backToTopBtn.innerHTML = '&#8679;'; // Up arrow
+  backToTopBtn.ariaLabel = 'Torna in cima';
+  document.body.appendChild(backToTopBtn);
+
+  // Scroll variables
+  let lastScrollTop = 0;
+  const header = document.querySelector('header');
+  const scrollThreshold = 100; // Minimum scroll to show button
+
+  window.addEventListener('scroll', () => {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Back to Top Visibility
+    if (scrollTop > scrollThreshold) {
+      backToTopBtn.classList.add('show');
+    } else {
+      backToTopBtn.classList.remove('show');
+    }
+
+    // Smart Header (Only on mobile/small screens if requested, but logic here applies generally or can be scoped)
+    // The user requested: "header should reappear when user scrolling down a bit but then scrolls up a bit"
+    // Apply this logic mainly when the menu is NOT open
+    if (!hamburger || !hamburger.classList.contains('active')) {
+      if (scrollTop > lastScrollTop && scrollTop > header.offsetHeight) {
+        // Scrolling Down
+        header.classList.add('header-hidden');
+      } else {
+        // Scrolling Up
+        header.classList.remove('header-hidden');
+      }
+    }
+
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+  });
+
+  // Back to Top Action
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   });
 });
 

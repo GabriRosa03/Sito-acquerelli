@@ -19,24 +19,44 @@
 
 <body>
     <!-- Header with Logo and Navigation -->
-    <header>
-        <div class="signature-container">
-            <img src="images/firmaPapi.png" alt="Firma Artista Veneziano" class="signature-img">
+    <header class="header-contatti">
+        <!-- Left Navigation -->
+        <nav class="nav-left">
+            <ul>
+                <li><a href="chi-sono.html">Biografia</a></li>
+                <li><a href="gallery.html">Galleria</a></li>
+            </ul>
+        </nav>
+
+        <!-- Center Logo -->
+        <div class="logo-container">
+            <a href="index.html">
+                <img src="images/logoPapiPng.png" alt="Logo Davide Rosa" class="header-logo">
+            </a>
         </div>
 
-        <!-- Hamburger Menu Button -->
+        <!-- Right Navigation -->
+        <nav class="nav-right">
+            <ul>
+                <li><a href="materiali.html">Materiali</a></li>
+                <li><a href="contatti.html" class="active">Contatti</a></li>
+            </ul>
+        </nav>
+
+        <!-- Hamburger Menu Button (Mobile) -->
         <button class="hamburger" aria-label="Menu" id="hamburger-btn">
             <span></span>
             <span></span>
             <span></span>
         </button>
 
-        <nav id="main-nav">
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav" id="mobile-nav">
             <ul>
-                <li><a href="index.html"><img src="images/galleria2.png" alt="Galleria" class="nav-icon"></a></li>
-                <li><a href="chi-sono.html"><img src="images/chisono2.png" alt="Chi Sono" class="nav-icon"></a></li>
-                <li><a href="contatti.html"><img src="images/contatti2.png" alt="Contatti" class="nav-icon"></a></li>
-                <li><a href="materiali.html"><img src="images/materiali2.png" alt="Materiali" class="nav-icon"></a></li>
+                <li><a href="chi-sono.html">Biografia</a></li>
+                <li><a href="gallery.html">Galleria</a></li>
+                <li><a href="materiali.html">Materiali</a></li>
+                <li><a href="contatti.html" class="active">Contatti</a></li>
             </ul>
         </nav>
     </header>
@@ -49,12 +69,12 @@
             <form class="contact-form mt-lg" id="contact-form">
                 <div class="form-group">
                     <label for="name">Nome *</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" class="form-control" required>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email *</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" class="form-control" required>
                 </div>
 
                 <div class="form-group">

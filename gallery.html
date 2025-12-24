@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Galleria di dipinti veneziani - Acquerelli ispirati alla laguna di Venezia, paesaggi e atmosfere uniche della Serenissima">
+    <meta name="keywords" content="Davide Rosa, acquerelli, dipinti venezia, arte veneziana, laguna, paesaggi">
+    <meta name="author" content="Artista Veneziano">
+
+    <title>Galleria - Davide Rosa</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Preconnect to Google Fonts for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body>
+    <!-- Header with Logo and Navigation -->
+    <header class="header-gallery">
+        <!-- Left Navigation -->
+        <nav class="nav-left">
+            <ul>
+                <li><a href="chi-sono.html">Biografia</a></li>
+                <li><a href="gallery.html" class="active">Galleria</a></li>
+            </ul>
+        </nav>
+
+        <!-- Center Logo -->
+        <div class="logo-container">
+            <a href="index.html">
+                <img src="images/logoPapiPng.png" alt="Logo Davide Rosa" class="header-logo">
+            </a>
+        </div>
+
+        <!-- Right Navigation -->
+        <nav class="nav-right">
+            <ul>
+                <li><a href="materiali.html">Materiali</a></li>
+                <li><a href="contatti.html">Contatti</a></li>
+            </ul>
+        </nav>
+
+        <!-- Hamburger Menu Button (Mobile) -->
+        <button class="hamburger" aria-label="Menu" id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav" id="mobile-nav">
+            <ul>
+                <li><a href="chi-sono.html">Biografia</a></li>
+                <li><a href="gallery.html" class="active">Galleria</a></li>
+                <li><a href="materiali.html">Materiali</a></li>
+                <li><a href="contatti.html">Contatti</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Masonry Gallery -->
+        <div id="gallery-grid" class="gallery">
+            <!-- Gallery items will be dynamically inserted here by script.js -->
+        </div>
+    </main>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="">
+            <div class="lightbox-info">
+                <h2 id="lightbox-title"></h2>
+                <div id="lightbox-info"></div>
+            </div>
+        </div>
+        <!-- Fixed Navigation Buttons -->
+        <div class="lightbox-nav-fixed">
+            <button id="lightbox-prev" aria-label="Precedente">&lt;</button>
+            <span id="lightbox-counter" class="lightbox-counter"></span>
+            <button id="lightbox-next" aria-label="Successivo">&gt;</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Davide Rosa - Tutti i diritti riservati</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="paintings.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

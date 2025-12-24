@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Galleria di dipinti veneziani - Acquerelli ispirati alla laguna di Venezia, paesaggi e atmosfere uniche della Serenissima">
-  <meta name="keywords" content="Davide Rosa, acquerelli, dipinti venezia, arte veneziana, laguna, paesaggi">
-  <meta name="author" content="Artista Veneziano">
+    content="Davide Rosa - Artista veneziano specializzato in acquerelli ispirati alla laguna di Venezia">
+  <meta name="keywords" content="Davide Rosa, acquerelli, dipinti venezia, arte veneziana, laguna">
+  <meta name="author" content="Davide Rosa">
 
-  <title>Galleria - Davide Rosa</title>
+  <title>Davide Rosa - Acquerelli Veneziani</title>
 
   <link rel="stylesheet" href="styles.css">
 
@@ -18,56 +18,54 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 
-<body>
+<body class="home-body">
   <!-- Header with Logo and Navigation -->
-  <header>
-    <div class="signature-container">
-      <img src="images/firmaPapi2.png" alt="Firma Artista Veneziano" class="signature-img">
+  <header class="header-home">
+    <!-- Left Navigation -->
+    <nav class="nav-left">
+      <ul>
+        <li><a href="chi-sono.html">Biografia</a></li>
+        <li><a href="gallery.html">Galleria</a></li>
+      </ul>
+    </nav>
+
+    <!-- Center Logo -->
+    <div class="logo-container">
+      <a href="index.html">
+        <img src="images/logoPapiPng.png" alt="Logo Davide Rosa" class="header-logo">
+      </a>
     </div>
 
-    <!-- Hamburger Menu Button -->
+    <!-- Right Navigation -->
+    <nav class="nav-right">
+      <ul>
+        <li><a href="materiali.html">Materiali</a></li>
+        <li><a href="contatti.html">Contatti</a></li>
+      </ul>
+    </nav>
+
+    <!-- Hamburger Menu Button (Mobile) -->
     <button class="hamburger" aria-label="Menu" id="hamburger-btn">
       <span></span>
       <span></span>
       <span></span>
     </button>
 
-    <!--    
-    <nav id="main-nav">
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobile-nav">
       <ul>
-        <li><a href="index.html"><img src="images/galleria3.png" alt="Galleria" class="nav-icon"></a></li>
-        <li><a href="chi-sono.html"><img src="images/chisono3.png" alt="Chi Sono" class="nav-icon"></a></li>
-        <li><a href="contatti.html"><img src="images/contatti3.png" alt="Contatti" class="nav-icon"></a></li>
-        <li><a href="materiali.html"><img src="images/materiali3.png" alt="Materiali" class="nav-icon"></a></li>
+        <li><a href="chi-sono.html">Biografia</a></li>
+        <li><a href="gallery.html">Galleria</a></li>
+        <li><a href="materiali.html">Materiali</a></li>
+        <li><a href="contatti.html">Contatti</a></li>
       </ul>
     </nav>
--->
   </header>
 
   <!-- Main Content -->
-  <main>
-    <!-- Masonry Gallery -->
-    <div id="gallery-grid" class="gallery">
-      <!-- Gallery items will be dynamically inserted here by script.js -->
-    </div>
+  <main class="home-main home-fullscreen">
+    <img src="images/final17.png" alt="Acquerello Veneziano" class="hero-fullscreen-image">
   </main>
-
-  <!-- Lightbox -->
-  <div id="lightbox" class="lightbox">
-    <span class="lightbox-close">&times;</span>
-    <div class="lightbox-content">
-      <img id="lightbox-img" src="" alt="">
-      <div class="lightbox-info">
-        <h2 id="lightbox-title"></h2>
-        <div id="lightbox-info"></div>
-      </div>
-    </div>
-    <!-- Fixed Navigation Buttons -->
-    <div class="lightbox-nav-fixed">
-      <button id="lightbox-prev" aria-label="Precedente">&lt;</button>
-      <button id="lightbox-next" aria-label="Successivo">&gt;</button>
-    </div>
-  </div>
 
   <!-- Footer -->
   <footer>
@@ -75,7 +73,6 @@
   </footer>
 
   <!-- JavaScript -->
-  <script src="paintings.js"></script>
   <script src="script.js"></script>
 </body>
 

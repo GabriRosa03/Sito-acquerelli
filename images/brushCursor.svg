@@ -1,0 +1,7 @@
+<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Handle -->
+  <path d="M2.5 28.5L12 19L28.5 2.5C29.5 1.5 30 0.5 28.5 0.5C27 0.5 26 1 25 2.5L8.5 19L2.5 28.5Z" fill="#8E1C14"/>
+  <!-- Bristle holder/ferrule (optional, simplified into handle or added detail) -->
+  <!-- Bristles -->
+  <path d="M2.5 28.5L8.5 19C7 20.5 6 22 5 24C4 26 2 28 2.5 28.5Z" fill="#D9CBA3"/>
+</svg>
