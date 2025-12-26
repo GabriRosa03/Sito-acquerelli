@@ -47,10 +47,21 @@ function loadGallery() {
 
     const infoDiv = document.createElement('div');
     infoDiv.className = 'painting-info';
+
+    // Create like button
+    const paintingId = likeSystem.getPaintingId(painting);
+    const hasLiked = likeSystem.hasUserLiked(paintingId);
+
     infoDiv.innerHTML = `
             <h3>${title}</h3>
             <p class="painting-description">${description}</p>
             <div class="painting-actions">
+                <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${index}">
+                    <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span class="like-count" data-painting-id="${paintingId}">0</span>
+                </button>
                 <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">${btnText}</a>
             </div>
         `;
@@ -66,6 +77,12 @@ function loadGallery() {
     galleryGrid.appendChild(card);
   });
 
+  // Load all likes from Firebase and update counters
+  loadAllLikes();
+
+  // Add click listeners to like buttons
+  setupLikeButtons();
+
   // Deep Linking Check
   const urlParams = new URLSearchParams(window.location.search);
   const operaParam = urlParams.get('opera');
@@ -74,6 +91,112 @@ function loadGallery() {
     if (paintingIndex !== -1) {
       openLightbox(paintingIndex);
     }
+  }
+}
+
+// Like System Functions
+async function loadAllLikes() {
+  try {
+    const allLikes = await likeSystem.getAllLikes();
+
+    // Update all like counters
+    Object.keys(allLikes).forEach(paintingId => {
+      const count = allLikes[paintingId];
+      updateLikeCounter(paintingId, count);
+    });
+
+    // Listen for real-time updates
+    likeSystem.onAllLikesChange((allLikes) => {
+      Object.keys(allLikes).forEach(paintingId => {
+        const count = allLikes[paintingId];
+        updateLikeCounter(paintingId, count);
+      });
+    });
+  } catch (error) {
+    console.error('Errore nel caricamento dei like:', error);
+  }
+}
+
+function updateLikeCounter(paintingId, count) {
+  const counters = document.querySelectorAll(`.like-count[data-painting-id="${paintingId}"]`);
+  counters.forEach(counter => {
+    counter.textContent = count || 0;
+  });
+}
+
+function setupLikeButtons() {
+  const likeButtons = document.querySelectorAll('.btn-like');
+
+  likeButtons.forEach(button => {
+    button.addEventListener('click', async (e) => {
+      e.stopPropagation(); // Prevent opening lightbox
+
+      const paintingId = button.dataset.paintingId;
+      const paintingIndex = parseInt(button.dataset.index);
+      const painting = paintings[paintingIndex];
+
+      // Disable button during request
+      button.disabled = true;
+
+      try {
+        // Toggle like
+        const isNowLiked = await likeSystem.toggleLike(painting);
+
+        // Update button state
+        if (isNowLiked) {
+          button.classList.add('liked');
+          // Heart animation
+          button.classList.add('heart-pop');
+          setTimeout(() => button.classList.remove('heart-pop'), 300);
+        } else {
+          button.classList.remove('liked');
+        }
+
+        // The counter will be updated automatically by the real-time listener
+      } catch (error) {
+        console.error('Errore nel toggle del like:', error);
+        alert('Errore nel salvare il like. Riprova.');
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+}
+
+function setupLightboxLikeButton() {
+  const lightboxLikeBtn = document.getElementById('lightbox-like-btn');
+
+  if (lightboxLikeBtn) {
+    // Remove old listener if exists
+    const newBtn = lightboxLikeBtn.cloneNode(true);
+    lightboxLikeBtn.parentNode.replaceChild(newBtn, lightboxLikeBtn);
+
+    newBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+
+      const paintingId = newBtn.dataset.paintingId;
+      const paintingIndex = parseInt(newBtn.dataset.index);
+      const painting = paintings[paintingIndex];
+
+      newBtn.disabled = true;
+
+      try {
+        const isNowLiked = await likeSystem.toggleLike(painting);
+
+        if (isNowLiked) {
+          newBtn.classList.add('liked');
+          newBtn.classList.add('heart-pop');
+          setTimeout(() => newBtn.classList.remove('heart-pop'), 300);
+        } else {
+          newBtn.classList.remove('liked');
+        }
+      } catch (error) {
+        console.error('Errore nel toggle del like:', error);
+        alert('Errore nel salvare il like. Riprova.');
+      } finally {
+        newBtn.disabled = false;
+      }
+    });
   }
 }
 
@@ -117,12 +240,26 @@ function updateLightboxContent(painting) {
   if (lightboxCounter) {
     lightboxCounter.textContent = `${currentPaintingIndex + 1} / ${paintings.length}`;
   }
+
+  // Get like info
+  const paintingId = likeSystem.getPaintingId(painting);
+  const hasLiked = likeSystem.hasUserLiked(paintingId);
+
   lightboxInfo.innerHTML = `
     <p>${description}</p>
     <div class="painting-actions" style="justify-content: center; margin-top: 1.5rem;">
+        <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${currentPaintingIndex}" id="lightbox-like-btn">
+            <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span class="like-count" data-painting-id="${paintingId}">0</span>
+        </button>
         <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">${btnContactText}</a>
     </div>
   `;
+
+  // Setup like button in lightbox
+  setupLightboxLikeButton();
 }
 
 function sharePainting(displayTitle, originalTitle) {

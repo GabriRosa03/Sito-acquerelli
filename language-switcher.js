@@ -22,21 +22,24 @@ document.addEventListener('DOMContentLoaded', () => {
 function updateSwitcherButtons() {
     const switchers = document.querySelectorAll('.lang-switcher');
     switchers.forEach(btn => {
-        if (currentLang === 'it') {
-            btn.innerHTML = `
-                <span class="lang-current">IT 🇮🇹</span>
-                <span class="lang-divider">/</span>
-                <span class="lang-option">EN</span>
-            `;
-        } else {
-            btn.innerHTML = `
-                <span class="lang-option">IT</span>
-                <span class="lang-divider">/</span>
-                <span class="lang-current">EN 🇬🇧</span>
-            `;
-        }
+        const flagClass = currentLang === 'it' ? 'flag-it' : 'flag-en';
+        const langText = currentLang === 'it' ? 'IT' : 'EN';
+
+        btn.innerHTML = `
+            <div class="lang-current-display">
+                <span class="flag-circle ${flagClass}"></span>
+                <span class="lang-text">${langText}</span>
+                <svg class="change-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="17 1 21 5 17 9"></polyline>
+                    <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                    <polyline points="7 23 3 19 7 15"></polyline>
+                    <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                </svg>
+            </div>
+        `;
     });
 }
+
 
 function createSwitcherButton() {
     const switcher = document.createElement('button');

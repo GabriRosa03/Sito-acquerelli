@@ -1480,9 +1480,14 @@ footer {
     color: var(--color-lagoon-deep);
   }
 
-  .painting-card .painting-info p,
-  .painting-card .painting-actions {
+  .painting-card .painting-info p {
     display: none;
+  }
+
+  .painting-card .painting-actions {
+    display: flex;
+    margin-top: 0.5rem;
+    justify-content: flex-start;
   }
 
 
@@ -1840,50 +1845,73 @@ header.header-hidden {
 }
 
 /* =========================================
-   Language Switcher
+   Language Switcher - Current Language Display
    ========================================= */
 .lang-switcher {
   background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  color: var(--color-charcoal);
-  font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 400;
-  padding: 0.4rem 0.7rem;
+  border: none;
+  padding: 0;
   cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.25s ease;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
 }
 
-.lang-switcher:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(0, 0, 0, 0.25);
+.lang-current-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+  padding: 6px 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
-.lang-current {
+.lang-switcher:hover .lang-current-display {
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.flag-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.flag-it {
+  background: linear-gradient(to right, #009246 0%, #009246 33%, #F1F2F1 33%, #F1F2F1 66%, #CE2B37 66%, #CE2B37 100%);
+}
+
+.flag-en {
+  background-image: url('images/BandieraInglese.png');
+  background-size: 140%;
+  background-position: center;
+}
+
+.lang-text {
+  font-size: 0.85rem;
   font-weight: 600;
-  color: var(--color-charcoal);
+  letter-spacing: 0.5px;
+  color: rgba(0, 0, 0, 0.8);
 }
 
-.lang-option {
-  font-weight: 400;
-  color: var(--color-mist-gray);
-  opacity: 0.6;
-  transition: opacity 0.2s;
+.change-icon {
+  width: 14px;
+  height: 14px;
+  color: rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  margin-left: 2px;
 }
 
-.lang-option:hover {
-  opacity: 0.9;
-}
-
-.lang-divider {
-  color: var(--color-mist-gray);
-  opacity: 0.4;
-  margin: 0 2px;
+.lang-switcher:hover .change-icon {
+  color: rgba(0, 0, 0, 0.7);
+  transform: rotate(180deg);
 }
 
 /* Desktop: Fixed top-right position */
@@ -1892,42 +1920,44 @@ header.header-hidden {
   top: 20px;
   right: 20px;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.lang-switcher-desktop:hover {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
 }
 
 /* Mobile: Bottom of menu */
 .lang-switcher-mobile {
   width: 100%;
+  display: flex;
   justify-content: center;
   padding: 10px 0;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
+}
+
+.lang-switcher-mobile .lang-current-display {
+  background: rgba(0, 0, 0, 0.15);
+  padding: 8px 16px;
+}
+
+.lang-switcher-mobile .flag-circle {
+  width: 22px;
+  height: 22px;
+}
+
+.lang-switcher-mobile .lang-text {
   font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.lang-switcher-mobile .lang-current {
-  color: white;
-  font-weight: 600;
+.lang-switcher-mobile .change-icon {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
-.lang-switcher-mobile .lang-option {
-  color: rgba(255, 255, 255, 0.5);
+.lang-switcher-mobile:hover .lang-current-display {
+  background: rgba(0, 0, 0, 0.2);
+  transform: none;
 }
 
-.lang-switcher-mobile .lang-divider {
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.lang-switcher-mobile:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.25);
+.lang-switcher-mobile:hover .change-icon {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Hide desktop switcher on mobile */
@@ -1951,26 +1981,168 @@ header.header-hidden {
   position: fixed;
   top: 35px;
   left: 20px;
-  /* Far left side */
   color: white;
   cursor: pointer;
   z-index: 1010;
   display: none;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  transition: transform 0.2s;
+  transition: transform 0.2s, background 0.3s;
+
+  /* Button styling */
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  padding: 8px 16px 8px 12px;
+
+  /* Flexbox for icon + text */
+  align-items: center;
+  gap: 8px;
 }
 
-.lightbox-share-mobile:active {
-  transform: scale(0.9);
+.lightbox-share-mobile .share-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: var(--font-serif);
+  letter-spacing: 0.02em;
 }
 
 .lightbox-share-mobile svg {
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.lightbox-share-mobile:active {
+  transform: scale(0.95);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 @media (max-width: 768px) {
   .lightbox-share-mobile {
-    display: block;
+    display: flex;
   }
+}
+
+/* ========================================
+   LIKE SYSTEM STYLES
+   ======================================== */
+
+/* Painting Actions Container */
+.painting-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Like Button */
+.btn-like {
+  background: transparent;
+  color: var(--color-primary-red);
+  border: 1px solid var(--color-primary-red);
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-like:hover:not(:disabled) {
+  background: rgba(142, 28, 20, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(142, 28, 20, 0.2);
+}
+
+.btn-like:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Heart Icon */
+.btn-like .heart-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: all 0.3s ease;
+}
+
+/* Liked State */
+.btn-like.liked {
+  background: var(--color-primary-red);
+  color: white;
+  border-color: var(--color-primary-red);
+}
+
+.btn-like.liked .heart-icon {
+  fill: white;
+  stroke: white;
+}
+
+.btn-like.liked:hover:not(:disabled) {
+  background: var(--color-primary-red-dark);
+  border-color: var(--color-primary-red-dark);
+}
+
+/* Heart Pop Animation */
+@keyframes heartPop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.btn-like.heart-pop .heart-icon {
+  animation: heartPop 0.3s ease;
+}
+
+/* Like Counter */
+.like-count {
+  font-weight: 700;
+  font-size: 0.95rem;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Mobile Adjustments for Like Button */
+@media (max-width: 768px) {
+  .btn-like {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .btn-like .heart-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .like-count {
+    font-size: 0.9rem;
+  }
+}
+
+/* Ensure painting-actions in lightbox are centered */
+.lightbox-info .painting-actions {
+  margin-top: 1.5rem;
 }
