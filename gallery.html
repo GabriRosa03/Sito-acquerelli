@@ -24,8 +24,8 @@
         <!-- Left Navigation -->
         <nav class="nav-left">
             <ul>
-                <li><a href="chi-sono.html">Biografia</a></li>
-                <li><a href="gallery.html" class="active">Galleria</a></li>
+                <li><a href="biografia.html" data-translate="nav.biography">Biografia</a></li>
+                <li><a href="gallery.html" class="active" data-translate="nav.gallery">Galleria</a></li>
             </ul>
         </nav>
 
@@ -39,8 +39,8 @@
         <!-- Right Navigation -->
         <nav class="nav-right">
             <ul>
-                <li><a href="materiali.html">Materiali</a></li>
-                <li><a href="contatti.html">Contatti</a></li>
+                <li><a href="materiali.html" data-translate="nav.materials">Materiali</a></li>
+                <li><a href="contatti.html" data-translate="nav.contacts">Contatti</a></li>
             </ul>
         </nav>
 
@@ -54,10 +54,10 @@
         <!-- Mobile Navigation -->
         <nav class="mobile-nav" id="mobile-nav">
             <ul>
-                <li><a href="chi-sono.html">Biografia</a></li>
-                <li><a href="gallery.html" class="active">Galleria</a></li>
-                <li><a href="materiali.html">Materiali</a></li>
-                <li><a href="contatti.html">Contatti</a></li>
+                <li><a href="biografia.html" data-translate="nav.biography">Biografia</a></li>
+                <li><a href="gallery.html" class="active" data-translate="nav.gallery">Galleria</a></li>
+                <li><a href="materiali.html" data-translate="nav.materials">Materiali</a></li>
+                <li><a href="contatti.html" data-translate="nav.contacts">Contatti</a></li>
             </ul>
         </nav>
     </header>
@@ -73,6 +73,16 @@
     <!-- Lightbox -->
     <div id="lightbox" class="lightbox">
         <span class="lightbox-close">&times;</span>
+        <span id="lightbox-share-mobile" class="lightbox-share-mobile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+        </span>
         <div class="lightbox-content">
             <img id="lightbox-img" src="" alt="">
             <div class="lightbox-info">
@@ -90,10 +100,12 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Davide Rosa - Tutti i diritti riservati</p>
+        <p data-translate="footer.rights">&copy; 2025 Davide Rosa - Tutti i diritti riservati</p>
     </footer>
 
     <!-- JavaScript -->
+    <script src="translations.js"></script>
+    <script src="language-switcher.js"></script>
     <script src="paintings.js"></script>
     <script src="script.js"></script>
 </body>

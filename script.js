@@ -6,30 +6,52 @@ let currentPaintingIndex = 0;
 
 
 
+// Helper to get current language keys
+function getLangKeys() {
+  const lang = window.getCurrentLanguage ? window.getCurrentLanguage() : (localStorage.getItem('site_lang') || 'it');
+  return {
+    titleKey: lang === 'it' ? 'title' : 'title_en',
+    descKey: lang === 'it' ? 'description' : 'description_en'
+  };
+}
+
 function loadGallery() {
   const galleryGrid = document.getElementById('gallery-grid');
   if (!galleryGrid) return;
+
+  // Clear existing content for re-render
+  galleryGrid.innerHTML = '';
+
+  const { titleKey, descKey } = getLangKeys();
+  // Safe access to translations
+  const lang = localStorage.getItem('site_lang') || 'it';
+  const btnText = (typeof translations !== 'undefined' && translations[lang]) ? translations[lang]['gallery.btn_contact'] : "Richiedi Informazioni";
 
   paintings.forEach((painting, index) => {
     const card = document.createElement('div');
     card.className = 'painting-card';
 
     const img = document.createElement('img');
-    img.src = painting.src;
-    img.alt = painting.alt || painting.title;
+    // Use thumbnail if available, otherwise full source
+    img.src = painting.thumb || painting.src;
+    const title = painting[titleKey] || painting.title;
+    img.alt = painting.alt || title;
+    img.loading = "lazy"; // Lazy loading enabled
 
     // Gestione errore caricamento immagine
     img.onerror = function () {
       this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23999" font-size="16"%3EImmagine non disponibile%3C/text%3E%3C/svg%3E';
     };
 
+    const description = painting[descKey] || painting.description;
+
     const infoDiv = document.createElement('div');
     infoDiv.className = 'painting-info';
     infoDiv.innerHTML = `
-            <h3>${painting.title}</h3>
-            <p class="painting-description">${painting.description}</p>
+            <h3>${title}</h3>
+            <p class="painting-description">${description}</p>
             <div class="painting-actions">
-                <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">Richiedi Informazioni</a>
+                <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">${btnText}</a>
             </div>
         `;
 
@@ -43,6 +65,16 @@ function loadGallery() {
 
     galleryGrid.appendChild(card);
   });
+
+  // Deep Linking Check
+  const urlParams = new URLSearchParams(window.location.search);
+  const operaParam = urlParams.get('opera');
+  if (operaParam) {
+    const paintingIndex = paintings.findIndex(p => p.title === operaParam);
+    if (paintingIndex !== -1) {
+      openLightbox(paintingIndex);
+    }
+  }
 }
 
 // Lightbox
@@ -69,19 +101,58 @@ function updateLightboxContent(painting) {
   const lightboxInfo = document.getElementById('lightbox-info');
   const lightboxCounter = document.getElementById('lightbox-counter');
 
+  const { titleKey, descKey } = getLangKeys();
+  const title = painting[titleKey] || painting.title;
+  const description = painting[descKey] || painting.description;
+
+  // Buttons text
+  const lang = localStorage.getItem('site_lang') || 'it';
+  const btnContactText = (typeof translations !== 'undefined' && translations[lang]) ? translations[lang]['gallery.btn_contact'] : "Richiedi Informazioni";
+  const btnShareText = (typeof translations !== 'undefined' && translations[lang]) ? translations[lang]['gallery.btn_share'] : "Condividi";
+
   lightboxImg.src = painting.src;
-  lightboxImg.alt = painting.alt || painting.title;
-  lightboxTitle.textContent = painting.title;
+  lightboxImg.alt = painting.alt || title;
+  lightboxTitle.textContent = title;
 
   if (lightboxCounter) {
     lightboxCounter.textContent = `${currentPaintingIndex + 1} / ${paintings.length}`;
   }
   lightboxInfo.innerHTML = `
-    <p>${painting.description}</p>
+    <p>${description}</p>
     <div class="painting-actions" style="justify-content: center; margin-top: 1.5rem;">
-        <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">Richiedi Informazioni</a>
+        <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">${btnContactText}</a>
     </div>
   `;
+}
+
+function sharePainting(displayTitle, originalTitle) {
+  // Use originalTitle for ID param if available, else fallback
+  const shareUrl = window.location.origin + window.location.pathname + '?opera=' + encodeURIComponent(originalTitle || displayTitle);
+
+  const lang = localStorage.getItem('site_lang') || 'it';
+  let shareText = `Ehi guarda che bel quadro di Davide Rosa: "${displayTitle}"`;
+
+  if (lang === 'en') {
+    shareText = `Hey check out this beautiful painting by Davide Rosa: "${displayTitle}"`;
+  }
+
+  const fullText = `${shareText}\n${shareUrl}`;
+
+  // Web Share API
+  if (navigator.share) {
+    navigator.share({
+      title: displayTitle,
+      text: fullText,
+      // Leaving 'url' empty to force WhatsApp/others to use the 'text' field which contains the URL.
+      // This solves the issue where WhatsApp ignores 'text' if 'url' is present.
+    })
+      .then(() => console.log('Condiviso con successo'))
+      .catch((error) => console.log('Errore nella condivisone:', error));
+  } else {
+    // Fallback WhatsApp (api.whatsapp.com is more reliable than wa.me for text+links)
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(fullText)}`;
+    window.open(waUrl, '_blank');
+  }
 }
 
 function navigateLightbox(direction) {
@@ -242,6 +313,52 @@ document.addEventListener('DOMContentLoaded', () => {
       top: 0,
       behavior: 'smooth'
     });
+  });
+
+  // ========================================
+  // SERVICE WORKER REGISTRATION (Cache system)
+  // ========================================
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        })
+        .catch(error => {
+          console.log('ServiceWorker registration failed: ', error);
+        });
+    });
+  }
+
+  // ========================================
+  // MOBILE SHARE BUTTON LISTENER
+  // ========================================
+  const mobileShareBtn = document.getElementById('lightbox-share-mobile');
+  if (mobileShareBtn) {
+    mobileShareBtn.addEventListener('click', (e) => {
+      // Prevent bubbling if necessary, though it's separate from content
+      e.stopPropagation();
+
+      // Use currentPaintingIndex to get title
+      if (typeof currentPaintingIndex !== 'undefined' && paintings[currentPaintingIndex]) {
+        sharePainting(paintings[currentPaintingIndex].title);
+      }
+    });
+  }
+
+  // ========================================
+  // IMAGE PROTECTION (No Right Click / No Drag)
+  // ========================================
+  document.addEventListener('contextmenu', (e) => {
+    if (e.target.tagName === 'IMG') {
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener('dragstart', (e) => {
+    if (e.target.tagName === 'IMG') {
+      e.preventDefault();
+    }
   });
 });
 

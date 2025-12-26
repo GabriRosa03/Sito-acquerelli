@@ -23,8 +23,8 @@
         <!-- Left Navigation -->
         <nav class="nav-left">
             <ul>
-                <li><a href="chi-sono.html">Biografia</a></li>
-                <li><a href="gallery.html">Galleria</a></li>
+                <li><a href="biografia.html" data-translate="nav.biography">Biografia</a></li>
+                <li><a href="gallery.html" data-translate="nav.gallery">Galleria</a></li>
             </ul>
         </nav>
 
@@ -38,8 +38,8 @@
         <!-- Right Navigation -->
         <nav class="nav-right">
             <ul>
-                <li><a href="materiali.html">Materiali</a></li>
-                <li><a href="contatti.html" class="active">Contatti</a></li>
+                <li><a href="materiali.html" data-translate="nav.materials">Materiali</a></li>
+                <li><a href="contatti.html" class="active" data-translate="nav.contacts">Contatti</a></li>
             </ul>
         </nav>
 
@@ -53,10 +53,10 @@
         <!-- Mobile Navigation -->
         <nav class="mobile-nav" id="mobile-nav">
             <ul>
-                <li><a href="chi-sono.html">Biografia</a></li>
-                <li><a href="gallery.html">Galleria</a></li>
-                <li><a href="materiali.html">Materiali</a></li>
-                <li><a href="contatti.html" class="active">Contatti</a></li>
+                <li><a href="biografia.html" data-translate="nav.biography">Biografia</a></li>
+                <li><a href="gallery.html" data-translate="nav.gallery">Galleria</a></li>
+                <li><a href="materiali.html" data-translate="nav.materials">Materiali</a></li>
+                <li><a href="contatti.html" class="active" data-translate="nav.contacts">Contatti</a></li>
             </ul>
         </nav>
     </header>
@@ -68,31 +68,35 @@
 
             <form class="contact-form mt-lg" id="contact-form">
                 <div class="form-group">
-                    <label for="name">Nome *</label>
+                    <label for="name" data-translate="contact.name">Nome *</label>
                     <input type="text" id="name" name="name" class="form-control" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email *</label>
+                    <label for="email" data-translate="contact.email">Email *</label>
                     <input type="email" id="email" name="email" class="form-control" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="painting">Quadro di Interesse (opzionale)</label>
+                    <label for="painting" data-translate="contact.interest">Quadro di Interesse (opzionale)</label>
                     <div class="collapsible-selector">
-                        <button type="button" id="toggle-selector" class="toggle-btn">
+                        <button type="button" id="toggle-selector" class="toggle-btn"
+                            data-translate="contact.select_btn">
                             Seleziona un quadro <span class="arrow">▼</span>
                         </button>
                         <div id="selector-content" class="selector-content collapsed">
-                            <p style="font-size: 0.9rem; color: var(--color-mist-gray); margin-bottom: 1rem;">Clicca su
+                            <p style="font-size: 0.9rem; color: var(--color-mist-gray); margin-bottom: 1rem;"
+                                data-translate="contact.select_hint">Clicca su
                                 un quadro per selezionarlo</p>
                             <div id="painting-grid" class="painting-grid">
                                 <!-- Paintings will be dynamically inserted here -->
                             </div>
                             <div class="pagination-controls">
-                                <button type="button" id="prev-page" class="btn-page" disabled>Indietro</button>
+                                <button type="button" id="prev-page" class="btn-page" disabled
+                                    data-translate="contact.back">Indietro</button>
                                 <span id="page-num">1</span>
-                                <button type="button" id="next-page" class="btn-page">Avanti</button>
+                                <button type="button" id="next-page" class="btn-page"
+                                    data-translate="contact.next">Avanti</button>
                             </div>
                         </div>
                     </div>
@@ -101,16 +105,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="message">Messaggio *</label>
+                    <label for="message" data-translate="contact.message">Messaggio *</label>
                     <textarea id="message" name="message" required></textarea>
                 </div>
 
-                <button type="submit" class="btn-submit">Invia Messaggio</button>
+                <button type="submit" class="btn-submit" data-translate="contact.submit">Invia Messaggio</button>
             </form>
 
             <!-- Social Media Section -->
             <div class="social-section mt-lg">
-                <h2 class="text-center">Seguimi sui Social</h2>
+                <h2 class="text-center" data-translate="contact.social">Seguimi sui Social</h2>
                 <div class="social-links">
                     <a href="https://www.instagram.com/davide_rosa_watercolors" target="_blank"
                         rel="noopener noreferrer" class="social-link">
@@ -133,10 +137,12 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Davide Rosa - Tutti i diritti riservati</p>
+        <p data-translate="footer.rights">&copy; 2025 Davide Rosa - Tutti i diritti riservati</p>
     </footer>
 
     <!-- JavaScript -->
+    <script src="translations.js"></script>
+    <script src="language-switcher.js"></script>
     <script src="paintings.js"></script>
     <script src="script.js"></script>
     <script src="contact.js"></script>

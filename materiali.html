@@ -24,8 +24,8 @@
         <!-- Left Navigation -->
         <nav class="nav-left">
             <ul>
-                <li><a href="chi-sono.html">Biografia</a></li>
-                <li><a href="gallery.html">Galleria</a></li>
+                <li><a href="biografia.html" data-translate="nav.biography">Biografia</a></li>
+                <li><a href="gallery.html" data-translate="nav.gallery">Galleria</a></li>
             </ul>
         </nav>
 
@@ -39,8 +39,8 @@
         <!-- Right Navigation -->
         <nav class="nav-right">
             <ul>
-                <li><a href="materiali.html" class="active">Materiali</a></li>
-                <li><a href="contatti.html">Contatti</a></li>
+                <li><a href="materiali.html" class="active" data-translate="nav.materials">Materiali</a></li>
+                <li><a href="contatti.html" data-translate="nav.contacts">Contatti</a></li>
             </ul>
         </nav>
 
@@ -54,10 +54,10 @@
         <!-- Mobile Navigation -->
         <nav class="mobile-nav" id="mobile-nav">
             <ul>
-                <li><a href="chi-sono.html">Biografia</a></li>
-                <li><a href="gallery.html">Galleria</a></li>
-                <li><a href="materiali.html" class="active">Materiali</a></li>
-                <li><a href="contatti.html">Contatti</a></li>
+                <li><a href="biografia.html" data-translate="nav.biography">Biografia</a></li>
+                <li><a href="gallery.html" data-translate="nav.gallery">Galleria</a></li>
+                <li><a href="materiali.html" class="active" data-translate="nav.materials">Materiali</a></li>
+                <li><a href="contatti.html" data-translate="nav.contacts">Contatti</a></li>
             </ul>
         </nav>
     </header>
@@ -66,14 +66,14 @@
     <main>
         <div class="content-section">
 
-            <p>
+            <p data-translate="mat.intro">
                 Per catturare la magia e la trasparenza dei miei dipinti, la scelta dei materiali è fondamentale quanto
                 la tecnica stessa. Utilizzo esclusivamente prodotti di altissima qualità per garantire che ogni opera
                 mantenga la sua bellezza e vivacità nel tempo.
             </p>
 
-            <h2>La Carta</h2>
-            <p>
+            <h2 data-translate="mat.paper">La Carta</h2>
+            <p data-translate="mat.paper_desc">
                 Il supporto è l'anima dell'acquerello. Utilizzo prevalentemente carta cinese <strong><a
                         href="https://www.baohongart.com/" target="_blank" rel="noopener noreferrer">BAOHONG
                         MASTERCHOICE</a></strong> in puro cotone al 100%, con una grammatura di 300g. La sua texture,
@@ -81,8 +81,8 @@
                 quantità d'acqua senza che il foglio si deformi.
             </p>
 
-            <h2>I Colori</h2>
-            <p>
+            <h2 data-translate="mat.colors">I Colori</h2>
+            <p data-translate="mat.colors_desc">
                 Agli inizi ho utilizzato principalmente prodotti Winsor & Newton ma ora, dopo tante ricerche e prove, la
                 mia tavolozza è composta esclusivamente dai prodotti della <strong><a
                         href="https://www.danielsmith.com/" target="_blank" rel="noopener noreferrer">DANIEL
@@ -91,8 +91,8 @@
                 dei tramonti.
             </p>
 
-            <h2>I Pennelli</h2>
-            <p>
+            <h2 data-translate="mat.brushes">I Pennelli</h2>
+            <p data-translate="mat.brushes_desc">
                 Oltre all'acqua ovviamente, che regola sempre e comunque tutto il processo "delicato e unico" della
                 pittura ad acquerello, i pennelli sono il mezzo di trasposizione principale sulla carta. Sono strumenti
                 fondamentali, da ricercare con pazienza, attenzione, precisione. Ho dedicato e continuo a dedicare molto
@@ -102,13 +102,13 @@
                         rel="noopener noreferrer">ESCODA</a></strong>, e i set SOLO di Michael Solovyev.
             </p>
 
-            <h2>Artisti seguiti</h2>
-            <p>
+            <h2 data-translate="mat.artists">Artisti seguiti</h2>
+            <p data-translate="mat.artists_desc">
                 Ritengo che un artista, per quanto voglia ricercare, proporre e farsi riconoscere con un linguaggio
                 unico e indistinguibile debba avere comunque dei riferimenti importanti da cui attingere. Poi il tempo
                 farà si che tutto venga unito in un unico codice, assolutamente personale.
             </p>
-            <p>
+            <p data-translate="mat.artists_desc2">
                 Seguo quindi con grande passione e ammirazione tanti artisti con i quali ho anche iniziato ad avere
                 anche qualche scambio di opinione artistico e non solo, eccone alcuni:
             </p>
@@ -122,7 +122,7 @@
             </ul>
 
             <div class="text-center mt-lg">
-                <p style="font-style: italic; color: var(--color-mist-gray);">
+                <p style="font-style: italic; color: var(--color-mist-gray);" data-translate="mat.quote">
                     "La qualità del materiale è il primo passo verso l'eccellenza dell'opera."
                 </p>
             </div>
@@ -131,10 +131,12 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Davide Rosa - Tutti i diritti riservati</p>
+        <p data-translate="footer.rights">&copy; 2025 Davide Rosa - Tutti i diritti riservati</p>
     </footer>
 
     <!-- JavaScript -->
+    <script src="translations.js"></script>
+    <script src="language-switcher.js"></script>
     <script src="script.js"></script>
 </body>
 

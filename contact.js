@@ -22,6 +22,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Helper to get titles based on language
+    function getPaintingTitle(painting) {
+        const lang = localStorage.getItem('site_lang') || 'it';
+        return (lang === 'en' && painting.title_en) ? painting.title_en : painting.title;
+    }
+
     // Initialize Grid
     function renderGrid(page) {
         if (!paintingGrid || typeof paintings === 'undefined') return;
@@ -41,9 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 gridItem.classList.add('selected');
             }
 
+            const displayTitle = getPaintingTitle(painting);
+
             gridItem.innerHTML = `
                 <img src="${painting.src}" alt="${painting.alt}">
-                <p class="painting-grid-title">${painting.title}</p>
+                <p class="painting-grid-title">${displayTitle}</p>
             `;
 
             gridItem.addEventListener('click', () => {
@@ -76,8 +84,14 @@ document.addEventListener('DOMContentLoaded', function () {
             feedback.textContent = '';
             paintingInput.value = '';
         } else {
-            const titles = selectedPaintings.map(p => p.title);
-            feedback.textContent = `Hai selezionato: ${titles.join(', ')}`;
+            const titles = selectedPaintings.map(p => getPaintingTitle(p));
+            // Localize feedback prefix
+            const lang = localStorage.getItem('site_lang') || 'it';
+            const prefix = lang === 'en' ? "Selected: " : "Hai selezionato: ";
+
+            feedback.textContent = `${prefix}${titles.join(', ')}`;
+            // Keep the hidden input with original Italian titles for admin reference if preferred, 
+            // or use the localized ones. Let's use localized for consistency with user intent.
             paintingInput.value = titles.join(', ');
         }
     }
@@ -105,8 +119,53 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial Render
     if (typeof paintings !== 'undefined') {
         renderGrid(currentPage);
-
         updateFeedback();
+
+        // Check for 'opera' URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const operaTitle = urlParams.get('opera');
+
+        if (operaTitle) {
+            // Find painting by title (case insensitive search could be better, but exact match is fine for now)
+            const paintingToSelect = paintings.find(p => p.title === operaTitle);
+
+            if (paintingToSelect) {
+                // Select the painting
+                selectedPaintings.push(paintingToSelect);
+
+                // Update UI Feedback
+                updateFeedback();
+
+                // Open the selector accordion
+                if (selectorContent && toggleBtn) {
+                    selectorContent.classList.remove('collapsed');
+                    toggleBtn.classList.add('active');
+                }
+
+                // Scroll to the page containing this painting
+                const pIndex = paintings.findIndex(p => p.title === operaTitle);
+                if (pIndex >= 0) {
+                    const targetPage = Math.floor(pIndex / itemsPerPage) + 1;
+                    if (targetPage !== currentPage) {
+                        currentPage = targetPage;
+                        renderGrid(currentPage);
+                    }
+
+                    // Re-apply visual selection class since renderGrid was called
+                    // We need to wait for renderGrid to finish, practically it's synchronous here
+                    const allItems = document.querySelectorAll('.painting-grid-item');
+                    // The renderGrid function already checks selectedPaintings, so it should be fine.
+                    // But let's double check if we need to force re-render if page didn't change
+                    if (targetPage === 1) renderGrid(currentPage);
+                }
+
+                // Pre-fill Message
+                const messageArea = document.getElementById('message');
+                if (messageArea) {
+                    messageArea.value = `Salve, vorrei ricevere maggiori informazioni sul quadro "${operaTitle}".`;
+                }
+            }
+        }
     }
 
     // Form Submission with FormSubmit.co (AJAX)
@@ -181,4 +240,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         });
     }
+
+    // Listen for Language Changes to re-render grid/feedback
+    window.addEventListener('languageChanged', () => {
+        // Re-render grid to update titles
+        if (typeof renderGrid === 'function' && typeof currentPage !== 'undefined') {
+            renderGrid(currentPage);
+        }
+        // Update feedback text
+        if (typeof updateFeedback === 'function') {
+            updateFeedback();
+        }
+    });
 });
