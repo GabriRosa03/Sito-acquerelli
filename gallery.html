@@ -72,31 +72,65 @@
 
     <!-- Lightbox -->
     <div id="lightbox" class="lightbox">
-        <span class="lightbox-close">&times;</span>
-        <span id="lightbox-share-mobile" class="lightbox-share-mobile">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="18" cy="5" r="3"></circle>
-                <circle cx="6" cy="12" r="3"></circle>
-                <circle cx="18" cy="19" r="3"></circle>
-                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-            </svg>
-            <span class="share-text">Condividi</span>
-        </span>
-        <div class="lightbox-content">
-            <img id="lightbox-img" src="" alt="">
-            <div class="lightbox-info">
-                <h2 id="lightbox-title"></h2>
-                <div id="lightbox-info"></div>
+        <!-- Header Fixed (Share left, Close right) -->
+        <div class="lightbox-header">
+            <button id="lightbox-share-btn" class="header-icon-btn" aria-label="Condividi">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+            </button>
+            <button id="lightbox-close-btn" class="header-icon-btn" aria-label="Chiudi">&times;</button>
+        </div>
+
+        <!-- Scrollable Content Wrapper -->
+        <div class="lightbox-scroll-container">
+            <div class="lightbox-content">
+
+                <!-- Top Text Section -->
+                <div class="lightbox-text-top">
+                    <h2 id="lightbox-title"></h2>
+                    <div id="lightbox-description"></div>
+                </div>
+
+                <!-- Image Container -->
+                <div class="lightbox-image-container">
+                    <img id="lightbox-img" src="" alt="">
+                </div>
+
+                <!-- Bottom Actions Section -->
+                <!-- Like Button Container (Moved between Image and CTA) -->
+                <div id="lightbox-like-container" class="lightbox-likes-wrapper"></div>
+
+                <!-- Primary CTA -->
+                <a id="lightbox-cta" href="#" class="btn-inquiry-primary">Richiedi Informazioni</a>
+
+                <!-- Secondary Nav (Arrows Corners, Counter Center) -->
+                <div class="lightbox-secondary-nav">
+                    <button id="lightbox-prev" class="nav-arrow-btn" aria-label="Precedente">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+
+                    <!-- Counter -->
+                    <span id="lightbox-counter" class="lightbox-counter"></span>
+
+                    <button id="lightbox-next" class="nav-arrow-btn" aria-label="Successivo">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
-        <!-- Fixed Navigation Buttons -->
-        <div class="lightbox-nav-fixed">
-            <button id="lightbox-prev" aria-label="Precedente">&lt;</button>
-            <span id="lightbox-counter" class="lightbox-counter"></span>
-            <button id="lightbox-next" aria-label="Successivo">&gt;</button>
-        </div>
+    </div>
     </div>
 
     <!-- Footer -->

@@ -52,6 +52,20 @@ function loadGallery() {
     const paintingId = likeSystem.getPaintingId(painting);
     const hasLiked = likeSystem.hasUserLiked(paintingId);
 
+    // Mobile info Header (Title + Like Count for Mobile - Read Only)
+    const mobileHeader = document.createElement('div');
+    mobileHeader.className = 'mobile-info-header';
+    mobileHeader.innerHTML = `
+      <h3>${title}</h3>
+      <div class="mobile-heart-display ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" style="display: flex; align-items: center; justify-content: center; min-width: 30px; min-height: 30px;">
+          <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span class="like-count" data-painting-id="${paintingId}" style="margin-left: 5px; font-size: 0.9rem; color: #8E1C14; font-weight: 700;">0</span>
+      </div>
+    `;
+
+    // Standard Desktop Info
     infoDiv.innerHTML = `
             <h3>${title}</h3>
             <p class="painting-description">${description}</p>
@@ -66,11 +80,47 @@ function loadGallery() {
             </div>
         `;
 
+    // Insert mobile header at the top of infoDiv, but we need to manage innerHTML carefully. 
+    // Actually, innerHTML overwrote everything. Let's prepend or reconstruct.
+    // Better strategy: construct innerHTML then prepend the mobile header if needed, or structured insert.
+    // Let's use the provided structure and hide elements via CSS as planned.
+
+    // We already set innerHTML above for desktop. Now let's prepend the mobile header.
+    // BUT wait, on desktop we see Title in h3. on mobile we see Title in mobileHeader h3. 
+    // We should hide the "standard" h3 on mobile via CSS if we have it in mobileHeader.
+    // Or simpler: put the mobile header inside.
+
+    infoDiv.innerHTML = ''; // Reset
+    infoDiv.appendChild(mobileHeader);
+
+    const desktopContent = document.createElement('div');
+    desktopContent.innerHTML = `
+            <h3 class="desktop-title">${title}</h3> <!-- Class to hide on mobile if needed, or just let valid CSS handle -->
+            <p class="painting-description">${description}</p>
+            <div class="painting-actions">
+                <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${index}">
+                   <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span class="like-count" data-painting-id="${paintingId}">0</span>
+                </button>
+                <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">${btnText}</a>
+            </div>
+    `;
+    // We need to append the children of desktopContent
+    while (desktopContent.firstChild) {
+      infoDiv.appendChild(desktopContent.firstChild);
+    }
+
     card.appendChild(img);
     card.appendChild(infoDiv);
 
     // Click per aprire lightbox
     img.addEventListener('click', () => {
+      openLightbox(index);
+    });
+
+    mobileHeader.addEventListener('click', () => {
       openLightbox(index);
     });
 
@@ -118,86 +168,80 @@ async function loadAllLikes() {
 }
 
 function updateLikeCounter(paintingId, count) {
+  const safeCount = count || 0;
+
+  // Standard buttons
   const counters = document.querySelectorAll(`.like-count[data-painting-id="${paintingId}"]`);
   counters.forEach(counter => {
-    counter.textContent = count || 0;
+    counter.textContent = safeCount;
   });
+
+  // Mobile indicators (previously mobile-like-indicator, now inline)
+  // Our new structure uses .like-count inside .mobile-heart-display which has data-painting-id.
+  // The above selector `.like-count[data-painting-id="${paintingId}"]` ALREADY catches the span inside the mobile div 
+  // because I added the data attribute to the SPAN in the new HTML.
+  // So no extra code needed here for the number.
 }
 
 function setupLikeButtons() {
   const likeButtons = document.querySelectorAll('.btn-like');
 
   likeButtons.forEach(button => {
-    button.addEventListener('click', async (e) => {
-      e.stopPropagation(); // Prevent opening lightbox
-
-      const paintingId = button.dataset.paintingId;
-      const paintingIndex = parseInt(button.dataset.index);
-      const painting = paintings[paintingIndex];
-
-      // Disable button during request
-      button.disabled = true;
-
-      try {
-        // Toggle like
-        const isNowLiked = await likeSystem.toggleLike(painting);
-
-        // Update button state
-        if (isNowLiked) {
-          button.classList.add('liked');
-          // Heart animation
-          button.classList.add('heart-pop');
-          setTimeout(() => button.classList.remove('heart-pop'), 300);
-        } else {
-          button.classList.remove('liked');
-        }
-
-        // The counter will be updated automatically by the real-time listener
-      } catch (error) {
-        console.error('Errore nel toggle del like:', error);
-        alert('Errore nel salvare il like. Riprova.');
-      } finally {
-        button.disabled = false;
-      }
-    });
+    // Avoid double binding if called multiple times, though here it's called once per load
+    button.removeEventListener('click', handleLikeClick);
+    button.addEventListener('click', handleLikeClick);
   });
 }
 
-function setupLightboxLikeButton() {
-  const lightboxLikeBtn = document.getElementById('lightbox-like-btn');
+// Extracted handler to use for both grid and lightbox buttons
+async function handleLikeClick(e) {
+  e.stopPropagation(); // Prevent opening lightbox
 
-  if (lightboxLikeBtn) {
-    // Remove old listener if exists
-    const newBtn = lightboxLikeBtn.cloneNode(true);
-    lightboxLikeBtn.parentNode.replaceChild(newBtn, lightboxLikeBtn);
+  const button = e.currentTarget;
+  const paintingId = button.dataset.paintingId;
+  const paintingIndex = parseInt(button.dataset.index);
+  const painting = paintings[paintingIndex];
 
-    newBtn.addEventListener('click', async (e) => {
-      e.stopPropagation();
+  // Disable button during request
+  button.disabled = true;
 
-      const paintingId = newBtn.dataset.paintingId;
-      const paintingIndex = parseInt(newBtn.dataset.index);
-      const painting = paintings[paintingIndex];
+  try {
+    // Toggle like
+    const isNowLiked = await likeSystem.toggleLike(painting);
 
-      newBtn.disabled = true;
+    // Update button state (find ALL buttons for this painting to sync them)
+    // Select both .btn-like AND .mobile-heart-display
+    const relatedButtons = document.querySelectorAll(`.btn-like[data-painting-id="${paintingId}"], .mobile-heart-display[data-painting-id="${paintingId}"]`);
 
-      try {
-        const isNowLiked = await likeSystem.toggleLike(painting);
-
-        if (isNowLiked) {
-          newBtn.classList.add('liked');
-          newBtn.classList.add('heart-pop');
-          setTimeout(() => newBtn.classList.remove('heart-pop'), 300);
-        } else {
-          newBtn.classList.remove('liked');
+    relatedButtons.forEach(btn => {
+      if (isNowLiked) {
+        btn.classList.add('liked');
+        // Only add animation to interactive buttons
+        if (btn.classList.contains('btn-like')) {
+          btn.classList.add('heart-pop');
+          setTimeout(() => btn.classList.remove('heart-pop'), 300);
         }
-      } catch (error) {
-        console.error('Errore nel toggle del like:', error);
-        alert('Errore nel salvare il like. Riprova.');
-      } finally {
-        newBtn.disabled = false;
+      } else {
+        btn.classList.remove('liked');
       }
     });
+
+    // The counter will be updated automatically by the real-time listener
+  } catch (error) {
+    console.error('Errore nel toggle del like:', error);
+    alert('Errore nel salvare il like. Riprova.');
+  } finally {
+    button.disabled = false;
   }
+}
+
+function setupLightboxLikeButton() {
+  // Re-bind all like buttons, including new ones in lightbox
+  const likeButtons = document.querySelectorAll('#lightbox .btn-like');
+  likeButtons.forEach(button => {
+    button.removeEventListener('click', handleLikeClick);
+    button.addEventListener('click', handleLikeClick);
+  });
 }
 
 // Lightbox
@@ -208,21 +252,32 @@ function openLightbox(index) {
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxTitle = document.getElementById('lightbox-title');
-  const lightboxInfo = document.getElementById('lightbox-info');
+  const lightboxInfo = document.getElementById('lightbox-info'); // This is the inner container div
 
-  if (!lightbox || !lightboxImg || !lightboxTitle || !lightboxInfo) return;
+  if (!lightbox || !lightboxImg || !lightboxTitle) return;
 
   updateLightboxContent(painting);
 
   lightbox.classList.add('active');
   document.body.style.overflow = 'hidden';
+
+  // Immersive Mode: Ensure header is hidden if we want full immersion, 
+  // but CSS fullscreen handles most.
+
+  // Add history state for back button support
+  history.pushState({ lightboxOpen: true }, '', '#lightbox');
 }
 
 function updateLightboxContent(painting) {
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxTitle = document.getElementById('lightbox-title');
-  const lightboxInfo = document.getElementById('lightbox-info');
+  const lightboxDescription = document.getElementById('lightbox-description');
   const lightboxCounter = document.getElementById('lightbox-counter');
+
+  // New Layout Elements
+  const likeContainer = document.getElementById('lightbox-like-container');
+  const shareBtn = document.getElementById('lightbox-share-btn');
+  const ctaBtn = document.getElementById('lightbox-cta');
 
   const { titleKey, descKey } = getLangKeys();
   const title = painting[titleKey] || painting.title;
@@ -231,11 +286,20 @@ function updateLightboxContent(painting) {
   // Buttons text
   const lang = localStorage.getItem('site_lang') || 'it';
   const btnContactText = (typeof translations !== 'undefined' && translations[lang]) ? translations[lang]['gallery.btn_contact'] : "Richiedi Informazioni";
-  const btnShareText = (typeof translations !== 'undefined' && translations[lang]) ? translations[lang]['gallery.btn_share'] : "Condividi";
 
   lightboxImg.src = painting.src;
   lightboxImg.alt = painting.alt || title;
+
+  // Reset Zoom
+  lightboxImg.classList.remove('zoomed');
+  lightboxImg.style.transform = '';
+
   lightboxTitle.textContent = title;
+
+  // Populate Description
+  if (lightboxDescription) {
+    lightboxDescription.textContent = description;
+  }
 
   if (lightboxCounter) {
     lightboxCounter.textContent = `${currentPaintingIndex + 1} / ${paintings.length}`;
@@ -245,20 +309,54 @@ function updateLightboxContent(painting) {
   const paintingId = likeSystem.getPaintingId(painting);
   const hasLiked = likeSystem.hasUserLiked(paintingId);
 
-  lightboxInfo.innerHTML = `
-    <p>${description}</p>
-    <div class="painting-actions" style="justify-content: center; margin-top: 1.5rem;">
-        <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${currentPaintingIndex}" id="lightbox-like-btn">
+  // Update Like Button in Secondary Nav
+  if (likeContainer) {
+    likeContainer.innerHTML = `
+        <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${currentPaintingIndex}">
             <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-            <span class="like-count" data-painting-id="${paintingId}">0</span>
+            <span class="like-count" data-painting-id="${paintingId}">...</span>
         </button>
-        <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">${btnContactText}</a>
-    </div>
-  `;
+      `;
+  }
 
-  // Setup like button in lightbox
+  // Update CTA Button
+  if (ctaBtn) {
+    ctaBtn.href = `contatti.html?opera=${encodeURIComponent(painting.title)}`;
+    ctaBtn.textContent = btnContactText;
+  }
+
+  // Bind Share Button
+  if (shareBtn) {
+    shareBtn.onclick = (e) => {
+      e.stopPropagation();
+      sharePainting(title);
+    };
+  }
+
+  // Detect vertical painting and optimize layout
+  lightboxImg.onload = () => {
+    const isVertical = lightboxImg.naturalHeight > lightboxImg.naturalWidth * 1.3;
+    const lightboxContent = document.querySelector('.lightbox-content');
+
+    if (isVertical) {
+      lightboxImg.classList.add('vertical-painting');
+      if (lightboxContent) {
+        lightboxContent.classList.add('has-vertical-painting');
+      }
+    } else {
+      lightboxImg.classList.remove('vertical-painting');
+      if (lightboxContent) {
+        lightboxContent.classList.remove('has-vertical-painting');
+      }
+    }
+  };
+
+  // Refresh counters immediately
+  likeSystem.getLikes(painting).then(c => updateLikeCounter(paintingId, c));
+
+  // Setup listeners for NEW buttons
   setupLightboxLikeButton();
 }
 
@@ -309,8 +407,30 @@ function closeLightbox() {
   const lightbox = document.getElementById('lightbox');
   if (!lightbox) return;
 
-  lightbox.classList.remove('active');
-  document.body.style.overflow = '';
+  // Add closing class to trigger animation
+  const scrollContainer = lightbox.querySelector('.lightbox-scroll-container');
+  if (scrollContainer) {
+    scrollContainer.classList.add('closing');
+
+    // Wait for animation to finish (400ms match CSS)
+    setTimeout(() => {
+      lightbox.classList.remove('active');
+      scrollContainer.classList.remove('closing');
+      document.body.style.overflow = '';
+    }, 350); // Slightly less than 400ms to feel snappy and avoid flash
+  } else {
+    // Fallback if structure not found
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Handle History State
+  if (history.state && history.state.lightboxOpen) {
+    history.back();
+  } else if (window.location.hash === '#lightbox') {
+    // Clean up hash if present differently
+    history.back();
+  }
 }
 
 // Event listeners
@@ -318,18 +438,108 @@ document.addEventListener('DOMContentLoaded', () => {
   loadGallery();
 
   // Chiudi lightbox
-  const lightboxClose = document.querySelector('.lightbox-close');
+  const lightboxClose = document.getElementById('lightbox-close-btn');
   if (lightboxClose) {
     lightboxClose.addEventListener('click', closeLightbox);
   }
 
+  // History API - Back button closes lightbox
+  window.addEventListener('popstate', (event) => {
+    const lightbox = document.getElementById('lightbox');
+    if (lightbox && lightbox.classList.contains('active')) {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
   const lightbox = document.getElementById('lightbox');
   if (lightbox) {
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) {
-        closeLightbox();
+    // Note: We removed "Click outside to close" because the new layout is a full-screen scrollable page.
+    // Accidental clicks on the background while scrolling were too likely.
+    // Users should use the "X" button or Back button.
+
+    // Gestures Logic (Swipe & Pinch)
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    // Pinch variables
+    let initialDistance = 0;
+    let currentScale = 1;
+    let isPinching = false;
+    const lightboxImg = document.getElementById('lightbox-img');
+
+    lightbox.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+      } else if (e.touches.length === 2) {
+        isPinching = true;
+        initialDistance = Math.hypot(
+          e.touches[0].pageX - e.touches[1].pageX,
+          e.touches[0].pageY - e.touches[1].pageY
+        );
+      }
+    }, { passive: false });
+
+    lightbox.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 2 && isPinching) {
+        e.preventDefault(); // Prevent page scroll while zooming
+        const currentDistance = Math.hypot(
+          e.touches[0].pageX - e.touches[1].pageX,
+          e.touches[0].pageY - e.touches[1].pageY
+        );
+
+        // Limit zoom
+        let scaleDiff = currentDistance / initialDistance;
+        let newScale = Math.max(1, Math.min(currentScale * scaleDiff, 3));
+
+        if (lightboxImg) {
+          lightboxImg.style.transform = `scale(${newScale})`;
+        }
+      }
+    }, { passive: false });
+
+    lightbox.addEventListener('touchend', (e) => {
+      if (isPinching) {
+        // Reset Zoom on release for creating a "Lens" feel, or stay zoomed?
+        // Current logic: Reset to avoid complex panning logic.
+        if (e.touches.length < 2) {
+          isPinching = false;
+          if (lightboxImg) {
+            lightboxImg.style.transform = '';
+            lightboxImg.classList.remove('zoomed');
+            currentScale = 1;
+          }
+        }
+        return;
+      }
+
+      if (e.changedTouches.length === 1) {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        handleGesture();
       }
     });
+
+    function handleGesture() {
+      const xDiff = touchEndX - touchStartX;
+      const yDiff = touchEndY - touchStartY;
+
+      // Thresholds
+      if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        // Horizontal Swipe
+        if (Math.abs(xDiff) > 50) { // Min swipe distance
+          if (xDiff > 0) {
+            navigateLightbox(-1); // Right swipe -> Prev
+          } else {
+            navigateLightbox(1); // Left swipe -> Next
+          }
+        }
+      }
+      // Removed Vertical Swipe (Down) to Close to allow natural scrolling
+    }
   }
 
   // Navigation Buttons
@@ -470,18 +680,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ========================================
   // MOBILE SHARE BUTTON LISTENER
   // ========================================
-  const mobileShareBtn = document.getElementById('lightbox-share-mobile');
-  if (mobileShareBtn) {
-    mobileShareBtn.addEventListener('click', (e) => {
-      // Prevent bubbling if necessary, though it's separate from content
-      e.stopPropagation();
 
-      // Use currentPaintingIndex to get title
-      if (typeof currentPaintingIndex !== 'undefined' && paintings[currentPaintingIndex]) {
-        sharePainting(paintings[currentPaintingIndex].title);
-      }
-    });
-  }
 
   // ========================================
   // IMAGE PROTECTION (No Right Click / No Drag)
