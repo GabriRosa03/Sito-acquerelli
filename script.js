@@ -447,8 +447,19 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('popstate', (event) => {
     const lightbox = document.getElementById('lightbox');
     if (lightbox && lightbox.classList.contains('active')) {
-      lightbox.classList.remove('active');
-      document.body.style.overflow = '';
+      // VISUAL CLOSE with animation
+      const scrollContainer = lightbox.querySelector('.lightbox-scroll-container');
+      if (scrollContainer) {
+        scrollContainer.classList.add('closing');
+        setTimeout(() => {
+          lightbox.classList.remove('active');
+          scrollContainer.classList.remove('closing');
+          document.body.style.overflow = '';
+        }, 350);
+      } else {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
     }
   });
 
@@ -606,17 +617,48 @@ document.addEventListener('DOMContentLoaded', () => {
       const x = touch.clientX - rect.left;
       const y = touch.clientY - rect.top;
 
-      // Position magnifier at touch point
-      const lensSize = 120; // Size of magnifier
+      // Larger magnifier size
+      const lensSize = 250;
+      const offset = 80; // Distance from finger
+
+      // Direct position is the touch point (snappy follow)
       magnifier.style.left = `${x}px`;
       magnifier.style.top = `${y}px`;
 
-      // Calculate background position for zoom effect
-      const bgX = -x * 2 + lensSize / 2; // 2x zoom
-      const bgY = -y * 2 + lensSize / 2;
+      // Calculate the offset based on side
+      const isRightSide = x > rect.width / 2;
+      let targetOffsetX, targetOffsetY;
+
+      if (isRightSide) {
+        // Touch on right -> Lens moves to the left of the finger
+        targetOffsetX = -lensSize - offset;
+      } else {
+        // Touch on left -> Lens moves to the right of the finger
+        targetOffsetX = offset;
+      }
+
+      // Vertical offset: slightly above the finger center
+      targetOffsetY = -lensSize / 2 - offset;
+
+      // Boundary clamping: ensure the lens stays within the image rectangle
+      const minOffsetX = -x;
+      const maxOffsetX = rect.width - lensSize - x;
+      const minOffsetY = -y;
+      const maxOffsetY = rect.height - lensSize - y;
+
+      targetOffsetX = Math.max(minOffsetX, Math.min(targetOffsetX, maxOffsetX));
+      targetOffsetY = Math.max(minOffsetY, Math.min(targetOffsetY, maxOffsetY));
+
+      // Update CSS variables for the smooth transform transition (defined in CSS)
+      magnifier.style.setProperty('--offset-x', `${targetOffsetX}px`);
+      magnifier.style.setProperty('--offset-y', `${targetOffsetY}px`);
+
+      // Calculate background position for 3x zoom
+      const bgX = -x * 3 + lensSize / 2;
+      const bgY = -y * 3 + lensSize / 2;
 
       magnifier.style.backgroundImage = `url('${lightboxImg.src}')`;
-      magnifier.style.backgroundSize = `${rect.width * 2}px ${rect.height * 2}px`;
+      magnifier.style.backgroundSize = `${rect.width * 3}px ${rect.height * 3}px`;
       magnifier.style.backgroundPosition = `${bgX}px ${bgY}px`;
     }
 

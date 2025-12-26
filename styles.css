@@ -2450,29 +2450,36 @@ header.header-hidden {
    ======================================== */
 .magnifier-lens {
   position: absolute;
-  width: 120px;
-  height: 120px;
-  border: 3px solid rgba(255, 255, 255, 0.8);
+  width: 250px;
+  height: 250px;
+  border: 4px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   cursor: none;
   pointer-events: none;
   z-index: 150;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
-    inset 0 0 20px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4),
+    inset 0 0 30px rgba(255, 255, 255, 0.3);
   background-repeat: no-repeat;
   backdrop-filter: blur(0);
-  animation: magnifierAppear 0.2s ease-out;
+
+  /* Initial offset variables */
+  --offset-x: 0px;
+  --offset-y: 0px;
+  transform: translate(var(--offset-x), var(--offset-y)) scale(1);
+
+  /* Smooth transition for transform (specifically the side swap) */
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation: magnifierAppear 0.25s ease-out;
 }
 
 @keyframes magnifierAppear {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
+    transform: translate(var(--offset-x), var(--offset-y)) scale(0.5);
   }
 
   to {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(var(--offset-x), var(--offset-y)) scale(1);
   }
 }
