@@ -757,18 +757,17 @@ h2 {
 
 .header-icon-btn {
   pointer-events: auto;
-  background: rgba(255, 255, 255, 0.8);
-  /* Pill */
+  background: white;
   border: none;
   cursor: pointer;
-  color: var(--color-ink-dark);
+  color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  transition: transform 0.2s;
+  transition: transform 0.2s, background 0.2s;
   font-size: 2rem;
   padding: 0;
   line-height: 1;
@@ -780,41 +779,43 @@ h2 {
   height: 20px;
 }
 
+.header-icon-btn img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  opacity: 0.6;
+}
+
 .header-icon-btn:hover {
   transform: scale(1.1);
   color: var(--color-primary-red);
-  background: white;
 }
 
 #lightbox-close-btn {
   font-family: var(--font-casual);
   font-size: 2.2rem;
-  padding-bottom: 4px;
 }
 
 /* Scrollable Container (The Sheet) */
 .lightbox-scroll-container {
   width: 100%;
   height: 90%;
-  /* 90% Height as requested */
   background-image: url('images/sfondoQuadro2.png');
-  /* Paper Background */
   background-color: #fafafa;
   background-size: cover;
   background-position: center;
   border-radius: 20px 20px 0 0;
-  /* Rounded Top Corners */
   box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.3);
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 60px;
-  /* Space underneath the header buttons */
-  padding-bottom: 40px;
+  padding-top: 50px;
+  /* Reduced from 60px */
+  padding-bottom: 80px;
+  /* Increased for nav bar space */
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  /* Animation for slide up */
   animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -845,128 +846,138 @@ h2 {
 .lightbox-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  padding: 0 20px;
-  min-height: 100%;
+  padding: 0 20px 140px 20px;
+  /* Bottom padding for fixed buttons */
+  height: 100%;
+  /* Full height for flex */
 }
 
 /* Top Text Section */
 .lightbox-text-top {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  /* Reduced from 1.5rem */
   width: 100%;
 }
 
 #lightbox-title {
   font-family: var(--font-display);
-  font-size: 1.8rem;
+  font-size: 1.7rem;
+  /* Slightly smaller */
   color: var(--color-primary-red);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   line-height: 1.2;
 }
 
 #lightbox-description {
   font-family: var(--font-serif);
-  font-size: 1rem;
+  font-size: 0.95rem;
+  /* Slightly smaller */
   color: #555;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
-/* Image Container */
+/* Image Container - CENTERED IN AVAILABLE SPACE */
 .lightbox-image-container {
   width: 100%;
+  flex: 1;
+  /* Take all available space */
   display: flex;
   justify-content: center;
-  margin-bottom: 2rem;
+  align-items: center;
+  /* Center vertically */
   position: relative;
   min-height: 200px;
+  margin-bottom: 0;
+  /* No margin, buttons are fixed */
 }
 
 #lightbox-img {
   width: 100%;
-  height: auto;
-  max-height: 70vh;
+  height: 100%;
+  /* Fill container */
+  max-width: 100%;
+  max-height: 100%;
+  /* Adaptive to available space */
   object-fit: contain;
   border-radius: 4px;
-  box-shadow: var(--shadow-medium);
   transition: transform 0.2s;
 }
 
-/* Vertical Painting Optimization */
-#lightbox-img.vertical-painting {
-  max-height: 82vh;
-  /* More space for vertical paintings */
-}
-
+/* Vertical Painting - Adapts naturally to available space */
 .lightbox-content.has-vertical-painting .lightbox-text-top {
-  margin-bottom: 1rem;
-  /* Tighter spacing */
+  margin-bottom: 0.6rem;
 }
 
 .lightbox-content.has-vertical-painting #lightbox-title {
-  font-size: 1.6rem;
-  /* Slightly smaller */
+  font-size: 1.5rem;
 }
 
 .lightbox-content.has-vertical-painting #lightbox-description {
-  font-size: 0.9rem;
-  /* More compact */
+  font-size: 0.85rem;
+  line-height: 1.3;
 }
 
-/* Bottom Actions Section */
+/* Bottom Actions Section - FIXED AT BOTTOM */
 .lightbox-actions-bottom {
+  position: fixed;
+  bottom: 60px;
+  /* Above navigation bar (60px height) */
+  left: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 0;
-  /* Removing margin to fit flush at bottom if needed */
-  flex-grow: 1;
-  /* Push to bottom if container has space */
-  justify-content: flex-end;
-  /* Align to bottom */
-  padding-bottom: 20px;
-  /* Safe area */
+  gap: 0.6rem;
+  /* Tight spacing */
+  padding: 12px 20px;
+  background: linear-gradient(to top, rgba(250, 250, 250, 0.98), rgba(250, 250, 250, 0.95));
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 2025;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
 }
 
-/* Like Button Wrapper (Prominent but Secondary) */
+/* Like Button Wrapper */
 .lightbox-likes-wrapper {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   display: flex;
   justify-content: center;
   width: 100%;
+  max-width: 600px;
+  /* Constrain width */
 }
 
-/* Style the Like Button - Elegant Pill Design */
+/* Style the Like Button - Compact */
 #lightbox-like-container .btn-like {
   background: white;
   border: 2px solid #e8e8e8;
-  border-radius: 30px;
-  /* Pill shape */
-  padding: 10px 20px;
-  min-width: 100px;
+  border-radius: 22px;
+  padding: 6px 12px;
+  /* Even smaller */
+  min-width: 75px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 5px;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 #lightbox-like-container .btn-like:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   border-color: #d0d0d0;
 }
 
 #lightbox-like-container .btn-like svg {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  /* Smaller */
+  height: 18px;
   fill: none;
   stroke: #666;
   stroke-width: 2;
@@ -976,7 +987,8 @@ h2 {
 
 #lightbox-like-container .btn-like .like-count {
   font-family: var(--font-serif);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  /* Smaller */
   color: #666;
   font-weight: 500;
   transition: all 0.3s;
@@ -999,20 +1011,22 @@ h2 {
 
 .btn-inquiry-primary {
   width: 100%;
+  max-width: 600px;
+  /* Constrain width */
   background-color: var(--color-primary-red);
-  /* Red CTA */
   color: white;
-  padding: 18px;
-  border-radius: 12px;
-  /* Softer rounded corners */
+  padding: 11px;
+  /* Smaller */
+  border-radius: 8px;
   font-weight: 700;
   text-transform: uppercase;
   text-align: center;
   text-decoration: none;
   letter-spacing: 0.05em;
   font-family: var(--font-serif);
-  font-size: 1.1rem;
-  box-shadow: 0 4px 15px rgba(142, 28, 20, 0.25);
+  font-size: 0.95rem;
+  /* Smaller */
+  box-shadow: 0 2px 10px rgba(142, 28, 20, 0.15);
   transition: all 0.3s ease;
   display: block;
 }
@@ -1020,21 +1034,24 @@ h2 {
 .btn-inquiry-primary:hover {
   background-color: var(--color-primary-red-dark);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(142, 28, 20, 0.35);
+  box-shadow: 0 4px 14px rgba(142, 28, 20, 0.25);
   color: white;
 }
 
-/* Secondary Nav: Counter & Likes & Arrows */
+/* Secondary Nav: PINNED TO ABSOLUTE BOTTOM */
 .lightbox-secondary-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  /* Arrows in corners */
   align-items: center;
-  width: 100%;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding-top: 1.5rem;
-  margin-top: auto;
-  /* Push to very bottom of container */
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 16px 20px;
+  z-index: 2030;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
 
 
@@ -2288,4 +2305,174 @@ header.header-hidden {
 /* Ensure painting-actions in lightbox are centered */
 .lightbox-info .painting-actions {
   margin-top: 1.5rem;
+}
+
+/* ========================================
+   BACK TO TOP BUTTON
+   ======================================== */
+#back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background-color: var(--color-primary-red);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(142, 28, 20, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+
+#back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+#back-to-top:hover {
+  background-color: var(--color-primary-red-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(142, 28, 20, 0.4);
+}
+
+/* Hide back-to-top when lightbox is open */
+.lightbox.active~#back-to-top {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none;
+}
+
+/* ========================================
+   LIGHTBOX HEADER BUTTONS
+   ======================================== */
+.lightbox-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  padding-top: 30px;
+  z-index: 2040;
+  pointer-events: none;
+}
+
+.header-icon-btn {
+  pointer-events: auto;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 2rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+
+.header-icon-btn:hover {
+  transform: scale(1.1);
+  color: var(--color-primary-red);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.header-icon-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ========================================
+   DOUBLE-TAP LIKE ANIMATION
+   ======================================== */
+.like-heart-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+}
+
+.like-heart-overlay svg {
+  width: 100%;
+  height: 100%;
+  fill: var(--color-primary-red);
+  filter: drop-shadow(0 4px 12px rgba(142, 28, 20, 0.4));
+}
+
+/* White heart for unlike */
+.like-heart-overlay.unlike svg {
+  fill: white;
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-width: 1;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+/* Heart pulse animation */
+.like-heart-overlay.animate {
+  animation: likeHeartPulse 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes likeHeartPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ========================================
+   MAGNIFYING GLASS LENS
+   ======================================== */
+.magnifier-lens {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  cursor: none;
+  pointer-events: none;
+  z-index: 150;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.2);
+  background-repeat: no-repeat;
+  backdrop-filter: blur(0);
+  animation: magnifierAppear 0.2s ease-out;
+}
+
+@keyframes magnifierAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }

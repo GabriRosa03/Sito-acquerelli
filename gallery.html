@@ -72,23 +72,18 @@
 
     <!-- Lightbox -->
     <div id="lightbox" class="lightbox">
-        <!-- Header Fixed (Share left, Close right) -->
-        <div class="lightbox-header">
-            <button id="lightbox-share-btn" class="header-icon-btn" aria-label="Condividi">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="18" cy="5" r="3"></circle>
-                    <circle cx="6" cy="12" r="3"></circle>
-                    <circle cx="18" cy="19" r="3"></circle>
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-            </button>
-            <button id="lightbox-close-btn" class="header-icon-btn" aria-label="Chiudi">&times;</button>
-        </div>
-
         <!-- Scrollable Content Wrapper -->
         <div class="lightbox-scroll-container">
+            <!-- Header Fixed (Share left, Close right) -->
+            <div class="lightbox-header">
+                <button id="lightbox-share-btn" class="header-icon-btn" aria-label="Condividi">
+                    <img src="images/share.png" alt="Condividi" style="width: 19px; height: 19px;">
+                </button>
+                <button id="lightbox-close-btn" class="header-icon-btn" aria-label="Chiudi">
+                    <img src="images/close.png" alt="Chiudi" style="width: 20px; height: 20px; top: 10px;">
+                </button>
+            </div>
+
             <div class="lightbox-content">
 
                 <!-- Top Text Section -->

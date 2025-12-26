@@ -501,6 +501,133 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, { passive: false });
 
+    // Double-tap to Like functionality
+    let lastTap = 0;
+    const doubleTapDelay = 300; // ms
+
+    lightboxImg.addEventListener('touchend', (e) => {
+      const currentTime = new Date().getTime();
+      const tapLength = currentTime - lastTap;
+
+      if (tapLength < doubleTapDelay && tapLength > 0) {
+        // Double tap detected!
+        e.preventDefault();
+        handleDoubleTapLike();
+        lastTap = 0; // Reset to avoid triple-tap
+      } else {
+        lastTap = currentTime;
+      }
+    });
+
+    function handleDoubleTapLike() {
+      const likeBtn = document.querySelector('#lightbox-like-container .btn-like');
+      if (!likeBtn) return;
+
+      // Check current like state BEFORE clicking
+      const wasLiked = likeBtn.classList.contains('liked');
+
+      // Trigger like action
+      likeBtn.click();
+
+      // Show animated heart overlay with appropriate color
+      showLikeAnimation(!wasLiked); // Pass new state
+    }
+
+    function showLikeAnimation(isLiked) {
+      // Create heart overlay
+      const heartOverlay = document.createElement('div');
+      heartOverlay.className = 'like-heart-overlay';
+
+      // Add class based on like state
+      if (!isLiked) {
+        heartOverlay.classList.add('unlike');
+      }
+
+      heartOverlay.innerHTML = `
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      `;
+
+      const imageContainer = document.querySelector('.lightbox-image-container');
+      if (imageContainer) {
+        imageContainer.appendChild(heartOverlay);
+
+        // Trigger animation
+        setTimeout(() => heartOverlay.classList.add('animate'), 10);
+
+        // Remove after animation
+        setTimeout(() => {
+          heartOverlay.remove();
+        }, 1000);
+      }
+    }
+
+    // Magnifying Glass functionality
+    let magnifier = null;
+    let isMagnifying = false;
+
+    lightboxImg.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1 && !isPinching) {
+        // Single finger touch - activate magnifier
+        createMagnifier();
+        updateMagnifier(e.touches[0]);
+      }
+    });
+
+    lightboxImg.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 1 && magnifier && !isPinching) {
+        e.preventDefault();
+        updateMagnifier(e.touches[0]);
+      }
+    });
+
+    lightboxImg.addEventListener('touchend', () => {
+      removeMagnifier();
+    });
+
+    function createMagnifier() {
+      if (magnifier) return;
+
+      magnifier = document.createElement('div');
+      magnifier.className = 'magnifier-lens';
+
+      const imageContainer = document.querySelector('.lightbox-image-container');
+      if (imageContainer) {
+        imageContainer.appendChild(magnifier);
+        isMagnifying = true;
+      }
+    }
+
+    function updateMagnifier(touch) {
+      if (!magnifier || !lightboxImg) return;
+
+      const rect = lightboxImg.getBoundingClientRect();
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+
+      // Position magnifier at touch point
+      const lensSize = 120; // Size of magnifier
+      magnifier.style.left = `${x}px`;
+      magnifier.style.top = `${y}px`;
+
+      // Calculate background position for zoom effect
+      const bgX = -x * 2 + lensSize / 2; // 2x zoom
+      const bgY = -y * 2 + lensSize / 2;
+
+      magnifier.style.backgroundImage = `url('${lightboxImg.src}')`;
+      magnifier.style.backgroundSize = `${rect.width * 2}px ${rect.height * 2}px`;
+      magnifier.style.backgroundPosition = `${bgX}px ${bgY}px`;
+    }
+
+    function removeMagnifier() {
+      if (magnifier) {
+        magnifier.remove();
+        magnifier = null;
+        isMagnifying = false;
+      }
+    }
+
     lightbox.addEventListener('touchend', (e) => {
       if (isPinching) {
         // Reset Zoom on release for creating a "Lens" feel, or stay zoomed?
@@ -619,7 +746,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inject Back to Top Button
   const backToTopBtn = document.createElement('button');
   backToTopBtn.id = 'back-to-top';
-  backToTopBtn.innerHTML = '&#8679;'; // Up arrow
+  backToTopBtn.innerHTML = '<img src="images/arrowUp.svg" alt="Scroll to top" style="width: 21px; height: 21px; opacity: 0.8;">';
   backToTopBtn.ariaLabel = 'Torna in cima';
   document.body.appendChild(backToTopBtn);
 
