@@ -469,12 +469,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Accidental clicks on the background while scrolling were too likely.
     // Users should use the "X" button or Back button.
 
-    // Gestures Logic (Swipe & Pinch)
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
-
     // Pinch variables
     let initialDistance = 0;
     let currentScale = 1;
@@ -482,10 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightboxImg = document.getElementById('lightbox-img');
 
     lightbox.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
-      } else if (e.touches.length === 2) {
+      if (e.touches.length === 2) {
         isPinching = true;
         initialDistance = Math.hypot(
           e.touches[0].pageX - e.touches[1].pageX,
@@ -625,6 +616,32 @@ document.addEventListener('DOMContentLoaded', () => {
       magnifier.style.left = `${x}px`;
       magnifier.style.top = `${y}px`;
 
+      // Calculate actual rendered image dimensions (handling object-fit: contain)
+      const naturalRatio = lightboxImg.naturalWidth / lightboxImg.naturalHeight;
+      const boxWidth = rect.width;
+      const boxHeight = rect.height;
+      const boxRatio = boxWidth / boxHeight;
+
+      let renderedWidth, renderedHeight;
+      let imgOffsetX = 0;
+      let imgOffsetY = 0;
+
+      if (naturalRatio > boxRatio) {
+        // Image is constrained by width, has bars top/bottom
+        renderedWidth = boxWidth;
+        renderedHeight = boxWidth / naturalRatio;
+        imgOffsetY = (boxHeight - renderedHeight) / 2;
+      } else {
+        // Image is constrained by height, has bars left/right
+        renderedHeight = boxHeight;
+        renderedWidth = boxHeight * naturalRatio;
+        imgOffsetX = (boxWidth - renderedWidth) / 2;
+      }
+
+      // Adjust touch coordinates relative to the actual painting content
+      const contentX = x - imgOffsetX;
+      const contentY = y - imgOffsetY;
+
       // Calculate the offset based on side
       const isRightSide = x > rect.width / 2;
       let targetOffsetX, targetOffsetY;
@@ -653,12 +670,12 @@ document.addEventListener('DOMContentLoaded', () => {
       magnifier.style.setProperty('--offset-x', `${targetOffsetX}px`);
       magnifier.style.setProperty('--offset-y', `${targetOffsetY}px`);
 
-      // Calculate background position for 3x zoom
-      const bgX = -x * 3 + lensSize / 2;
-      const bgY = -y * 3 + lensSize / 2;
+      // Calculate background position relative to actual content for 3x zoom
+      const bgX = -contentX * 3 + lensSize / 2;
+      const bgY = -contentY * 3 + lensSize / 2;
 
       magnifier.style.backgroundImage = `url('${lightboxImg.src}')`;
-      magnifier.style.backgroundSize = `${rect.width * 3}px ${rect.height * 3}px`;
+      magnifier.style.backgroundSize = `${renderedWidth * 3}px ${renderedHeight * 3}px`;
       magnifier.style.backgroundPosition = `${bgX}px ${bgY}px`;
     }
 
@@ -684,31 +701,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return;
       }
-
-      if (e.changedTouches.length === 1) {
-        touchEndX = e.changedTouches[0].screenX;
-        touchEndY = e.changedTouches[0].screenY;
-        handleGesture();
-      }
     });
-
-    function handleGesture() {
-      const xDiff = touchEndX - touchStartX;
-      const yDiff = touchEndY - touchStartY;
-
-      // Thresholds
-      if (Math.abs(xDiff) > Math.abs(yDiff)) {
-        // Horizontal Swipe
-        if (Math.abs(xDiff) > 50) { // Min swipe distance
-          if (xDiff > 0) {
-            navigateLightbox(-1); // Right swipe -> Prev
-          } else {
-            navigateLightbox(1); // Left swipe -> Next
-          }
-        }
-      }
-      // Removed Vertical Swipe (Down) to Close to allow natural scrolling
-    }
   }
 
   // Navigation Buttons
