@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const displayTitle = getPaintingTitle(painting);
 
             gridItem.innerHTML = `
-                <img src="${painting.src}" alt="${painting.alt}">
+                <img src="${painting.thumb || painting.src}" alt="${painting.alt}">
                 <p class="painting-grid-title">${displayTitle}</p>
             `;
 
@@ -80,20 +80,40 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateFeedback() {
-        if (selectedPaintings.length === 0) {
-            feedback.textContent = '';
-            paintingInput.value = '';
-        } else {
-            const titles = selectedPaintings.map(p => getPaintingTitle(p));
-            // Localize feedback prefix
-            const lang = localStorage.getItem('site_lang') || 'it';
-            const prefix = lang === 'en' ? "Selected: " : "Hai selezionato: ";
+        const thumbnailsContainer = document.getElementById('selected-thumbnails');
+        if (!thumbnailsContainer) return;
 
-            feedback.textContent = `${prefix}${titles.join(', ')}`;
-            // Keep the hidden input with original Italian titles for admin reference if preferred, 
-            // or use the localized ones. Let's use localized for consistency with user intent.
-            paintingInput.value = titles.join(', ');
+        thumbnailsContainer.innerHTML = '';
+
+        if (selectedPaintings.length === 0) {
+            paintingInput.value = '';
+            return;
         }
+
+        const titles = selectedPaintings.map(p => getPaintingTitle(p));
+        paintingInput.value = titles.join(', ');
+
+        // Render thumbnails
+        selectedPaintings.forEach((painting) => {
+            const thumb = document.createElement('div');
+            thumb.className = 'thumb-item';
+            thumb.innerHTML = `
+                <img src="${painting.thumb || painting.src}" alt="${painting.alt}">
+                <button type="button" class="remove-thumb" title="Rimuovi">&times;</button>
+            `;
+
+            thumb.querySelector('.remove-thumb').addEventListener('click', (e) => {
+                e.stopPropagation();
+                const index = selectedPaintings.findIndex(p => p.src === painting.src);
+                if (index > -1) {
+                    selectedPaintings.splice(index, 1);
+                    updateFeedback();
+                    renderGrid(currentPage); // Refresh grid to remove selection checkmark
+                }
+            });
+
+            thumbnailsContainer.appendChild(thumb);
+        });
     }
 
     // Pagination Click Listeners

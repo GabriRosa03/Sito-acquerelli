@@ -43,7 +43,6 @@ const translations = {
         "contact.email": "Email *",
         "contact.interest": "Quadro di Interesse (opzionale)",
         "contact.select_btn": "Seleziona un quadro",
-        "contact.select_hint": "Clicca su un quadro per selezionarlo",
         "contact.back": "Indietro",
         "contact.next": "Avanti",
         "contact.message": "Messaggio *",
@@ -59,6 +58,8 @@ const translations = {
         "gallery.share_error": "Errore nella condivisione",
         "gallery.lightbox_prev": "Precedente",
         "gallery.lightbox_next": "Successivo",
+        "gallery.btn_room": "Vedi in Stanza",
+        "gallery.room_hint": "Puoi pizzicare per zoomare o trascinare per spostare il quadro sul muro",
 
         // Footer
         "footer.rights": "&copy; 2025 Davide Rosa - Tutti i diritti riservati"
@@ -123,6 +124,8 @@ const translations = {
         "gallery.share_error": "Error sharing",
         "gallery.lightbox_prev": "Previous",
         "gallery.lightbox_next": "Next",
+        "gallery.btn_room": "View in Room",
+        "gallery.room_hint": "Pinch to zoom or drag to move the painting on the wall",
 
         // Footer
         "footer.rights": "&copy; 2025 Davide Rosa - All rights reserved"

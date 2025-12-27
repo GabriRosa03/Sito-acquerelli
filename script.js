@@ -58,7 +58,7 @@ function loadGallery() {
     mobileHeader.innerHTML = `
       <h3>${title}</h3>
       <div class="mobile-heart-display ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" style="display: flex; align-items: center; justify-content: center; min-width: 30px; min-height: 30px;">
-          <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
+          <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px;">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
           <span class="like-count" data-painting-id="${paintingId}" style="margin-left: 5px; font-size: 0.9rem; color: #8E1C14; font-weight: 700;">0</span>
@@ -433,6 +433,128 @@ function closeLightbox() {
   }
 }
 
+function openRoomView() {
+  const overlay = document.getElementById('room-view-overlay');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const paintingOnWall = document.getElementById('painting-on-wall');
+
+  if (overlay && lightboxImg && paintingOnWall) {
+    paintingOnWall.src = lightboxImg.src;
+    overlay.classList.add('active');
+
+    // Reset position and scale
+    const container = document.querySelector('.painting-on-wall-container');
+    if (container) {
+      container.style.top = '40%';
+      container.style.left = '50%';
+      container.style.width = '30%';
+    }
+
+    // Initialize touch interactions for the room view
+    initRoomViewInteractions();
+  }
+}
+
+function closeRoomView() {
+  const overlay = document.getElementById('room-view-overlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+  }
+}
+
+function initRoomViewInteractions() {
+  const container = document.querySelector('.painting-on-wall-container');
+  if (!container) return;
+
+  let isDragging = false;
+  let startX, startY;
+  let currentTop = 40;
+  let currentLeft = 50;
+  let currentWidth = 30;
+
+  // Pinch zoom logic for room view
+  let initialDist = 0;
+  let initialWidth = 30;
+
+  container.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    } else if (e.touches.length === 2) {
+      isDragging = false;
+      initialDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      initialWidth = currentWidth;
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchmove', (e) => {
+    const overlay = document.getElementById('room-view-overlay');
+    if (!overlay || !overlay.classList.contains('active')) return;
+
+    if (e.touches.length === 1 && isDragging) {
+      e.preventDefault();
+      const dx = ((e.touches[0].clientX - startX) / window.innerWidth) * 100;
+      const dy = ((e.touches[0].clientY - startY) / window.innerHeight) * 100;
+
+      container.style.left = `${currentLeft + dx}%`;
+      container.style.top = `${currentTop + dy}%`;
+    } else if (e.touches.length === 2) {
+      e.preventDefault();
+      const currentDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const scale = currentDist / initialDist;
+      currentWidth = Math.max(10, Math.min(initialWidth * scale, 80));
+      container.style.width = `${currentWidth}%`;
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchend', (e) => {
+    if (isDragging) {
+      const topStr = container.style.top;
+      const leftStr = container.style.left;
+      if (topStr) currentTop = parseFloat(topStr);
+      if (leftStr) currentLeft = parseFloat(leftStr);
+      isDragging = false;
+    }
+  });
+
+  // Mouse interactions for desktop
+  container.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    const overlay = document.getElementById('room-view-overlay');
+    if (!overlay || !overlay.classList.contains('active')) return;
+
+    if (isDragging) {
+      const dx = ((e.clientX - startX) / window.innerWidth) * 100;
+      const dy = ((e.clientY - startY) / window.innerHeight) * 100;
+
+      container.style.left = `${currentLeft + dx}%`;
+      container.style.top = `${currentTop + dy}%`;
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDragging) {
+      const topStr = container.style.top;
+      const leftStr = container.style.left;
+      if (topStr) currentTop = parseFloat(topStr);
+      if (leftStr) currentLeft = parseFloat(leftStr);
+      isDragging = false;
+    }
+  });
+}
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
   loadGallery();
@@ -441,6 +563,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightboxClose = document.getElementById('lightbox-close-btn');
   if (lightboxClose) {
     lightboxClose.addEventListener('click', closeLightbox);
+  }
+
+  // Room View Button
+  const roomViewBtn = document.getElementById('lightbox-room-btn');
+  if (roomViewBtn) {
+    roomViewBtn.addEventListener('click', openRoomView);
+  }
+
+  // Room View Close
+  const roomViewClose = document.getElementById('room-view-close');
+  if (roomViewClose) {
+    roomViewClose.addEventListener('click', closeRoomView);
   }
 
   // History API - Back button closes lightbox

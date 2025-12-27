@@ -64,6 +64,14 @@
     <!-- Main Content -->
     <main>
         <div class="content-section">
+            <header class="page-header-title text-center">
+                <h2 data-translate="contact.title">Contattami</h2>
+                <p class="page-description" data-translate="contact.description">
+                    Questo sito è una galleria digitale delle mie opere. Non è previsto l'acquisto diretto online.
+                    Per informazioni su disponibilità, dettagli tecnici o collaborazioni, non esitare a contattarmi.
+                    Sarò felice di risponderti al più presto.
+                </p>
+            </header>
 
 
             <form class="contact-form mt-lg" id="contact-form">
@@ -80,33 +88,46 @@
                 <div class="form-group">
                     <label for="painting" data-translate="contact.interest">Quadro di Interesse (opzionale)</label>
                     <div class="collapsible-selector">
-                        <button type="button" id="toggle-selector" class="toggle-btn"
-                            data-translate="contact.select_btn">
-                            Seleziona un quadro <span class="arrow">▼</span>
+                        <button type="button" id="toggle-selector" class="toggle-btn">
+                            <span data-translate="contact.select_btn">Seleziona un quadro</span>
+                            <svg class="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
                         </button>
                         <div id="selector-content" class="selector-content collapsed">
-                            <p style="font-size: 0.9rem; color: var(--color-mist-gray); margin-bottom: 1rem;"
-                                data-translate="contact.select_hint">Clicca su
-                                un quadro per selezionarlo</p>
-                            <div id="painting-grid" class="painting-grid">
-                                <!-- Paintings will be dynamically inserted here -->
-                            </div>
-                            <div class="pagination-controls">
-                                <button type="button" id="prev-page" class="btn-page" disabled
-                                    data-translate="contact.back">Indietro</button>
-                                <span id="page-num">1</span>
-                                <button type="button" id="next-page" class="btn-page"
-                                    data-translate="contact.next">Avanti</button>
+                            <div class="selector-inner">
+                                <div id="painting-grid" class="painting-grid">
+                                    <!-- Paintings will be dynamically inserted here -->
+                                </div>
+                                <div class="pagination-controls">
+                                    <button type="button" id="prev-page" class="btn-page" disabled>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
+                                        </svg>
+                                    </button>
+                                    <span id="page-num">1</span>
+                                    <button type="button" id="next-page" class="btn-page">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <input type="hidden" id="painting" name="painting" value="">
-                    <div id="selection-feedback" class="selection-feedback"></div>
+                    <div id="selected-thumbnails" class="selected-thumbnails"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="message" data-translate="contact.message">Messaggio *</label>
-                    <textarea id="message" name="message" required></textarea>
+                    <textarea id="message" name="message"
+                        required>Buongiorno, vorrei ricevere informazioni su disponibilità e costi dei quadri selezionati. Grazie.</textarea>
                 </div>
 
                 <button type="submit" class="btn-submit" data-translate="contact.submit">Invia Messaggio</button>
@@ -114,22 +135,30 @@
 
             <!-- Social Media Section -->
             <div class="social-section mt-lg">
-                <h2 class="text-center" data-translate="contact.social">Seguimi sui Social</h2>
                 <div class="social-links">
-                    <a href="https://www.instagram.com/davide_rosa_watercolors" target="_blank"
-                        rel="noopener noreferrer" class="social-link">
-                        <img src="images/instagram.png" alt="Instagram">
-                        <span>Instagram</span>
-                    </a>
-                    <a href="https://www.facebook.com/daviderosa.art" target="_blank" rel="noopener noreferrer"
-                        class="social-link">
-                        <img src="images/facebook.png" alt="Facebook">
-                        <span>Facebook</span>
-                    </a>
-                    <a href="mailto:davide.rosa@example.com" class="social-link">
-                        <img src="images/email.png" alt="Email">
-                        <span>Email</span>
-                    </a>
+                    <div class="social-item">
+                        <a href="https://www.instagram.com/davide_rosa_watercolors" target="_blank"
+                            rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="social-svg">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <span class="social-label">Instagram</span>
+                    </div>
+                    <div class="social-item">
+                        <a href="mailto:davide.rosa@example.com" class="social-link" aria-label="Email">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="social-svg">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                </path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </a>
+                        <span class="social-label">Email</span>
+                    </div>
                 </div>
             </div>
         </div>
