@@ -213,6 +213,9 @@ async function handleLikeClick(e) {
     // Select both .btn-like AND .mobile-heart-display
     const relatedButtons = document.querySelectorAll(`.btn-like[data-painting-id="${paintingId}"], .mobile-heart-display[data-painting-id="${paintingId}"]`);
 
+    // Pass isNowLiked: true for Like, false for Unlike
+    triggerLikeCelebration(button, isNowLiked);
+
     relatedButtons.forEach(btn => {
       if (isNowLiked) {
         btn.classList.add('liked');
@@ -327,9 +330,18 @@ function updateLightboxContent(painting) {
     ctaBtn.textContent = btnContactText;
   }
 
-  // Bind Share Button
+  // Bind Share Button (Mobile & Desktop)
+  const shareBtnDesktop = document.getElementById('lightbox-share-btn-desktop');
+
   if (shareBtn) {
     shareBtn.onclick = (e) => {
+      e.stopPropagation();
+      sharePainting(title);
+    };
+  }
+
+  if (shareBtnDesktop) {
+    shareBtnDesktop.onclick = (e) => {
       e.stopPropagation();
       sharePainting(title);
     };
@@ -567,8 +579,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Room View Button
   const roomViewBtn = document.getElementById('lightbox-room-btn');
+  const roomViewBtnDesktop = document.getElementById('lightbox-room-btn-desktop');
+
   if (roomViewBtn) {
     roomViewBtn.addEventListener('click', openRoomView);
+  }
+  if (roomViewBtnDesktop) {
+    roomViewBtnDesktop.addEventListener('click', openRoomView);
   }
 
   // Room View Close
@@ -598,17 +615,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const lightbox = document.getElementById('lightbox');
-  if (lightbox) {
-    // Note: We removed "Click outside to close" because the new layout is a full-screen scrollable page.
-    // Accidental clicks on the background while scrolling were too likely.
-    // Users should use the "X" button or Back button.
+  const lightboxImg = document.getElementById('lightbox-img');
 
-    // Pinch variables
-    let initialDistance = 0;
-    let currentScale = 1;
-    let isPinching = false;
-    const lightboxImg = document.getElementById('lightbox-img');
+  // Pinch & Zoom state
+  let initialDistance = 0;
+  let currentScale = 1;
+  let isPinching = false;
 
+  if (lightbox && lightboxImg) {
+    // Re-enable "Click outside to close" for the new Desktop Layout (Left side backdrop)
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    // Touch events for Pinch zoom on mobile lightbox
     lightbox.addEventListener('touchstart', (e) => {
       if (e.touches.length === 2) {
         isPinching = true;
@@ -670,128 +692,159 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showLikeAnimation(isLiked) {
-      // Create heart overlay
-      const heartOverlay = document.createElement('div');
-      heartOverlay.className = 'like-heart-overlay';
+      const likeBtn = document.querySelector('#lightbox-like-container .btn-like');
+      triggerLikeCelebration(likeBtn || document.body, isLiked);
+    }
+  }
 
-      // Add class based on like state
-      if (!isLiked) {
-        heartOverlay.classList.add('unlike');
-      }
+  // Magnifying Glass functionality
+  let magnifier = null;
+  let isMagnifying = false;
 
-      heartOverlay.innerHTML = `
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
-      `;
+  lightboxImg.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1 && !isPinching) {
+      // Single finger touch - activate magnifier
+      createMagnifier();
+      updateMagnifier(e.touches[0]);
+    }
+  });
 
-      const imageContainer = document.querySelector('.lightbox-image-container');
-      if (imageContainer) {
-        imageContainer.appendChild(heartOverlay);
+  lightboxImg.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 1 && magnifier && !isPinching) {
+      e.preventDefault();
+      updateMagnifier(e.touches[0]);
+    }
+  });
 
-        // Trigger animation
-        setTimeout(() => heartOverlay.classList.add('animate'), 10);
+  lightboxImg.addEventListener('touchend', () => {
+    removeMagnifier();
+  });
 
-        // Remove after animation
-        setTimeout(() => {
-          heartOverlay.remove();
-        }, 1000);
-      }
+  // MOUSE SUPPORT (Desktop Zoom - Hover)
+  lightboxImg.addEventListener('mouseenter', () => {
+    createMagnifier();
+  });
+
+  lightboxImg.addEventListener('mouseleave', () => {
+    removeMagnifier();
+  });
+
+  lightboxImg.addEventListener('mousemove', (e) => {
+    // Track movement only if magnifier exists
+    if (isMagnifying && magnifier) {
+      e.preventDefault();
+      updateMagnifier(e);
+    }
+  });
+
+  // Window listeners removed as we only care about hovering the image directly
+
+
+  function createMagnifier() {
+    if (magnifier) return;
+
+    magnifier = document.createElement('div');
+    magnifier.className = 'magnifier-lens';
+
+    const imageContainer = document.querySelector('.lightbox-image-container');
+    if (imageContainer) {
+      imageContainer.appendChild(magnifier);
+      isMagnifying = true;
+    }
+  }
+
+  function updateMagnifier(touch) {
+    if (!magnifier || !lightboxImg) return;
+
+    const rect = lightboxImg.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+
+    // Larger magnifier size
+    const lensSize = 350;
+    const offset = 80; // Distance from finger
+
+    // Direct position is the touch point (snappy follow)
+    magnifier.style.left = `${x}px`;
+    magnifier.style.top = `${y}px`;
+
+    // Calculate actual rendered image dimensions (handling object-fit: contain)
+    const naturalRatio = lightboxImg.naturalWidth / lightboxImg.naturalHeight;
+    const boxWidth = rect.width;
+    const boxHeight = rect.height;
+    const boxRatio = boxWidth / boxHeight;
+
+    let renderedWidth, renderedHeight;
+    let imgOffsetX = 0;
+    let imgOffsetY = 0;
+
+    if (naturalRatio > boxRatio) {
+      // Image is constrained by width, has bars top/bottom
+      renderedWidth = boxWidth;
+      renderedHeight = boxWidth / naturalRatio;
+      imgOffsetY = (boxHeight - renderedHeight) / 2;
+    } else {
+      // Image is constrained by height, has bars left/right
+      renderedHeight = boxHeight;
+      renderedWidth = boxHeight * naturalRatio;
+      imgOffsetX = (boxWidth - renderedWidth) / 2;
     }
 
-    // Magnifying Glass functionality
-    let magnifier = null;
-    let isMagnifying = false;
+    // Adjust touch coordinates relative to the actual painting content
+    const contentX = x - imgOffsetX;
+    const contentY = y - imgOffsetY;
 
-    lightboxImg.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1 && !isPinching) {
-        // Single finger touch - activate magnifier
-        createMagnifier();
-        updateMagnifier(e.touches[0]);
-      }
-    });
+    // Calculate the offset based on side
+    const isRightSide = x > rect.width / 2;
+    let targetOffsetX, targetOffsetY;
 
-    lightboxImg.addEventListener('touchmove', (e) => {
-      if (e.touches.length === 1 && magnifier && !isPinching) {
-        e.preventDefault();
-        updateMagnifier(e.touches[0]);
-      }
-    });
+    // Check if it's a mouse event (closer to cursor, no side flipping)
+    const isMouse = touch instanceof MouseEvent;
 
-    lightboxImg.addEventListener('touchend', () => {
-      removeMagnifier();
-    });
+    if (isMouse) {
+      // DESKTOP: Quadrant Logic to keep lens on screen
+      const isTopHalf = y < rect.height / 2;
 
-    function createMagnifier() {
-      if (magnifier) return;
-
-      magnifier = document.createElement('div');
-      magnifier.className = 'magnifier-lens';
-
-      const imageContainer = document.querySelector('.lightbox-image-container');
-      if (imageContainer) {
-        imageContainer.appendChild(magnifier);
-        isMagnifying = true;
-      }
-    }
-
-    function updateMagnifier(touch) {
-      if (!magnifier || !lightboxImg) return;
-
-      const rect = lightboxImg.getBoundingClientRect();
-      const x = touch.clientX - rect.left;
-      const y = touch.clientY - rect.top;
-
-      // Larger magnifier size
-      const lensSize = 250;
-      const offset = 80; // Distance from finger
-
-      // Direct position is the touch point (snappy follow)
-      magnifier.style.left = `${x}px`;
-      magnifier.style.top = `${y}px`;
-
-      // Calculate actual rendered image dimensions (handling object-fit: contain)
-      const naturalRatio = lightboxImg.naturalWidth / lightboxImg.naturalHeight;
-      const boxWidth = rect.width;
-      const boxHeight = rect.height;
-      const boxRatio = boxWidth / boxHeight;
-
-      let renderedWidth, renderedHeight;
-      let imgOffsetX = 0;
-      let imgOffsetY = 0;
-
-      if (naturalRatio > boxRatio) {
-        // Image is constrained by width, has bars top/bottom
-        renderedWidth = boxWidth;
-        renderedHeight = boxWidth / naturalRatio;
-        imgOffsetY = (boxHeight - renderedHeight) / 2;
-      } else {
-        // Image is constrained by height, has bars left/right
-        renderedHeight = boxHeight;
-        renderedWidth = boxHeight * naturalRatio;
-        imgOffsetX = (boxWidth - renderedWidth) / 2;
-      }
-
-      // Adjust touch coordinates relative to the actual painting content
-      const contentX = x - imgOffsetX;
-      const contentY = y - imgOffsetY;
-
-      // Calculate the offset based on side
-      const isRightSide = x > rect.width / 2;
-      let targetOffsetX, targetOffsetY;
-
+      // Horizontal Logic (Left/Right flip)
       if (isRightSide) {
-        // Touch on right -> Lens moves to the left of the finger
+        // Cursor on Right -> Lens on Left
+        targetOffsetX = -lensSize - 20;
+      } else {
+        // Cursor on Left -> Lens on Right
+        targetOffsetX = 20;
+      }
+
+      // Vertical Logic (Top/Bottom flip)
+      if (isTopHalf) {
+        // Cursor on Top -> Lens Below
+        // Position 40px below cursor
+        targetOffsetY = 40;
+      } else {
+        // Cursor on Bottom -> Lens Above
+        // Position bottom of lens 40px below cursor (so it sits above)
+        // Using -lensSize moves top to cursor. +40 moves it down.
+        // We want bottom to be at cursor minus overlap?
+        // No, standard is: top-left corner is at cursor.
+        // If we want it ABOVE: targetY = -lensSize + padding.
+        targetOffsetY = -lensSize + 40;
+      }
+    } else {
+      // MOBILE: Offset to avoid finger obstruction
+      if (isRightSide) {
         targetOffsetX = -lensSize - offset;
       } else {
-        // Touch on left -> Lens moves to the right of the finger
         targetOffsetX = offset;
       }
-
       // Vertical offset: slightly above the finger center
       targetOffsetY = -lensSize / 2 - offset;
+    }
 
-      // Boundary clamping: ensure the lens stays within the image rectangle
+    // Boundary clamping: ensure the lens stays within the image rectangle
+    // Adjust min/max based on the calculated target offsets relative to cursor X/Y?
+    // Actually, standard clamping is complex with offsets. 
+    // Let's just keep the lens fully visible if possible, or allow it to go to edge.
+    // For now, relax clamping for mouse to ensure smooth tracking
+    if (!isMouse) {
       const minOffsetX = -x;
       const maxOffsetX = rect.width - lensSize - x;
       const minOffsetY = -y;
@@ -799,44 +852,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
       targetOffsetX = Math.max(minOffsetX, Math.min(targetOffsetX, maxOffsetX));
       targetOffsetY = Math.max(minOffsetY, Math.min(targetOffsetY, maxOffsetY));
-
-      // Update CSS variables for the smooth transform transition (defined in CSS)
-      magnifier.style.setProperty('--offset-x', `${targetOffsetX}px`);
-      magnifier.style.setProperty('--offset-y', `${targetOffsetY}px`);
-
-      // Calculate background position relative to actual content for 3x zoom
-      const bgX = -contentX * 3 + lensSize / 2;
-      const bgY = -contentY * 3 + lensSize / 2;
-
-      magnifier.style.backgroundImage = `url('${lightboxImg.src}')`;
-      magnifier.style.backgroundSize = `${renderedWidth * 3}px ${renderedHeight * 3}px`;
-      magnifier.style.backgroundPosition = `${bgX}px ${bgY}px`;
     }
 
-    function removeMagnifier() {
-      if (magnifier) {
-        magnifier.remove();
-        magnifier = null;
-        isMagnifying = false;
-      }
-    }
+    // Update CSS variables for the smooth transform transition (defined in CSS)
+    magnifier.style.setProperty('--offset-x', `${targetOffsetX}px`);
+    magnifier.style.setProperty('--offset-y', `${targetOffsetY}px`);
 
-    lightbox.addEventListener('touchend', (e) => {
-      if (isPinching) {
-        // Reset Zoom on release for creating a "Lens" feel, or stay zoomed?
-        // Current logic: Reset to avoid complex panning logic.
-        if (e.touches.length < 2) {
-          isPinching = false;
-          if (lightboxImg) {
-            lightboxImg.style.transform = '';
-            lightboxImg.classList.remove('zoomed');
-            currentScale = 1;
-          }
-        }
-        return;
-      }
-    });
+    // Calculate background position relative to actual content for 5x zoom
+    const bgX = -contentX * 5 + lensSize / 2;
+    const bgY = -contentY * 5 + lensSize / 2;
+
+    magnifier.style.backgroundImage = `url('${lightboxImg.src}')`;
+    magnifier.style.backgroundSize = `${renderedWidth * 5}px ${renderedHeight * 5}px`;
+    magnifier.style.backgroundPosition = `${bgX}px ${bgY}px`;
   }
+
+  function removeMagnifier() {
+    if (magnifier) {
+      magnifier.remove();
+      magnifier = null;
+      isMagnifying = false;
+    }
+  }
+
+  lightbox.addEventListener('touchend', (e) => {
+    if (isPinching) {
+      // Reset Zoom on release for creating a "Lens" feel, or stay zoomed?
+      // Current logic: Reset to avoid complex panning logic.
+      if (e.touches.length < 2) {
+        isPinching = false;
+        if (lightboxImg) {
+          lightboxImg.style.transform = '';
+          lightboxImg.classList.remove('zoomed');
+          currentScale = 1;
+        }
+      }
+      return;
+    }
+  });
 
   // Navigation Buttons
   const prevBtn = document.getElementById('lightbox-prev');
@@ -906,7 +959,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-
 
   // ========================================
   // BACK TO TOP BUTTON & SMART HEADER
@@ -987,10 +1039,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.addEventListener('dragstart', (e) => {
-    if (e.target.tagName === 'IMG') {
-      e.preventDefault();
-    }
-  });
 });
 
+// Like Celebration Animation Utility (Elegant & Minimal)
+function triggerLikeCelebration(originNode, isLiked = true) {
+  if (!originNode) return;
+
+  const isLightbox = !!originNode.closest('#lightbox');
+  const container = isLightbox ? document.querySelector('.lightbox-image-container') : document.body;
+  if (!container) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = `like-overlay-elegant ${!isLiked ? 'unlike-celebration' : ''}`;
+
+  if (isLiked) {
+    overlay.innerHTML = `
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="currentColor"/>
+      </svg>
+    `;
+  } else {
+    // Beautiful simplified broken heart (split in two halves)
+    overlay.innerHTML = `
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="broken-heart-svg">
+        <path class="heart-half-left" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09L12 8.5V21.35z" fill="currentColor"/>
+        <path class="heart-half-right" d="M12 21.35V8.5c1.09-1.28 2.76-2.09 4.5-2.09 3.08 0 5.5 2.42 5.5 5.5 0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
+      </svg>
+    `;
+  }
+
+  // Center it in the container
+  container.appendChild(overlay);
+
+  // Cleanup
+  setTimeout(() => overlay.remove(), 1000);
+}

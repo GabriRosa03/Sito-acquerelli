@@ -109,15 +109,7 @@ body {
   margin: 0;
 }
 
-/* Cursor interaction states */
-a,
-button,
-input,
-select,
-textarea,
-.painting-card,
-.toggle-btn,
-.checkbox-container {}
+
 
 /* Background che scorre con il contenuto */
 body::before {
@@ -907,18 +899,7 @@ h2 {
 }
 
 /* Vertical Painting - Adapts naturally to available space */
-.lightbox-content.has-vertical-painting .lightbox-text-top {
-  margin-bottom: 0.6rem;
-}
-
-.lightbox-content.has-vertical-painting #lightbox-title {
-  font-size: 1.5rem;
-}
-
-.lightbox-content.has-vertical-painting #lightbox-description {
-  font-size: 0.85rem;
-  line-height: 1.3;
-}
+/* Vertical Painting rules removed to prevent font shrinking */
 
 /* Bottom Actions Section - FIXED AT BOTTOM */
 .lightbox-actions-bottom {
@@ -1009,7 +990,7 @@ h2 {
 }
 
 .btn-inquiry-primary {
-  width: 100%;
+  width: 80%;
   max-width: 600px;
   /* Constrain width */
   background-color: var(--color-primary-red);
@@ -2517,9 +2498,10 @@ header.header-hidden {
 }
 
 .btn-like:hover:not(:disabled) {
-  background: rgba(142, 28, 20, 0.1);
+  background: rgba(142, 28, 20, 0.05);
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(142, 28, 20, 0.2);
+  box-shadow: none;
+  /* No shadow when not liked */
 }
 
 .btn-like:disabled {
@@ -2554,6 +2536,8 @@ header.header-hidden {
 .btn-like.liked:hover:not(:disabled) {
   background: var(--color-primary-red-dark);
   border-color: var(--color-primary-red-dark);
+  box-shadow: 0 4px 12px rgba(142, 28, 20, 0.3);
+  /* Shadow only when liked */
 }
 
 /* Heart Pop Animation */
@@ -2746,10 +2730,13 @@ header.header-hidden {
 /* ========================================
    MAGNIFYING GLASS LENS
    ======================================== */
+/* ========================================
+   MAGNIFYING GLASS LENS
+   ======================================== */
 .magnifier-lens {
   position: absolute;
-  width: 250px;
-  height: 250px;
+  width: 350px;
+  height: 350px;
   border: 4px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   cursor: none;
@@ -2765,8 +2752,8 @@ header.header-hidden {
   --offset-y: 0px;
   transform: translate(var(--offset-x), var(--offset-y)) scale(1);
 
-  /* Smooth transition for transform (specifically the side swap) */
-  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  /* Fluid transition for transform (smooth side/vertical flips) */
+  transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
   animation: magnifierAppear 0.25s ease-out;
 }
 
@@ -2843,7 +2830,8 @@ header.header-hidden {
 
 .room-close-btn:hover {
   transform: rotate(90deg) scale(1.1);
-  background: #f0f0f0;
+  background: white;
+  /* Keep white for room view close */
 }
 
 .room-background {
@@ -2948,4 +2936,730 @@ header.header-hidden {
     width: 45%;
     /* Slightly larger on mobile for visibility */
   }
+}
+
+/* ========================================
+   DESKTOP ENHANCEMENTS (Min-width 1024px)
+   ======================================== */
+
+
+/* Default: Hide Desktop Share/Room Buttons on Mobile */
+#lightbox-share-btn-desktop,
+#lightbox-room-btn-desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+
+  /* --- 1. Desktop Gallery Grid Enhancement --- */
+
+  /* Make sure the main grid is clean */
+  .painting-card {
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .painting-card:hover {
+    transform: none;
+    /* remove card lift, we lift image only */
+    box-shadow: none;
+  }
+
+  /* Apply shadow and lift to IMAGE only */
+  .painting-card img {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    border-radius: 4px;
+    /* Optional rounded corners */
+  }
+
+  .painting-card:hover img {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Redefine .painting-info to be STATIC below the image */
+  .painting-info {
+    position: static;
+    /* Not absolute anymore */
+    opacity: 1;
+    /* Always visible */
+    background: transparent;
+    padding: 0.8rem 0;
+    /* Align left with image */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
+    transform: none;
+    transition: none;
+    color: var(--color-ink-dark);
+    box-shadow: none;
+    /* Ensure no shadow on text */
+  }
+
+  /* Show standard Title style */
+  .painting-info h3 {
+    margin-bottom: 0.3rem;
+    font-size: 1.1rem;
+    color: var(--color-ink-dark);
+    font-family: var(--font-serif);
+    font-weight: 600;
+  }
+
+  /* Hide the description paragraph on desktop grid to match "Mobile style" request (Title + Like only) */
+  .painting-info p.painting-description {
+    display: none;
+  }
+
+  /* Hide the standard action buttons (Contact/Like) from grid view - we only want Like count */
+  .painting-actions {
+    display: none;
+    /* We will use the mobile-header structure injected by script.js or custom CSS to show likes */
+  }
+
+  /* 
+       Wait, script.js injects .mobile-info-header inside .painting-info.
+       On desktop, we might want to use that same structure since it already has Title + Like.
+       Let's ensure .mobile-info-header is visible on desktop.
+    */
+  .mobile-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .mobile-info-header h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    color: var(--color-ink-dark);
+  }
+
+  /* Ensure heart is RED on desktop */
+  .mobile-heart-display .heart-icon {
+    stroke: var(--color-primary-red);
+    fill: none;
+    /* Default empty */
+  }
+
+  .mobile-heart-display.liked .heart-icon {
+    fill: var(--color-primary-red);
+    /* Filled if liked */
+    stroke: var(--color-primary-red);
+  }
+
+  .mobile-heart-display .like-count {
+    color: var(--color-primary-red);
+  }
+
+  /* Hide the .desktop-title since we use the mobile header */
+  .desktop-title {
+    display: none;
+  }
+
+
+  /* --- HOVER OVERLAY "APRI" --- */
+  .painting-card::after {
+    content: "APRI";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px);
+    /* Cover image only, leave text below exposed roughly */
+    /* Alternatively, cover everything? Request says "hover su card... appare scritta". 
+           Usually overlay covers image. Let's cover the Image part.
+           Since .painting-card is a flex container now (or block), Image is first child.
+           Hard to target height perfectly without specific height on card.
+           Let's just position it absolute top 0, but height 100% and use a background that fades out at bottom?
+           Or just cover the whole thing. Let's cover the Image.
+        */
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    /* Let clicks pass to image */
+    backdrop-filter: blur(2px);
+  }
+
+  /* We need to target the image area specifically if possible. 
+       Since card has Image then Info.
+       Let's wrap image in a relative container in JS? 
+       No, let's just make the ::after cover the whole card but use clip-path or just let it cover text too?
+       "Sotto ogni card... aggiungi titolo". Usually this implies text is visible.
+       If I cover text with "APRI", it hides the info.
+       I'll try to make the overlay only cover the image by setting bottom: 50px (approx text height).
+    */
+  .painting-card::after {
+    height: 100%;
+    bottom: 0;
+    /* Reset */
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .painting-card:hover::after {
+    opacity: 1;
+  }
+
+  /* FIX: Ensure the text below is NOT covered */
+  .painting-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .painting-card img {
+    order: 1;
+  }
+
+  .painting-card .painting-info {
+    order: 2;
+    z-index: 20;
+    /* Ensure text is above overlay if overlay is full height */
+    position: relative;
+    background: transparent;
+    /* Make text bg white so overlay doesn't show behind it */
+  }
+
+  /* Restrict overlay to image area only using pseudo-element on the image? No, can't add pseudo to img. */
+  /* We can make overlay full height but z-index -1 relative to text? */
+  /* .painting-card needs to be relative. */
+  /* Let's adjust top/height of overlay? */
+  .painting-card::after {
+    height: auto;
+    bottom: 60px;
+    /* Leave space for text approx */
+    /* This is risky if text height varies. */
+    /* Safest: content "APRI" is on the image wrapper. BUT we don't have an image wrapper in HTML for grid items. */
+    /* Compromise: Full overlay, but text has higher z-index and white background. */
+    z-index: 5;
+  }
+
+  .painting-info {
+    z-index: 10;
+    background: #fff;
+    /* Opaque background for info */
+  }
+
+
+  /* --- 2. Desktop Lightbox Redesign (Split Screen) --- */
+
+  /* Lightbox Container */
+  .lightbox {
+    /* Backdrop already handled by .lightbox background */
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    /* Remove padding */
+  }
+
+  /* The actual white content container */
+
+
+  /* Animation - Slide Out (triggered by script adding .closing class) */
+  /* Animation - Slide Out (triggered by script adding .closing class) */
+  .lightbox-scroll-container.closing {
+    animation: slideOutRight 0.4s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+  }
+
+  /* REFINED LIGHTBOX CONTAINER for Sidebar Effect */
+  .lightbox-scroll-container {
+    width: 85%;
+    margin-left: auto;
+    /* Push to right, leaving 15% on left for Close Area */
+    background-image: url('images/sfondoQuadro2.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 0;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+    /* Shadow to separate from sidebar */
+
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+    animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Left transparent close area arrow implementation - REFINED */
+  /* This arrow sits in the 15% dark area on the left */
+  /* Fixed Close Arrow - Animate only on direct hover */
+  .lightbox::before {
+    content: "";
+    position: absolute;
+    left: 7.5%;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    border-top: 4px solid rgba(255, 255, 255, 0.8);
+    border-right: 4px solid rgba(255, 255, 255, 0.8);
+    transform: translate(-50%, -50%) rotate(45deg) scale(1);
+    cursor: pointer;
+    opacity: 0.8;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+    /* Ensure clickable */
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    z-index: 2050;
+  }
+
+  .lightbox::before:hover {
+    border-color: #fff;
+    transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
+    /* Pop effect */
+    opacity: 1;
+  }
+
+  /* Remove the generic hover effect */
+  /* .lightbox.active:hover::before was causing the issue */
+
+  /* The Content Grid - Adjusted for new Right Panel grouping */
+  .lightbox-content {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    padding: 20px;
+    margin: 0;
+    /* Grid Layout: Left (Image) - Right (Info) */
+    grid-template-columns: 1fr 450px;
+    /* Rows: 
+         1. Spacer Top (Flex 1)
+         2. Like Button
+         3. Title & Desc
+         4. Room Btn (Stacked)
+         5. CTA (Stacked)
+         6. Share (Stacked)
+         7. Spacer Bottom (Flex 1)
+      */
+    grid-template-rows: 1fr auto auto auto auto auto 1fr;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  /* 1. IMAGE PANEL (Left, spans all rows) */
+  .lightbox-image-container {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    /* Span full height */
+    background: transparent;
+    /* Transparent to show paper bg */
+    height: 100%;
+    order: -1;
+    /* Ensure visually first */
+    padding: 40px 40px 100px 40px;
+    /* More bottom padding to avoid nav overlap */
+    display: flex;
+    /* Ensure flex for centering */
+    justify-content: center;
+    align-items: center;
+  }
+
+  #lightbox-img {
+    max-height: 100%;
+    /* Fill available height (minus padding) */
+    max-width: 100%;
+    width: auto;
+    /* Make sure obj fit doesn't crop */
+    object-fit: contain;
+    cursor: default;
+    /* Remove zoom icon */
+  }
+
+  /* 2. NAV (Overlay on Image Panel) - Smaller & Compact */
+  /* 2. NAV (Overlay on Image Panel) - Transparent & Consistent Style */
+  .lightbox-secondary-nav {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    align-self: end;
+    justify-self: center;
+    position: static;
+    margin-bottom: 30px;
+    width: auto;
+    background: transparent;
+    /* Fully transparent as requested */
+    backdrop-filter: none;
+    /* Removed blur if fully transparent, or keep? User said "transparent background" */
+    /* Container now transparent/no-border */
+    padding: 0;
+    box-shadow: none;
+    border: none;
+    z-index: 10;
+    gap: 15px;
+    display: flex;
+    align-items: center;
+    color: #555;
+    /* Dark text/icon */
+  }
+
+  /* Smaller arrow buttons */
+  .lightbox-secondary-nav .nav-arrow-btn {
+    width: 38px;
+    /* Slightly larger for button feel */
+    height: 38px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .lightbox-secondary-nav .nav-arrow-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.4);
+  }
+
+  /* Directional hover movement for arrows */
+  #lightbox-prev:hover {
+    transform: translateX(-3px);
+  }
+
+  #lightbox-next:hover {
+    transform: translateX(3px);
+  }
+
+  .lightbox-secondary-nav .nav-arrow-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .lightbox-counter {
+    font-size: 0.95rem;
+    /* Smaller font */
+    font-weight: 600;
+    color: #444;
+    min-width: 40px;
+  }
+
+  /* 3. HEADER (Right Top) - Room View Button Only */
+  .lightbox-header {
+    grid-column: 2;
+    grid-row: 1;
+    position: relative;
+    width: 100%;
+    padding: 0 40px;
+    display: flex;
+    justify-content: flex-end;
+    /* Align to right */
+    align-items: center;
+    z-index: 20;
+    align-self: center;
+  }
+
+  /* Hide Close Button AND Header Share/Room Buttons on Desktop */
+  #lightbox-close-btn,
+  #lightbox-share-btn,
+  .lightbox-header {
+    display: none !important;
+    /* Hide entire header */
+  }
+
+  /* Reveal and Style Desktop Share Button - STACKED */
+  #lightbox-share-btn-desktop {
+    grid-column: 2;
+    grid-row: 6;
+    position: static;
+    margin: 10px 0;
+    /* Vertical spacing */
+    align-self: start;
+    justify-self: center;
+
+    width: 300px;
+    /* Equal Width */
+    height: 44px;
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: #555;
+    border-radius: 30px;
+    box-shadow: none;
+    z-index: 50;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  #lightbox-share-btn-desktop img {
+    filter: brightness(0.2);
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Add Text "Condividi" */
+  #lightbox-share-btn-desktop::after {
+    content: "Condividi";
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: var(--font-serif);
+    color: #333;
+  }
+
+  #lightbox-share-btn-desktop:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+  }
+
+  #lightbox-share-btn-desktop:hover img {
+    filter: none;
+    /* Don't invert, keep dark */
+    opacity: 0.8;
+  }
+
+  #lightbox-share-btn-desktop:hover::after {
+    color: #333;
+    /* Keep text dark */
+  }
+
+  /* Reveal and Style Desktop ROOM Button - STACKED */
+  #lightbox-room-btn-desktop {
+    display: flex;
+    /* Reveal */
+    grid-column: 2;
+    grid-row: 4;
+    /* Above CTA */
+    position: static;
+    margin: 10px 0;
+    align-self: end;
+    justify-self: center;
+
+    width: 300px;
+    /* Equal Width */
+    height: 44px;
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: #555;
+    border-radius: 30px;
+    box-shadow: none;
+    z-index: 50;
+    padding: 0;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: var(--font-serif);
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  #lightbox-room-btn-desktop:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+  }
+
+  /* REORDERED: Like Button (Row 2, Top) */
+  #lightbox-like-container {
+    grid-column: 2;
+    grid-row: 2;
+    /* Move to Top */
+    padding: 0 40px;
+    margin-bottom: 20px;
+    align-self: end;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* REORDERED: Title & Desc (Row 3) */
+  .lightbox-text-top {
+    grid-column: 2;
+    grid-row: 3;
+    align-self: center;
+    /* Center Vertically in its space */
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    max-height: 35vh;
+    overflow-y: auto;
+    text-align: center;
+    width: 100%;
+  }
+
+  #lightbox-title {
+    font-size: 2.2rem;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--color-primary-red);
+    line-height: 1.2;
+    font-family: var(--font-serif);
+  }
+
+  #lightbox-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 5px;
+    color: #777;
+    max-width: 90%;
+  }
+
+  /* CTA (Row 5 - Center Sandwich) */
+  #lightbox-cta {
+    grid-column: 2;
+    grid-row: 5;
+    margin: 5px 0;
+    /* Tight spacing in stack */
+    align-self: center;
+    justify-self: center;
+    width: 300px;
+    /* Equal Width */
+    height: 44px;
+    /* Equal Height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    /* Ensure padding doesn't affect width */
+    border-radius: 30px !important;
+    /* Rounded corners */
+    text-transform: none !important;
+    font-weight: 500;
+  }
+
+  /* Hide Room View Overlay Close button on Desktop since we have big area? 
+       No, keep it.
+    */
+
+  /* Ensure image resets zoom/transform on desktop for clean look */
+  #lightbox-img {
+    transform: none !important;
+  }
+}
+
+/* Move keyframes to top level for reliability */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Elegant Like Overlay (centered on image) */
+.like-overlay-elegant {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  z-index: 1000;
+  color: rgba(255, 255, 255, 0.95);
+  /* Elegant semi-transparent white */
+  filter: drop-shadow(0 0 15px rgba(255, 25, 25, 0.4));
+  /* Subtle red glow */
+  animation: heartPulseElegant 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.like-overlay-elegant.unlike-celebration {
+  color: rgba(220, 220, 220, 0.9);
+  /* Slightly greyish for unlike */
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2));
+  animation: brokenHeartPulse 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.like-overlay-elegant svg {
+  width: 120px;
+  height: 120px;
+}
+
+@keyframes heartPulseElegant {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.85;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes brokenHeartPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+
+  30% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* Broken Heart Halves Animation */
+.unlike-celebration .heart-half-left {
+  animation: splitLeft 1.2s ease-out forwards;
+}
+
+.unlike-celebration .heart-half-right {
+  animation: splitRight 1.2s ease-out forwards;
+}
+
+@keyframes splitLeft {
+  0% {
+    transform: translateX(0) rotate(0);
+  }
+
+  100% {
+    transform: translateX(-15px) rotate(-10deg);
+  }
+}
+
+@keyframes splitRight {
+  0% {
+    transform: translateX(0) rotate(0);
+  }
+
+  100% {
+    transform: translateX(15px) rotate(10deg);
+  }
+}
+
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
 }
