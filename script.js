@@ -421,6 +421,12 @@ function closeLightbox() {
 
   // Add closing class to trigger animation
   const scrollContainer = lightbox.querySelector('.lightbox-scroll-container');
+  const sidebar = document.getElementById('lightbox-sidebar-action');
+
+  if (sidebar) {
+    sidebar.classList.add('closing');
+  }
+
   if (scrollContainer) {
     scrollContainer.classList.add('closing');
 
@@ -428,11 +434,13 @@ function closeLightbox() {
     setTimeout(() => {
       lightbox.classList.remove('active');
       scrollContainer.classList.remove('closing');
+      if (sidebar) sidebar.classList.remove('closing');
       document.body.style.overflow = '';
-    }, 350); // Slightly less than 400ms to feel snappy and avoid flash
+    }, 500); // Increased to 500ms to match CSS transition
   } else {
     // Fallback if structure not found
     lightbox.classList.remove('active');
+    if (sidebar) sidebar.classList.remove('closing');
     document.body.style.overflow = '';
   }
 
@@ -575,6 +583,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightboxClose = document.getElementById('lightbox-close-btn');
   if (lightboxClose) {
     lightboxClose.addEventListener('click', closeLightbox);
+  }
+
+  // Sidebar Close Action (Desktop)
+  const lightboxSidebar = document.getElementById('lightbox-sidebar-action');
+  if (lightboxSidebar) {
+    lightboxSidebar.addEventListener('click', closeLightbox);
   }
 
   // Room View Button
@@ -761,7 +775,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const y = touch.clientY - rect.top;
 
     // Larger magnifier size
-    const lensSize = 350;
+    const lensSize = 200;
     const offset = 80; // Distance from finger
 
     // Direct position is the touch point (snappy follow)
@@ -821,12 +835,8 @@ document.addEventListener('DOMContentLoaded', () => {
         targetOffsetY = 40;
       } else {
         // Cursor on Bottom -> Lens Above
-        // Position bottom of lens 40px below cursor (so it sits above)
-        // Using -lensSize moves top to cursor. +40 moves it down.
-        // We want bottom to be at cursor minus overlap?
-        // No, standard is: top-left corner is at cursor.
-        // If we want it ABOVE: targetY = -lensSize + padding.
-        targetOffsetY = -lensSize + 40;
+        // Position bottom of lens 20px above cursor
+        targetOffsetY = -lensSize - 20;
       }
     } else {
       // MOBILE: Offset to avoid finger obstruction

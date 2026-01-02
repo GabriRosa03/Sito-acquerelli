@@ -2735,8 +2735,8 @@ header.header-hidden {
    ======================================== */
 .magnifier-lens {
   position: absolute;
-  width: 350px;
-  height: 350px;
+  width: 200px;
+  height: 200px;
   border: 4px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   cursor: none;
@@ -3063,56 +3063,71 @@ header.header-hidden {
   }
 
 
-  /* --- HOVER OVERLAY "APRI" --- */
+  /* --- HOVER OVERLAY "SCOPRI" --- */
   .painting-card::after {
-    content: "APRI";
+    /* Text "Scopri" */
+    content: "Scopri";
+
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - 60px);
-    /* Cover image only, leave text below exposed roughly */
-    /* Alternatively, cover everything? Request says "hover su card... appare scritta". 
-           Usually overlay covers image. Let's cover the Image part.
-           Since .painting-card is a flex container now (or block), Image is first child.
-           Hard to target height perfectly without specific height on card.
-           Let's just position it absolute top 0, but height 100% and use a background that fades out at bottom?
-           Or just cover the whole thing. Let's cover the Image.
-        */
-    background: rgba(0, 0, 0, 0.4);
+    height: 100%;
+
+    /* Layout: Flex column to stack Icon and Text */
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 12px;
+    /* Space between icon and text */
+
+    /* Background: Subtle darken */
+    background-color: rgba(0, 0, 0, 0.4);
+
+    /* Minimal Diagonal Arrow Up-Right Icon */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='7' y1='17' x2='17' y2='7'/%3E%3Cpolyline points='7 7 17 7 17 17'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center calc(50% - 15px);
+    /* Shift icon up slightly */
+    background-size: 32px;
+
     color: white;
     font-family: var(--font-serif);
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding-top: 25px;
+    /* Push text down to make room for icon */
+
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     pointer-events: none;
-    /* Let clicks pass to image */
-    backdrop-filter: blur(2px);
+    backdrop-filter: none;
   }
 
-  /* We need to target the image area specifically if possible. 
-       Since card has Image then Info.
-       Let's wrap image in a relative container in JS? 
-       No, let's just make the ::after cover the whole card but use clip-path or just let it cover text too?
-       "Sotto ogni card... aggiungi titolo". Usually this implies text is visible.
-       If I cover text with "APRI", it hides the info.
-       I'll try to make the overlay only cover the image by setting bottom: 50px (approx text height).
-    */
-  .painting-card::after {
-    height: 100%;
-    bottom: 0;
-    /* Reset */
-    background: rgba(0, 0, 0, 0.3);
+  /* Target only the image part for the overlay if possible */
+  /* Since we can't easily target just image height without structure change, 
+     we assume image is top part. We use bottom padding or calc if needed, 
+     but full cover with transparency is fine for modern look. */
+
+  .painting-card:hover {
+    cursor: pointer;
+    /* Change cursor to indicate action */
   }
 
   .painting-card:hover::after {
     opacity: 1;
+    background-color: rgba(0, 0, 0, 0.3);
+    /* Slightly darker on hover */
+    background-size: 36px;
+    /* Subtle icon zoom */
+    /* Text transform is handled by flex container, hard to animate separately without 2 elements */
+    /* So we just animate the whole overlay */
   }
+
+
 
   /* FIX: Ensure the text below is NOT covered */
   .painting-card {
@@ -3169,9 +3184,12 @@ header.header-hidden {
 
 
   /* Animation - Slide Out (triggered by script adding .closing class) */
-  /* Animation - Slide Out (triggered by script adding .closing class) */
   .lightbox-scroll-container.closing {
-    animation: slideOutRight 0.4s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+    /* Use transitions for smooth exit from any position (hovered or not) */
+    transform: translateX(100%) !important;
+    transition: transform 0.5s cubic-bezier(0.5, 0, 0.75, 0);
+    animation: none;
+    /* Disable keyframe animation to prevent jumping */
   }
 
   /* REFINED LIGHTBOX CONTAINER for Sidebar Effect */
@@ -3191,36 +3209,81 @@ header.header-hidden {
     overflow: hidden;
     padding: 0;
     position: relative;
+    height: 100%;
+    /* FIX: Full height for desktop sidebar */
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    /* Ensure return animation matches */
     animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* Left transparent close area arrow implementation - REFINED */
-  /* This arrow sits in the 15% dark area on the left */
-  /* Fixed Close Arrow - Animate only on direct hover */
-  .lightbox::before {
-    content: "";
+  /* NEW SIDEBAR ACTION LEFT */
+  .lightbox-sidebar-left {
     position: absolute;
-    left: 7.5%;
-    top: 50%;
-    width: 40px;
-    height: 40px;
-    border-top: 4px solid rgba(255, 255, 255, 0.8);
-    border-right: 4px solid rgba(255, 255, 255, 0.8);
-    transform: translate(-50%, -50%) rotate(45deg) scale(1);
+    top: 0;
+    left: 0;
+    left: 0;
+    width: 15%;
+    height: 100%;
+    z-index: 2060;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    opacity: 0.8;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: auto;
-    /* Ensure clickable */
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-    z-index: 2050;
+    background: rgba(0, 0, 0, 0.01);
+    transition: background 0.6s ease, width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .lightbox::before:hover {
-    border-color: #fff;
-    transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
-    /* Pop effect */
-    opacity: 1;
+  .lightbox-sidebar-left:hover {
+    background: rgba(0, 0, 0, 0.4);
+    width: calc(15% + 60px);
+    /* Expand sidebar to fill the gap created by scroll container translation */
+  }
+
+  /* Slide Effect on Scroll Container when Sidebar Hovered */
+  .lightbox-sidebar-left:hover~.lightbox-scroll-container {
+    transform: translateX(60px);
+    /* Larger displacement */
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    /* Slower, fluid ease-out */
+  }
+
+  /* Sidebar Closing Animation */
+  .lightbox-sidebar-left.closing {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.5s ease;
+    pointer-events: none;
+  }
+
+  .sidebar-action-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+    transform: translateX(-10px);
+    pointer-events: none;
+  }
+
+  .lightbox-sidebar-left:hover .sidebar-action-content {
+    color: white;
+    transform: translateX(0);
+  }
+
+  .sidebar-arrow {
+    width: 28px;
+    height: 28px;
+    stroke-width: 1.5;
+    opacity: 0.8;
+  }
+
+  .sidebar-text {
+    font-family: var(--font-main);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 300;
   }
 
   /* Remove the generic hover effect */
@@ -3661,5 +3724,4 @@ header.header-hidden {
   to {
     transform: translateX(100%);
   }
-}
 }
