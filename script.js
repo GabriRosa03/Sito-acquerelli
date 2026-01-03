@@ -487,32 +487,35 @@ function openRoomView() {
       container.style.top = '40%';
       container.style.left = '50%';
 
-      // Calculate proportional width based on real dimensions
+      // Calculate REAL proportional dimensions based on cm measurements
       let width = 30; // default fallback
+      let height = 'auto'; // default
+
       if (painting.dimensions) {
-        // DIAGONAL-BASED SCALING METHOD
-        // Calculate diagonal (true size of painting, like measuring a TV screen)
-        const diagonal = Math.sqrt(
-          painting.dimensions.width ** 2 +
-          painting.dimensions.height ** 2
-        );
+        // TRUE PROPORTIONAL SCALING
+        // Use a reference scale: 1 cm = 0.8% of viewport width
+        // This ensures paintings maintain their real proportions
+        const scaleFactor = 0.8; // % of viewport width per cm
 
-        // Base scaling: 0.5% per cm of diagonal
-        let baseWidth = diagonal * 0.5;
+        // Calculate both width and height based on real cm dimensions
+        const realWidth = painting.dimensions.width * scaleFactor;
+        const realHeight = painting.dimensions.height * scaleFactor;
 
-        // Adjust for aspect ratio - wider paintings get slightly more space
-        const aspectRatio = painting.dimensions.width / painting.dimensions.height;
-        if (aspectRatio > 1.3) {
-          baseWidth *= 1.05; // Horizontal paintings slightly larger
-        } else if (aspectRatio < 0.75) {
-          baseWidth *= 0.95; // Vertical paintings slightly smaller
-        }
+        // Clamp width between 15% and 60% of screen width
+        width = Math.max(15, Math.min(realWidth, 60));
 
-        // Clamp between 15% and 60% of screen width
-        width = Math.max(15, Math.min(baseWidth, 60));
+        // Calculate proportional height maintaining the REAL aspect ratio
+        // If width was clamped, adjust height proportionally
+        const widthRatio = width / realWidth;
+        height = realHeight * widthRatio;
+
+        // Set both dimensions to maintain real proportions
+        container.style.width = `${width}%`;
+        container.style.height = `${height}%`;
+      } else {
+        container.style.width = `${width}%`;
+        container.style.height = 'auto';
       }
-
-      container.style.width = `${width}%`;
     }
 
     // Update room info with dimensions
@@ -535,102 +538,105 @@ function updateRoomViewInfo() {
   const dimensionsElement = document.getElementById('room-dimensions');
 
   if (painting.dimensions && dimensionsElement) {
-    const dimensionText = `${painting.dimensions.width} × ${painting.dimensions.height} cm`;
-    dimensionsElement.textContent = dimensionText;
+    const lang = localStorage.getItem('site_lang') || 'it';
+    const isEn = lang === 'en';
+
+    // Format: "Larghezza: 40 cm  |  Altezza: 30 cm"
+    const widthLabel = isEn ? 'Width' : 'Larghezza';
+    const heightLabel = isEn ? 'Height' : 'Altezza';
+
+    const dimensionText = `${widthLabel}: ${painting.dimensions.width} cm &nbsp;&nbsp;|&nbsp;&nbsp; ${heightLabel}: ${painting.dimensions.height} cm`;
+    dimensionsElement.innerHTML = dimensionText;
   }
 }
 
+let roomViewInteractionsInitialized = false;
+
 function initRoomViewInteractions() {
+  if (roomViewInteractionsInitialized) return; // Prevent multiple bindings
+
   const container = document.querySelector('.painting-on-wall-container');
   if (!container) return;
 
   let isDragging = false;
   let startX, startY;
+  // Initialize from current CSS or default
   let currentTop = 40;
   let currentLeft = 50;
-  let currentWidth = 30;
+  let currentWidth = 30; // Will be updated by openRoomView
 
-  // Pinch zoom logic for room view
-  let initialDist = 0;
-  let initialWidth = 30;
-
+  // Touch handling
   container.addEventListener('touchstart', (e) => {
     if (e.touches.length === 1) {
       isDragging = true;
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
-    } else if (e.touches.length === 2) {
-      isDragging = false;
-      initialDist = Math.hypot(
-        e.touches[0].clientX - e.touches[1].clientX,
-        e.touches[0].clientY - e.touches[1].clientY
-      );
-      initialWidth = currentWidth;
+      // Get current percentage positions
+      const style = window.getComputedStyle(container);
+      const matrix = new WebKitCSSMatrix(style.transform);
+      // Note: we control top/left via style, not transform for position usually in this script logic
+      // But let's stick to the existing logic of updating top/left percentages
+      const parent = container.offsetParent || document.body;
+      currentLeft = (container.offsetLeft / parent.clientWidth) * 100;
+      currentTop = (container.offsetTop / parent.clientHeight) * 100;
     }
   }, { passive: false });
 
   window.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
     const overlay = document.getElementById('room-view-overlay');
     if (!overlay || !overlay.classList.contains('active')) return;
 
-    if (e.touches.length === 1 && isDragging) {
-      e.preventDefault();
+    if (e.touches.length === 1) {
+      e.preventDefault(); // Prevent scrolling while dragging
       const dx = ((e.touches[0].clientX - startX) / window.innerWidth) * 100;
       const dy = ((e.touches[0].clientY - startY) / window.innerHeight) * 100;
 
       container.style.left = `${currentLeft + dx}%`;
       container.style.top = `${currentTop + dy}%`;
-    } else if (e.touches.length === 2) {
-      e.preventDefault();
-      const currentDist = Math.hypot(
-        e.touches[0].clientX - e.touches[1].clientX,
-        e.touches[0].clientY - e.touches[1].clientY
-      );
-      const scale = currentDist / initialDist;
-      currentWidth = Math.max(10, Math.min(initialWidth * scale, 80));
-      container.style.width = `${currentWidth}%`;
     }
   }, { passive: false });
 
-  window.addEventListener('touchend', (e) => {
-    if (isDragging) {
-      const topStr = container.style.top;
-      const leftStr = container.style.left;
-      if (topStr) currentTop = parseFloat(topStr);
-      if (leftStr) currentLeft = parseFloat(leftStr);
-      isDragging = false;
-    }
+  window.addEventListener('touchend', () => {
+    isDragging = false;
   });
 
-  // Mouse interactions for desktop
+  // Mouse handling
   container.addEventListener('mousedown', (e) => {
+    e.preventDefault(); // Prevent image drag behavior
     isDragging = true;
     startX = e.clientX;
     startY = e.clientY;
+
+    // Sync current position
+    const parent = container.offsetParent || document.body;
+    currentLeft = (container.offsetLeft / parent.clientWidth) * 100;
+    currentTop = (container.offsetTop / parent.clientHeight) * 100;
+
+    container.style.cursor = 'grabbing';
   });
 
   window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
     const overlay = document.getElementById('room-view-overlay');
     if (!overlay || !overlay.classList.contains('active')) return;
 
-    if (isDragging) {
-      const dx = ((e.clientX - startX) / window.innerWidth) * 100;
-      const dy = ((e.clientY - startY) / window.innerHeight) * 100;
+    e.preventDefault();
+    const dx = ((e.clientX - startX) / window.innerWidth) * 100;
+    const dy = ((e.clientY - startY) / window.innerHeight) * 100;
 
-      container.style.left = `${currentLeft + dx}%`;
-      container.style.top = `${currentTop + dy}%`;
-    }
+    container.style.left = `${currentLeft + dx}%`;
+    container.style.top = `${currentTop + dy}%`;
   });
 
   window.addEventListener('mouseup', () => {
     if (isDragging) {
-      const topStr = container.style.top;
-      const leftStr = container.style.left;
-      if (topStr) currentTop = parseFloat(topStr);
-      if (leftStr) currentLeft = parseFloat(leftStr);
       isDragging = false;
+      container.style.cursor = 'grab';
     }
   });
+
+  roomViewInteractionsInitialized = true;
 }
 
 // Event listeners

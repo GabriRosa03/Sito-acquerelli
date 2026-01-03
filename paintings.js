@@ -19,7 +19,7 @@ const paintings = [
         description: "Acquerello su carta - Dolci colline e cipressi sotto un cielo azzurro",
         description_en: "Watercolor on paper - Rolling hills and cypresses under a blue sky",
         alt: "Campagna Toscana",
-        dimensions: { width: 40, height: 30 }
+        dimensions: { width: 45, height: 30 }
     },
 
     {
@@ -29,7 +29,7 @@ const paintings = [
         description: "Tecnica mista - Atmosfera",
         description_en: "Mixed media - Atmosphere",
         alt: "Sogno in Laguna",
-        dimensions: { width: 35, height: 35 }
+        dimensions: { width: 40, height: 30 }
     },
     {
         src: "images/paint17.jpg",
@@ -38,7 +38,7 @@ const paintings = [
         description: "Acquerello su carta - Acque cristalline circondate da vette innevate",
         description_en: "Watercolor on paper - Crystal clear waters surrounded by snowy peaks",
         alt: "Lago di Montagna",
-        dimensions: { width: 50, height: 35 }
+        dimensions: { width: 30, height: 30 }
     },
 
     {
@@ -48,7 +48,7 @@ const paintings = [
         description: "Acquerello su carta - Un viottolo tra i boschi alpini in autunno",
         description_en: "Watercolor on paper - A path through alpine woods in autumn",
         alt: "Sentiero di Montagna",
-        dimensions: { width: 30, height: 40 }
+        dimensions: { width: 30, height: 30 }
     },
     {
         src: "images/paint7.jpg",
@@ -66,7 +66,7 @@ const paintings = [
         description: "Acquerello su carta - Dettagli architettonici di antichi palazzi veneziani",
         description_en: "Watercolor on paper - Architectural details of ancient Venetian palaces",
         alt: "Finestre Veneziane",
-        dimensions: { width: 25, height: 35 }
+        dimensions: { width: 40, height: 30 }
     },
     {
         src: "images/paint2.jpg",
@@ -86,7 +86,7 @@ const paintings = [
         description: "Acquerello su carta - La laguna avvolta dalla nebbia mattutina",
         description_en: "Watercolor on paper - The lagoon wrapped in morning mist",
         alt: "Nebbie Lagunari",
-        dimensions: { width: 50, height: 35 }
+        dimensions: { width: 30, height: 40 }
     },
 
     {

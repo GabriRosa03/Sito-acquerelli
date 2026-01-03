@@ -2795,10 +2795,12 @@ header.header-hidden {
 
 .room-view-container {
   position: relative;
-  width: 95vw;
-  height: 95vh;
-  max-width: 1200px;
-  max-height: 800px;
+  width: 98vw;
+  /* Maximized width */
+  height: 98vh;
+  /* Maximized height */
+  max-width: 1800px;
+  max-height: 1200px;
   background: white;
   border-radius: 12px;
   overflow: hidden;
@@ -2809,28 +2811,29 @@ header.header-hidden {
 
 .room-close-btn {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 40px;
-  height: 40px;
+  top: 25px;
+  right: 25px;
+  width: 50px;
+  height: 50px;
   background: white;
   border-radius: 50%;
   border: none;
-  font-size: 28px;
+  font-size: 32px;
   color: #333;
   cursor: pointer;
-  z-index: 10;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  line-height: 1;
+  padding-bottom: 4px;
 }
 
 .room-close-btn:hover {
   transform: rotate(90deg) scale(1.1);
   background: white;
-  /* Keep white for room view close */
 }
 
 .room-background {
@@ -2853,14 +2856,15 @@ header.header-hidden {
 
 .painting-on-wall-container {
   position: absolute;
-  /* This will be the "safe wall zone" roughly centered horizontally and somewhat high up */
+  /* Safe wall zone */
   top: 40%;
   left: 50%;
   transform: translate(-50%, -55%);
   width: 30%;
   /* Default proportional width */
   max-width: 80%;
-  z-index: 5;
+  z-index: 50;
+  /* Higher z-index for dragging */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2873,47 +2877,50 @@ header.header-hidden {
 
 #painting-on-wall {
   width: 100%;
-  height: auto;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  border: 2px solid white;
-  /* Simple thin white frame */
+  height: 100%;
+  object-fit: contain;
+  /* Image fits inside container maintaining aspect ratio */
+
+  /* No border, no shadow - clean look */
+  border: none;
+  box-shadow: none;
+
   transition: transform 0.1s ease-out;
   /* Smooth follow for movement */
 }
 
 .room-info {
-  padding: 20px;
-  background: white;
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 30px;
+  background: rgba(0, 0, 0, 0.7);
+  /* Semi-transparent dark bg */
+  border-radius: 50px;
+  /* Rounded capsule shape */
   text-align: center;
-  border-top: 1px solid #eee;
-}
-
-.room-info p {
-  margin: 0;
-  font-family: var(--font-serif);
-  font-weight: 600;
-  color: #333;
-  font-size: 1.1rem;
-}
-
-.room-hint {
-  display: block;
-  margin-top: 5px;
-  font-size: 0.8rem;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  z-index: 20;
+  width: auto;
+  min-width: 200px;
 }
 
 .room-dimensions {
   display: block;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  font-family: var(--font-serif);
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: var(--color-primary-red);
+  font-family: var(--font-main);
+  /* Clean sans-serif font */
+  font-weight: 500;
+  font-size: 1rem;
+  color: white;
   letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.room-hint {
+  display: none;
+  /* Hide hint text as requested */
 }
 
 /* Lightbox Header adjustments to accommodate left alignment */
