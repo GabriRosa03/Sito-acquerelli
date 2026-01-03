@@ -477,16 +477,46 @@ function openRoomView() {
   const paintingOnWall = document.getElementById('painting-on-wall');
 
   if (overlay && lightboxImg && paintingOnWall) {
+    const painting = paintings[currentPaintingIndex];
     paintingOnWall.src = lightboxImg.src;
     overlay.classList.add('active');
 
-    // Reset position and scale
+    // Reset position and calculate proportional scale
     const container = document.querySelector('.painting-on-wall-container');
     if (container) {
       container.style.top = '40%';
       container.style.left = '50%';
-      container.style.width = '30%';
+
+      // Calculate proportional width based on real dimensions
+      let width = 30; // default fallback
+      if (painting.dimensions) {
+        // DIAGONAL-BASED SCALING METHOD
+        // Calculate diagonal (true size of painting, like measuring a TV screen)
+        const diagonal = Math.sqrt(
+          painting.dimensions.width ** 2 +
+          painting.dimensions.height ** 2
+        );
+
+        // Base scaling: 0.5% per cm of diagonal
+        let baseWidth = diagonal * 0.5;
+
+        // Adjust for aspect ratio - wider paintings get slightly more space
+        const aspectRatio = painting.dimensions.width / painting.dimensions.height;
+        if (aspectRatio > 1.3) {
+          baseWidth *= 1.05; // Horizontal paintings slightly larger
+        } else if (aspectRatio < 0.75) {
+          baseWidth *= 0.95; // Vertical paintings slightly smaller
+        }
+
+        // Clamp between 15% and 60% of screen width
+        width = Math.max(15, Math.min(baseWidth, 60));
+      }
+
+      container.style.width = `${width}%`;
     }
+
+    // Update room info with dimensions
+    updateRoomViewInfo();
 
     // Initialize touch interactions for the room view
     initRoomViewInteractions();
@@ -497,6 +527,16 @@ function closeRoomView() {
   const overlay = document.getElementById('room-view-overlay');
   if (overlay) {
     overlay.classList.remove('active');
+  }
+}
+
+function updateRoomViewInfo() {
+  const painting = paintings[currentPaintingIndex];
+  const dimensionsElement = document.getElementById('room-dimensions');
+
+  if (painting.dimensions && dimensionsElement) {
+    const dimensionText = `${painting.dimensions.width} × ${painting.dimensions.height} cm`;
+    dimensionsElement.textContent = dimensionText;
   }
 }
 
@@ -1036,7 +1076,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inject Back to Top Button
   const backToTopBtn = document.createElement('button');
   backToTopBtn.id = 'back-to-top';
-  backToTopBtn.innerHTML = '<img src="images/arrowUp.svg" alt="Scroll to top" style="width: 21px; height: 21px; opacity: 0.8;">';
+  backToTopBtn.innerHTML = '<img src="images/arrowUp.svg" alt="Scroll to top" style="width: 19px; height: 19px; opacity: 0.8;">';
   backToTopBtn.ariaLabel = 'Torna in cima';
   document.body.appendChild(backToTopBtn);
 
