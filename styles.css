@@ -723,6 +723,7 @@ h2 {
   justify-content: flex-end;
   /* Align sheet to bottom */
   flex-direction: column;
+  transition: background 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .lightbox.active {
@@ -945,13 +946,12 @@ h2 {
   justify-content: center;
   gap: 5px;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: none;
 }
 
 #lightbox-like-container .btn-like:hover {
   transform: translateY(-2px);
   box-shadow: none;
-  /* No shadow for unliked state */
   border-color: #d0d0d0;
 }
 
@@ -1016,8 +1016,8 @@ h2 {
 }
 
 .btn-inquiry-primary:hover {
-  background-color: #b3241b;
-  /* Brighter, "acceso" red */
+  background-color: var(--color-primary-red);
+  /* Keep same red background */
   transform: translateY(-2px);
   box-shadow: 0 4px 14px rgba(142, 28, 20, 0.35);
   color: white;
@@ -3234,14 +3234,19 @@ header.header-hidden {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    background: rgba(0, 0, 0, 0.01);
+    background: rgba(0, 0, 0, 0.3);
     transition: background 0.6s ease, width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .lightbox-sidebar-left:hover {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.19);
     width: calc(15% + 60px);
     /* Expand sidebar to fill the gap created by scroll container translation */
+  }
+
+  /* Fade out the main backdrop when hovering the sidebar to see the gallery behind */
+  .lightbox:has(.lightbox-sidebar-left:hover) {
+    background: rgba(0, 0, 0, 0.7);
   }
 
   /* Slide Effect on Scroll Container when Sidebar Hovered */
@@ -3325,6 +3330,7 @@ header.header-hidden {
     grid-column: 1;
     grid-row: 1 / -1;
     /* Span full height */
+    position: relative;
     background: transparent;
     /* Transparent to show paper bg */
     height: 100%;
@@ -3587,7 +3593,6 @@ header.header-hidden {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 15px;
     margin-bottom: 25px;
     max-height: 35vh;
     overflow-y: auto;
@@ -3596,7 +3601,7 @@ header.header-hidden {
   }
 
   #lightbox-title {
-    font-size: 2.2rem;
+    font-size: 1.7rem;
     margin-bottom: 5px;
     font-weight: 500;
     color: var(--color-primary-red);
@@ -3635,6 +3640,11 @@ header.header-hidden {
     font-weight: 500;
   }
 
+  /* Desktop CTA hover - keep red background and add arrow */
+  #lightbox-cta:hover {
+    background-color: var(--color-primary-red) !important;
+  }
+
   /* Hide Room View Overlay Close button on Desktop since we have big area? 
        No, keep it.
     */
@@ -3657,6 +3667,7 @@ header.header-hidden {
 }
 
 /* Elegant Like Overlay (centered on image) */
+/* Elegant Like Overlay (centered on image) */
 .like-overlay-elegant {
   position: absolute;
   top: 50%;
@@ -3664,23 +3675,25 @@ header.header-hidden {
   transform: translate(-50%, -50%) scale(0);
   pointer-events: none;
   z-index: 1000;
-  color: rgba(255, 255, 255, 0.95);
-  /* Elegant semi-transparent white */
-  filter: drop-shadow(0 0 15px rgba(255, 25, 25, 0.4));
-  /* Subtle red glow */
+  color: white;
+  /* Pure white */
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
+  /* Subtle white glow instead of red */
   animation: heartPulseElegant 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 }
 
 .like-overlay-elegant.unlike-celebration {
-  color: rgba(220, 220, 220, 0.9);
-  /* Slightly greyish for unlike */
-  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2));
+  color: white;
+  /* Keep white even for unlike */
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.1));
   animation: brokenHeartPulse 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 }
 
 .like-overlay-elegant svg {
   width: 120px;
   height: 120px;
+  overflow: visible !important;
+  /* Fix cut-off animation */
 }
 
 @keyframes heartPulseElegant {
@@ -3691,11 +3704,11 @@ header.header-hidden {
 
   50% {
     transform: translate(-50%, -50%) scale(1.1);
-    opacity: 0.85;
+    opacity: 1;
   }
 
   100% {
-    transform: translate(-50%, -50%) scale(1.2);
+    transform: translate(-50%, -50%) scale(1);
     opacity: 0;
   }
 }
@@ -3708,7 +3721,7 @@ header.header-hidden {
 
   30% {
     transform: translate(-50%, -50%) scale(1.05);
-    opacity: 0.8;
+    opacity: 1;
   }
 
   100% {
@@ -3732,7 +3745,8 @@ header.header-hidden {
   }
 
   100% {
-    transform: translateX(-15px) rotate(-10deg);
+    transform: translateX(-30px) rotate(-15deg);
+    /* Increased distance for clarity */
   }
 }
 
@@ -3742,7 +3756,8 @@ header.header-hidden {
   }
 
   100% {
-    transform: translateX(15px) rotate(10deg);
+    transform: translateX(30px) rotate(15deg);
+    /* Increased distance for clarity */
   }
 }
 
