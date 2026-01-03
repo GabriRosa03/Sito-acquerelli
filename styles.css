@@ -950,7 +950,8 @@ h2 {
 
 #lightbox-like-container .btn-like:hover {
   transform: translateY(-2px);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  /* No shadow for unliked state */
   border-color: #d0d0d0;
 }
 
@@ -959,7 +960,8 @@ h2 {
   /* Smaller */
   height: 18px;
   fill: none;
-  stroke: #666;
+  stroke: var(--color-primary-red);
+  /* Red stroke for unliked heart */
   stroke-width: 2;
   transition: all 0.3s;
   flex-shrink: 0;
@@ -969,7 +971,8 @@ h2 {
   font-family: var(--font-serif);
   font-size: 0.85rem;
   /* Smaller */
-  color: #666;
+  color: var(--color-primary-red);
+  /* Red text */
   font-weight: 500;
   transition: all 0.3s;
 }
@@ -1006,15 +1009,17 @@ h2 {
   font-family: var(--font-serif);
   font-size: 0.95rem;
   /* Smaller */
-  box-shadow: 0 2px 10px rgba(142, 28, 20, 0.15);
+  box-shadow: none;
+  /* Removed shadow default */
   transition: all 0.3s ease;
   display: block;
 }
 
 .btn-inquiry-primary:hover {
-  background-color: var(--color-primary-red-dark);
+  background-color: #b3241b;
+  /* Brighter, "acceso" red */
   transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(142, 28, 20, 0.25);
+  box-shadow: 0 4px 14px rgba(142, 28, 20, 0.35);
   color: white;
 }
 
@@ -3260,7 +3265,8 @@ header.header-hidden {
     flex-direction: column;
     align-items: center;
     gap: 0.8rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.9);
+    /* More visible initially */
     transition: all 0.3s ease;
     transform: translateX(-10px);
     pointer-events: none;
@@ -3275,7 +3281,8 @@ header.header-hidden {
     width: 28px;
     height: 28px;
     stroke-width: 1.5;
-    opacity: 0.8;
+    opacity: 1;
+    /* Fully visible initially */
   }
 
   .sidebar-text {
@@ -3461,10 +3468,22 @@ header.header-hidden {
     transition: all 0.3s ease;
   }
 
+  /* Hide the image, we'll use SVG via ::before */
   #lightbox-share-btn-desktop img {
-    filter: brightness(0.2);
+    display: none;
+  }
+
+  /* Link Icon via ::before */
+  #lightbox-share-btn-desktop::before {
+    content: '';
     width: 18px;
     height: 18px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/%3E%3Cpath d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
   }
 
   /* Add Text "Condividi" */
@@ -3474,6 +3493,18 @@ header.header-hidden {
     font-weight: 600;
     font-family: var(--font-serif);
     color: #333;
+    transition: all 0.3s ease;
+  }
+
+  /* Copied State */
+  #lightbox-share-btn-desktop.copied::before {
+    /* Red Checkmark */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238E1C14' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  }
+
+  #lightbox-share-btn-desktop.copied::after {
+    content: "Link Copiato!";
+    color: var(--color-primary-red);
   }
 
   #lightbox-share-btn-desktop:hover {

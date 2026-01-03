@@ -137,9 +137,16 @@ function loadGallery() {
   const urlParams = new URLSearchParams(window.location.search);
   const operaParam = urlParams.get('opera');
   if (operaParam) {
-    const paintingIndex = paintings.findIndex(p => p.title === operaParam);
+    const paintingIndex = paintings.findIndex(p => {
+      const { titleKey } = getLangKeys();
+      const pTitle = p[titleKey] || p.title;
+      return pTitle === operaParam || p.title === operaParam;
+    });
     if (paintingIndex !== -1) {
+      // Use a flag to avoid pushState during initial load
+      window.isInitialDeepLink = true;
       openLightbox(paintingIndex);
+      window.isInitialDeepLink = false;
     }
   }
 }
@@ -267,8 +274,16 @@ function openLightbox(index) {
   // Immersive Mode: Ensure header is hidden if we want full immersion, 
   // but CSS fullscreen handles most.
 
-  // Add history state for back button support
-  history.pushState({ lightboxOpen: true }, '', '#lightbox');
+  // Add history state for back button support and SEO-friendly URL
+  const { titleKey } = getLangKeys();
+  const paintingTitle = painting[titleKey] || painting.title;
+  const newUrl = window.location.origin + window.location.pathname + '?opera=' + encodeURIComponent(paintingTitle);
+
+  if (window.isInitialDeepLink) {
+    history.replaceState({ lightboxOpen: true, paintingIndex: index }, '', newUrl);
+  } else {
+    history.pushState({ lightboxOpen: true, paintingIndex: index }, '', newUrl);
+  }
 }
 
 function updateLightboxContent(painting) {
@@ -330,7 +345,7 @@ function updateLightboxContent(painting) {
     ctaBtn.textContent = btnContactText;
   }
 
-  // Bind Share Button (Mobile & Desktop)
+  // Bind Share Button (Mobile Only)
   const shareBtnDesktop = document.getElementById('lightbox-share-btn-desktop');
 
   if (shareBtn) {
@@ -340,12 +355,8 @@ function updateLightboxContent(painting) {
     };
   }
 
-  if (shareBtnDesktop) {
-    shareBtnDesktop.onclick = (e) => {
-      e.stopPropagation();
-      sharePainting(title);
-    };
-  }
+  // Desktop share button is handled by persistent listener in loadGallery()
+  // to avoid OS dialog and enable copy action.
 
   // Detect vertical painting and optimize layout
   lightboxImg.onload = () => {
@@ -370,6 +381,13 @@ function updateLightboxContent(painting) {
 
   // Setup listeners for NEW buttons
   setupLightboxLikeButton();
+
+  // Sync address bar URL if lightbox is already active (navigation)
+  const lightbox = document.getElementById('lightbox');
+  if (lightbox && lightbox.classList.contains('active')) {
+    const newUrl = window.location.origin + window.location.pathname + '?opera=' + encodeURIComponent(title);
+    history.replaceState({ lightboxOpen: true, paintingIndex: currentPaintingIndex }, '', newUrl);
+  }
 }
 
 function sharePainting(displayTitle, originalTitle) {
@@ -608,20 +626,60 @@ document.addEventListener('DOMContentLoaded', () => {
     roomViewClose.addEventListener('click', closeRoomView);
   }
 
+  // Desktop Share Button - Copy Link
+  const shareBtnDesktop = document.getElementById('lightbox-share-btn-desktop');
+  if (shareBtnDesktop) {
+    shareBtnDesktop.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      try {
+        // Copy current URL to clipboard
+        await navigator.clipboard.writeText(window.location.href);
+
+        // Visual feedback: add 'copied' class
+        shareBtnDesktop.classList.add('copied');
+
+        // Remove class after 2 seconds
+        setTimeout(() => {
+          shareBtnDesktop.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy link:', err);
+        // Fallback: try older method
+        const textArea = document.createElement('textarea');
+        textArea.value = window.location.href;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+
+        shareBtnDesktop.classList.add('copied');
+        setTimeout(() => {
+          shareBtnDesktop.classList.remove('copied');
+        }, 2000);
+      }
+    });
+  }
+
   // History API - Back button closes lightbox
   window.addEventListener('popstate', (event) => {
     const lightbox = document.getElementById('lightbox');
     if (lightbox && lightbox.classList.contains('active')) {
-      // VISUAL CLOSE with animation
       const scrollContainer = lightbox.querySelector('.lightbox-scroll-container');
-      if (scrollContainer) {
+      const sidebar = document.getElementById('lightbox-sidebar-action');
+
+      if (scrollContainer && !scrollContainer.classList.contains('closing')) {
         scrollContainer.classList.add('closing');
+        if (sidebar) sidebar.classList.add('closing');
+
         setTimeout(() => {
           lightbox.classList.remove('active');
           scrollContainer.classList.remove('closing');
+          if (sidebar) sidebar.classList.remove('closing');
           document.body.style.overflow = '';
-        }, 350);
-      } else {
+        }, 500); // Unified to 500ms
+      } else if (!scrollContainer) {
         lightbox.classList.remove('active');
         document.body.style.overflow = '';
       }
@@ -775,7 +833,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const y = touch.clientY - rect.top;
 
     // Larger magnifier size
-    const lensSize = 200;
+    const lensSize = 170;
     const offset = 80; // Distance from finger
 
     // Direct position is the touch point (snappy follow)
@@ -822,21 +880,22 @@ document.addEventListener('DOMContentLoaded', () => {
       // Horizontal Logic (Left/Right flip)
       if (isRightSide) {
         // Cursor on Right -> Lens on Left
-        targetOffsetX = -lensSize - 20;
+        // User requested more detachment (was 15px, increasing to 30px)
+        targetOffsetX = -lensSize - 30;
       } else {
         // Cursor on Left -> Lens on Right
-        targetOffsetX = 20;
+        targetOffsetX = 30;
       }
 
       // Vertical Logic (Top/Bottom flip)
       if (isTopHalf) {
         // Cursor on Top -> Lens Below
-        // Position 40px below cursor
-        targetOffsetY = 40;
+        // Position 30px below cursor
+        targetOffsetY = 30;
       } else {
         // Cursor on Bottom -> Lens Above
-        // Position bottom of lens 20px above cursor
-        targetOffsetY = -lensSize - 20;
+        // Position bottom of lens 30px above cursor
+        targetOffsetY = -lensSize - 30;
       }
     } else {
       // MOBILE: Offset to avoid finger obstruction
@@ -868,12 +927,12 @@ document.addEventListener('DOMContentLoaded', () => {
     magnifier.style.setProperty('--offset-x', `${targetOffsetX}px`);
     magnifier.style.setProperty('--offset-y', `${targetOffsetY}px`);
 
-    // Calculate background position relative to actual content for 5x zoom
-    const bgX = -contentX * 5 + lensSize / 2;
-    const bgY = -contentY * 5 + lensSize / 2;
+    // Calculate background position relative to actual content for 3x zoom
+    const bgX = -contentX * 3 + lensSize / 2;
+    const bgY = -contentY * 3 + lensSize / 2;
 
     magnifier.style.backgroundImage = `url('${lightboxImg.src}')`;
-    magnifier.style.backgroundSize = `${renderedWidth * 5}px ${renderedHeight * 5}px`;
+    magnifier.style.backgroundSize = `${renderedWidth * 3}px ${renderedHeight * 3}px`;
     magnifier.style.backgroundPosition = `${bgX}px ${bgY}px`;
   }
 
