@@ -180,11 +180,25 @@
                 </svg>
             </button>
             <div class="room-background">
-                <img src="images/room-view-bg.png" alt="Room Background">
+                <img id="room-bg-image" src="images/room-view-bg.png" alt="Room Background">
                 <div class="painting-on-wall-container">
                     <img id="painting-on-wall" src="" alt="Painting on wall">
                 </div>
             </div>
+
+            <!-- Background Switcher Controls -->
+            <div class="room-bg-controls">
+                <button class="room-bg-option active" data-bg="images/room-view-bg.png" aria-label="Stanza 1">
+                    <img src="images/room-view-bg.png" alt="Stanza 1">
+                </button>
+                <button class="room-bg-option" data-bg="images/room-view-bg1.png" aria-label="Stanza 2">
+                    <img src="images/room-view-bg1.png" alt="Stanza 2">
+                </button>
+                <button class="room-bg-option" data-bg="images/room-view-bg2.png" aria-label="Stanza 3">
+                    <img src="images/room-view-bg2.png" alt="Stanza 3">
+                </button>
+            </div>
+
             <div class="room-info">
                 <span id="room-dimensions" class="room-dimensions"></span>
             </div>

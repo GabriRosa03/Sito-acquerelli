@@ -43,7 +43,15 @@ function loadGallery() {
       this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23999" font-size="16"%3EImmagine non disponibile%3C/text%3E%3C/svg%3E';
     };
 
-    const description = painting[descKey] || painting.description;
+    // Display dimensions instead of description with explicit labels
+    // const description = painting[descKey] || painting.description;
+    let description = "";
+    if (painting.dimensions) {
+      const isEn = lang === 'en';
+      const widthLabel = isEn ? 'Width' : 'Larghezza';
+      const heightLabel = isEn ? 'Height' : 'Altezza';
+      description = `${widthLabel}: ${painting.dimensions.width} cm | ${heightLabel}: ${painting.dimensions.height} cm`;
+    }
 
     const infoDiv = document.createElement('div');
     infoDiv.className = 'painting-info';
@@ -68,7 +76,7 @@ function loadGallery() {
     // Standard Desktop Info
     infoDiv.innerHTML = `
             <h3>${title}</h3>
-            <p class="painting-description">${description}</p>
+            <p class="painting-description" style="font-style: italic; font-size: 0.9em;">${description}</p>
             <div class="painting-actions">
                 <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${index}">
                     <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -80,23 +88,14 @@ function loadGallery() {
             </div>
         `;
 
-    // Insert mobile header at the top of infoDiv, but we need to manage innerHTML carefully. 
-    // Actually, innerHTML overwrote everything. Let's prepend or reconstruct.
-    // Better strategy: construct innerHTML then prepend the mobile header if needed, or structured insert.
-    // Let's use the provided structure and hide elements via CSS as planned.
-
-    // We already set innerHTML above for desktop. Now let's prepend the mobile header.
-    // BUT wait, on desktop we see Title in h3. on mobile we see Title in mobileHeader h3. 
-    // We should hide the "standard" h3 on mobile via CSS if we have it in mobileHeader.
-    // Or simpler: put the mobile header inside.
-
+    // Insert mobile header at the top of infoDiv
     infoDiv.innerHTML = ''; // Reset
     infoDiv.appendChild(mobileHeader);
 
     const desktopContent = document.createElement('div');
     desktopContent.innerHTML = `
-            <h3 class="desktop-title">${title}</h3> <!-- Class to hide on mobile if needed, or just let valid CSS handle -->
-            <p class="painting-description">${description}</p>
+            <h3 class="desktop-title">${title}</h3>
+            <p class="painting-description" style="font-style: italic; font-size: 0.9em;">${description}</p>
             <div class="painting-actions">
                 <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${index}">
                    <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -297,12 +296,21 @@ function updateLightboxContent(painting) {
   const shareBtn = document.getElementById('lightbox-share-btn');
   const ctaBtn = document.getElementById('lightbox-cta');
 
-  const { titleKey, descKey } = getLangKeys();
+  const { titleKey } = getLangKeys();
   const title = painting[titleKey] || painting.title;
-  const description = painting[descKey] || painting.description;
+  // const description = painting[descKey] || painting.description;
 
   // Buttons text
   const lang = localStorage.getItem('site_lang') || 'it';
+
+  let description = "";
+  if (painting.dimensions) {
+    const isEn = lang === 'en';
+    const widthLabel = isEn ? 'Width' : 'Larghezza';
+    const heightLabel = isEn ? 'Height' : 'Altezza';
+    description = `${widthLabel}: ${painting.dimensions.width} cm | ${heightLabel}: ${painting.dimensions.height} cm`;
+  }
+
   const btnContactText = (typeof translations !== 'undefined' && translations[lang]) ? translations[lang]['gallery.btn_contact'] : "Richiedi Informazioni";
 
   lightboxImg.src = painting.src;
@@ -314,9 +322,10 @@ function updateLightboxContent(painting) {
 
   lightboxTitle.textContent = title;
 
-  // Populate Description
+  // Populate Description (which is now DIMENSIONS)
   if (lightboxDescription) {
     lightboxDescription.textContent = description;
+    lightboxDescription.style.fontStyle = 'italic'; // Add styling to make it look nicer
   }
 
   if (lightboxCounter) {
@@ -554,6 +563,41 @@ let roomViewInteractionsInitialized = false;
 
 function initRoomViewInteractions() {
   if (roomViewInteractionsInitialized) return; // Prevent multiple bindings
+
+  // Background Switching Logic
+  const bgOptions = document.querySelectorAll('.room-bg-option');
+  const roomBgImage = document.getElementById('room-bg-image');
+
+  if (bgOptions.length > 0 && roomBgImage) {
+    bgOptions.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent closing if we add close-on-click-outside later
+
+        // Remove active class from all
+        bgOptions.forEach(b => b.classList.remove('active'));
+
+        // Add active to current
+        // If clicked on image inside button
+        const targetBtn = e.currentTarget;
+        targetBtn.classList.add('active');
+
+        // Update background image
+        const newSrc = targetBtn.dataset.bg;
+        if (newSrc) {
+          // Preload/Swap
+          roomBgImage.style.opacity = '0.5'; // Fade out slightly
+          setTimeout(() => {
+            roomBgImage.src = newSrc;
+            roomBgImage.onload = () => {
+              roomBgImage.style.opacity = '1';
+            };
+            // Fallback if cached
+            if (roomBgImage.complete) roomBgImage.style.opacity = '1';
+          }, 150);
+        }
+      });
+    });
+  }
 
   // Dragging functionality has been disabled as per user request.
   // This function is kept to avoid breaking calls from other parts of the code.
