@@ -488,14 +488,14 @@ function openRoomView() {
       container.style.left = '50%';
 
       // Calculate REAL proportional dimensions based on cm measurements
-      let width = 30; // default fallback
+      let width = 31; // default fallback (increased from 30)
       let height = 'auto'; // default
 
       if (painting.dimensions) {
         // TRUE PROPORTIONAL SCALING
         // Use a reference scale: 1 cm = 0.8% of viewport width
         // This ensures paintings maintain their real proportions
-        const scaleFactor = 0.8; // % of viewport width per cm
+        const scaleFactor = 0.97; // % of viewport width per cm (increased from 0.8)
 
         // Calculate both width and height based on real cm dimensions
         const realWidth = painting.dimensions.width * scaleFactor;
@@ -555,86 +555,8 @@ let roomViewInteractionsInitialized = false;
 function initRoomViewInteractions() {
   if (roomViewInteractionsInitialized) return; // Prevent multiple bindings
 
-  const container = document.querySelector('.painting-on-wall-container');
-  if (!container) return;
-
-  let isDragging = false;
-  let startX, startY;
-  // Initialize from current CSS or default
-  let currentTop = 40;
-  let currentLeft = 50;
-  let currentWidth = 30; // Will be updated by openRoomView
-
-  // Touch handling
-  container.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 1) {
-      isDragging = true;
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      // Get current percentage positions
-      const style = window.getComputedStyle(container);
-      const matrix = new WebKitCSSMatrix(style.transform);
-      // Note: we control top/left via style, not transform for position usually in this script logic
-      // But let's stick to the existing logic of updating top/left percentages
-      const parent = container.offsetParent || document.body;
-      currentLeft = (container.offsetLeft / parent.clientWidth) * 100;
-      currentTop = (container.offsetTop / parent.clientHeight) * 100;
-    }
-  }, { passive: false });
-
-  window.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    const overlay = document.getElementById('room-view-overlay');
-    if (!overlay || !overlay.classList.contains('active')) return;
-
-    if (e.touches.length === 1) {
-      e.preventDefault(); // Prevent scrolling while dragging
-      const dx = ((e.touches[0].clientX - startX) / window.innerWidth) * 100;
-      const dy = ((e.touches[0].clientY - startY) / window.innerHeight) * 100;
-
-      container.style.left = `${currentLeft + dx}%`;
-      container.style.top = `${currentTop + dy}%`;
-    }
-  }, { passive: false });
-
-  window.addEventListener('touchend', () => {
-    isDragging = false;
-  });
-
-  // Mouse handling
-  container.addEventListener('mousedown', (e) => {
-    e.preventDefault(); // Prevent image drag behavior
-    isDragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
-
-    // Sync current position
-    const parent = container.offsetParent || document.body;
-    currentLeft = (container.offsetLeft / parent.clientWidth) * 100;
-    currentTop = (container.offsetTop / parent.clientHeight) * 100;
-
-    container.style.cursor = 'grabbing';
-  });
-
-  window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const overlay = document.getElementById('room-view-overlay');
-    if (!overlay || !overlay.classList.contains('active')) return;
-
-    e.preventDefault();
-    const dx = ((e.clientX - startX) / window.innerWidth) * 100;
-    const dy = ((e.clientY - startY) / window.innerHeight) * 100;
-
-    container.style.left = `${currentLeft + dx}%`;
-    container.style.top = `${currentTop + dy}%`;
-  });
-
-  window.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-      container.style.cursor = 'grab';
-    }
-  });
+  // Dragging functionality has been disabled as per user request.
+  // This function is kept to avoid breaking calls from other parts of the code.
 
   roomViewInteractionsInitialized = true;
 }

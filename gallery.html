@@ -172,10 +172,15 @@
     <!-- Room View Overlay -->
     <div id="room-view-overlay" class="room-view-overlay">
         <div class="room-view-container">
-            <button id="room-view-close" class="room-close-btn"
-                aria-label="Chiudi visualizzazione stanza">&times;</button>
+            <button id="room-view-close" class="room-close-btn" aria-label="Chiudi visualizzazione stanza">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
             <div class="room-background">
-                <img src="images/room-view-bg.png?v=4" alt="Room Background">
+                <img src="images/room-view-bg.png" alt="Room Background">
                 <div class="painting-on-wall-container">
                     <img id="painting-on-wall" src="" alt="Painting on wall">
                 </div>

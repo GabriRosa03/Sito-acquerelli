@@ -2813,27 +2813,27 @@ header.header-hidden {
   position: absolute;
   top: 25px;
   right: 25px;
-  width: 50px;
-  height: 50px;
+  width: 44px;
+  height: 44px;
   background: white;
   border-radius: 50%;
   border: none;
-  font-size: 32px;
   color: #333;
   cursor: pointer;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  line-height: 1;
-  padding-bottom: 4px;
+  /* Removed line-height and padding fix since we use SVG now */
 }
 
 .room-close-btn:hover {
-  transform: rotate(90deg) scale(1.1);
+  transform: scale(1.1);
   background: white;
+  color: var(--color-primary-red);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 .room-background {
@@ -2852,6 +2852,7 @@ header.header-hidden {
   object-fit: cover;
   user-select: none;
   -webkit-user-drag: none;
+  transform: translateZ(0);
 }
 
 .painting-on-wall-container {
@@ -2864,16 +2865,15 @@ header.header-hidden {
   /* Default proportional width */
   max-width: 80%;
   z-index: 50;
-  /* Higher z-index for dragging */
+  /* Higher z-index for visibility */
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: grab;
+  /* Dragging disabled - standard cursor */
+  cursor: default;
 }
 
-.painting-on-wall-container:active {
-  cursor: grabbing;
-}
+/* Removed active state since dragging is disabled */
 
 #painting-on-wall {
   width: 100%;
@@ -2881,9 +2881,11 @@ header.header-hidden {
   object-fit: contain;
   /* Image fits inside container maintaining aspect ratio */
 
-  /* No border, no shadow - clean look */
+  /* No border - clean look */
   border: none;
-  box-shadow: none;
+
+  /* Enhancement: Add brightness and depth */
+  filter: brightness(1.12) contrast(1.01);
 
   transition: transform 0.1s ease-out;
   /* Smooth follow for movement */
