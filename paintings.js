@@ -40,6 +40,15 @@ const paintings = [
         alt: "Lago di Montagna",
         dimensions: { width: 28, height: 25 }
     },
+    {
+        src: "images/paint24.jpg",
+        title: "Venezia Tramonto",
+        title_en: "Ancient Bridge",
+        description: "Acquerello su carta - Un vecchio ponte di pietra sopra un torrente di montagna",
+        description_en: "Watercolor on paper - An old stone bridge over a mountain stream",
+        alt: "Ponte Antico",
+        dimensions: { width: 56, height: 38 }
+    },
 
     {
         src: "images/paint6.jpg",
@@ -68,6 +77,8 @@ const paintings = [
         alt: "Finestre Veneziane",
         dimensions: { width: 21, height: 29 }
     },
+
+
     {
         src: "images/paint2.jpg",
         title: "Riflessi d'Oro",
@@ -106,6 +117,15 @@ const paintings = [
         description_en: "Watercolor on paper - A narrow Venetian street in the afternoon hours",
         alt: "Vicolo Silenzioso",
         dimensions: { width: 38, height: 28 }
+    },
+    {
+        src: "images/paint25.jpg",
+        title: "Nebbia Venezia",
+        title_en: "Ancient Bridge",
+        description: "Acquerello su carta - Un vecchio ponte di pietra sopra un torrente di montagna",
+        description_en: "Watercolor on paper - An old stone bridge over a mountain stream",
+        alt: "Ponte Antico",
+        dimensions: { width: 56, height: 38 }
     },
     {
         src: "images/paint14.jpg",
@@ -199,4 +219,6 @@ const paintings = [
         alt: "Ponte Antico",
         dimensions: { width: 31, height: 23 }
     },
+
+
 ]
