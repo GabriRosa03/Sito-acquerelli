@@ -28,40 +28,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- Column 2: Navigation with Details -->
                 <div class="footer-column footer-nav-detailed">
-                    <div class="nav-item-detailed">
-                        <a href="index.html" class="nav-title" data-translate="nav.home">Home</a>
-                        <span class="nav-desc">L'inizio del viaggio</span>
-                    </div>
-                    <div class="nav-item-detailed">
-                        <a href="gallery.html" class="nav-title" data-translate="nav.gallery">Galleria</a>
-                        <span class="nav-desc">Tutte le opere e collezioni</span>
-                    </div>
-                    <div class="nav-item-detailed">
-                        <a href="biografia.html" class="nav-title" data-translate="nav.biography">Biografia</a>
-                        <span class="nav-desc">La mia storia e ispirazione</span>
-                    </div>
-                    <div class="nav-item-detailed">
-                        <a href="materiali.html" class="nav-title" data-translate="nav.materials">Materiali</a>
-                        <span class="nav-desc">Strumenti e tecniche</span>
-                    </div>
-                    <div class="nav-item-detailed">
-                        <a href="contatti.html" class="nav-title" data-translate="nav.contacts">Contatti</a>
-                        <span class="nav-desc">Scrivimi per info o acquisti</span>
+                    <h4 class="footer-heading">Esplora</h4>
+                    <div class="nav-grid">
+                        <div class="nav-item-detailed">
+                            <a href="gallery.html" class="nav-title" data-translate="nav.gallery">Galleria</a>
+                            <span class="nav-desc">Tutte le opere e collezioni</span>
+                        </div>
+                        <div class="nav-item-detailed">
+                            <a href="biografia.html" class="nav-title" data-translate="nav.biography">Biografia</a>
+                            <span class="nav-desc">La mia storia e ispirazione</span>
+                        </div>
+                        <div class="nav-item-detailed">
+                            <a href="materiali.html" class="nav-title" data-translate="nav.materials">Materiali</a>
+                            <span class="nav-desc">Strumenti e tecniche</span>
+                        </div>
+                        <div class="nav-item-detailed">
+                            <a href="contatti.html" class="nav-title" data-translate="nav.contacts">Contatti</a>
+                            <span class="nav-desc">Scrivimi per info o acquisti</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Column 3: Social -->
                 <div class="footer-column footer-social">
                     <h4 class="footer-heading">Seguimi sui Social</h4>
-                    <div class="footer-social-icons">
-                        <!-- Instagram -->
-                        <a href="https://www.instagram.com/davide_rosa_watercolors" target="_blank" class="social-icon-link" aria-label="Instagram">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                        </a>
-                        <!-- YouTube -->
-                        <a href="https://www.youtube.com/@DavideRosaWatercolors" target="_blank" class="social-icon-link" aria-label="YouTube">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.97-1.96C18.84 4 12 4 12 4s-6.84 0-8.57.46a2.78 2.78 0 0 0-1.97 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58a2.78 2.78 0 0 0 1.97 1.96c1.73.46 8.57.46 8.57.46s6.84 0 8.57-.46a2.78 2.78 0 0 0 1.97-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"></path><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon></svg>
-                        </a>
+                    <div class="footer-social-links">
+                        <div class="footer-social-item">
+                            <a href="https://www.instagram.com/davide_rosa_watercolors" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Instagram">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="social-svg">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                            </a>
+                            <span class="footer-social-label">Instagram</span>
+                        </div>
+                        <div class="footer-social-item">
+                            <a href="https://www.youtube.com/@DavideRosaWatercolors" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="YouTube">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="social-svg">
+                                    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.97-1.96C18.84 4 12 4 12 4s-6.84 0-8.57.46a2.78 2.78 0 0 0-1.97 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58a2.78 2.78 0 0 0 1.97 1.96c1.73.46 8.57.46 8.57.46s6.84 0 8.57-.46a2.78 2.78 0 0 0 1.97-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"></path>
+                                    <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon>
+                                </svg>
+                            </a>
+                            <span class="footer-social-label">YouTube</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -72,11 +82,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="privacy.html">Privacy Policy</a>
                     <span class="separator">•</span>
                     <a href="cookie-policy.html">Cookie Policy</a>
-                    <span class="separator">•</span>
+                </div>
+                <div class="footer-copyright">
                     <span>&copy; 2025 Davide Rosa</span>
                 </div>
                 <div class="footer-credit">
-                    Designed with ❤️ by <a href="https://www.instagram.com/gabrielerosa_/" target="_blank">Gabriele Rosa</a>
+                    <a href="https://www.instagram.com/gabrielerosa_/" target="_blank" rel="noopener noreferrer" class="footer-credit-link">
+                        <span class="footer-credit-text">
+                            <span class="footer-credit-prefix">sviluppato da</span>
+                            <span class="footer-credit-name-red">Gabriele</span>
+                            <span class="footer-credit-name-red">Rosa</span>
+                        </span>
+                        <img src="images/logoGR2.png" alt="Gabriele Rosa" class="footer-credit-logo">
+                    </a>
                 </div>
             </div>
         </footer>

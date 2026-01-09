@@ -1083,9 +1083,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', () => {
     let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollBottom = documentHeight - (scrollTop + windowHeight);
+    
+    // Hide button when near bottom of page (within 200px of footer)
+    const bottomThreshold = 200;
 
     // Back to Top Visibility
-    if (scrollTop > scrollThreshold) {
+    if (scrollTop > scrollThreshold && scrollBottom > bottomThreshold) {
       backToTopBtn.classList.add('show');
     } else {
       backToTopBtn.classList.remove('show');

@@ -4,89 +4,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - Acquerelli di Gabriele</title>
+    <title>Privacy Policy - Davide Rosa</title>
     <!-- Use existing styles -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="cookie-banner.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
     <style>
         .policy-container {
-            max-width: 800px;
-            margin: 120px auto 60px;
-            /* Space for fixed header */
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            font-family: 'Montserrat', sans-serif;
+            max-width: 900px;
+            margin: 2rem auto 4rem;
+            padding: 3rem;
+            font-family: var(--font-main);
             color: var(--color-ink-dark);
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .policy-container h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.5rem;
+            font-family: var(--font-main);
+            font-size: 2.8rem;
             color: var(--color-primary-red);
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem;
             text-align: center;
+            font-weight: 700;
+        }
+
+        .policy-container .last-update {
+            text-align: center;
+            color: var(--color-mist-gray);
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
         }
 
         .policy-container h2 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            color: var(--color-lagoon-deep);
-            margin-top: 2rem;
+            font-family: var(--font-main);
+            font-size: 1.5rem;
+            color: var(--color-primary-red);
+            margin-top: 2.5rem;
             margin-bottom: 1rem;
-            border-bottom: 1px solid #eee;
+            border-bottom: 2px solid var(--color-border-light);
             padding-bottom: 0.5rem;
+            font-weight: 600;
         }
 
         .policy-container p {
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
+            color: var(--color-text-secondary);
         }
 
         .policy-container ul {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             padding-left: 2rem;
         }
 
         .policy-container li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--color-text-secondary);
+        }
+
+        .policy-container strong {
+            color: var(--color-ink-dark);
         }
 
         .back-link {
             display: inline-block;
-            margin-top: 2rem;
+            margin-top: 2.5rem;
             color: var(--color-primary-red);
             text-decoration: none;
-            font-weight: 500;
-            transition: opacity 0.3s;
+            font-weight: 600;
+            transition: all 0.3s;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--color-primary-red);
+            border-radius: 30px;
         }
 
         .back-link:hover {
-            opacity: 0.8;
-            text-decoration: underline;
+            background: var(--color-primary-red);
+            color: white;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 
 <body>
-    <!-- Header Simplificato -->
-    <header
-        style="background: white; padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; z-index: 1000;">
-        <div
-            style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-            <a href="index.html"
-                style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--color-primary-red); text-decoration: none; font-weight: 600;">Acquerelli
-                di Gabriele</a>
-            <a href="index.html" style="color: var(--color-ink-dark); text-decoration: none;">Torna alla Home</a>
+    <!-- Header -->
+    <header class="header-contatti">
+        <!-- Left Navigation -->
+        <nav class="nav-left">
+            <ul>
+                <li><a href="biografia.html" data-translate="nav.biography">Biografia</a></li>
+                <li><a href="gallery.html" data-translate="nav.gallery">Galleria</a></li>
+            </ul>
+        </nav>
+
+        <!-- Center Logo -->
+        <div class="logo-container">
+            <a href="index.html">
+                <img src="images/logoPapiPng.png" alt="Logo Davide Rosa" class="header-logo">
+            </a>
         </div>
+
+        <!-- Right Navigation -->
+        <nav class="nav-right">
+            <ul>
+                <li><a href="materiali.html" data-translate="nav.materials">Materiali</a></li>
+                <li><a href="contatti.html" data-translate="nav.contacts">Contatti</a></li>
+            </ul>
+        </nav>
+
+        <!-- Hamburger Menu Button (Mobile) -->
+        <button class="hamburger" aria-label="Menu" id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav" id="mobile-nav">
+            <ul>
+                <li><a href="biografia.html" data-translate="nav.biography">Biografia</a></li>
+                <li><a href="gallery.html" data-translate="nav.gallery">Galleria</a></li>
+                <li><a href="materiali.html" data-translate="nav.materials">Materiali</a></li>
+                <li><a href="contatti.html" data-translate="nav.contacts">Contatti</a></li>
+            </ul>
+        </nav>
     </header>
 
     <div class="policy-container">
         <h1>Privacy Policy</h1>
-        <p>Ultimo aggiornamento: Gennaio 2026</p>
+        <p class="last-update">Ultimo aggiornamento: Gennaio 2026</p>
 
         <p>Questa Privacy Policy descrive come vengono gestiti i dati personali degli utenti che visitano questo sito
             web.</p>
@@ -146,5 +193,8 @@
     <!-- JavaScript -->
     <script src="footer-loader.js"></script>
     <script src="translations.js"></script>
+    <script src="language-switcher.js"></script>
+    <script src="script.js"></script>
+    <script src="legal-helper.js"></script>
 
 </html>

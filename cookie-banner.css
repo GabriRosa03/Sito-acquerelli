@@ -18,6 +18,8 @@
     align-items: center;
     gap: 2rem;
     opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     font-family: 'Montserrat', sans-serif;
@@ -26,6 +28,8 @@
 #cookie-banner.visible {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 #cookie-banner .cookie-content {

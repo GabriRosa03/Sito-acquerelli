@@ -1,7 +1,30 @@
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('--- Cookie Consent Script Loaded ---');
-
     const COOKIE_CONSENT_KEY = 'cookieConsent';
+
+    // Check current status first
+    let consent = null;
+    try {
+        consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+        console.log('Current consent status:', consent);
+    } catch (e) {
+        console.warn('LocalStorage access denied:', e);
+    }
+
+    // Initialize analytics if already accepted
+    if (consent === 'accepted') {
+        if (typeof window.initAnalytics === 'function') {
+            window.initAnalytics();
+            console.log('Analytics initialized (Consent: accepted)');
+        }
+        return; // Don't even create the banner
+    } else if (consent === 'declined') {
+        console.log('Analytics blocked (Consent: declined)');
+        return; // Don't even create the banner
+    }
+
+    // No choice made -> Create and Show banner
+    console.log('No consent found. Creating banner...');
+
     const banner = document.createElement('div');
     banner.id = 'cookie-banner';
 
@@ -20,42 +43,19 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
     `;
 
-    // Append to body
+    // Append to body and show
     document.body.appendChild(banner);
-    console.log('Cookie banner appended to body');
+
+    // Force style just in case CSS fails to load, or just rely on CSS
+    banner.style.display = 'flex';
+
+    setTimeout(() => {
+        banner.classList.add('visible');
+        console.log('Banner visible class added');
+    }, 500);
 
     const acceptBtn = document.getElementById('btn-accept-cookies');
     const declineBtn = document.getElementById('btn-decline-cookies');
-
-    // Check current status
-    let consent = null;
-    try {
-        consent = localStorage.getItem(COOKIE_CONSENT_KEY);
-        console.log('Current consent status:', consent);
-    } catch (e) {
-        console.warn('LocalStorage access denied:', e);
-    }
-
-    if (consent === 'accepted') {
-        if (typeof window.initAnalytics === 'function') {
-            window.initAnalytics();
-            console.log('Analytics initialized (Consent: accepted)');
-        }
-    } else if (consent === 'declined') {
-        console.log('Analytics blocked (Consent: declined)');
-    } else {
-        // No choice made -> Show banner
-        console.log('No consent found. Showing banner...');
-
-        // Force style just in case CSS fails to load
-        banner.style.display = 'flex';
-
-        setTimeout(() => {
-            banner.classList.add('visible');
-            console.log('Banner visible class added');
-        }, 500);
-    }
-
 
     // Handle Accept
     acceptBtn.addEventListener('click', () => {
