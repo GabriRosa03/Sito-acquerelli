@@ -12,6 +12,7 @@
     <title>Galleria - Davide Rosa</title>
 
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="cookie-banner.css">
 
     <!-- Preconnect to Google Fonts for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,6 +65,11 @@
 
     <!-- Main Content -->
     <main>
+        <!-- Loading Overlay -->
+        <div id="gallery-loading" class="gallery-loading">
+            <div class="spinner"></div>
+        </div>
+
         <!-- Masonry Gallery -->
         <div id="gallery-grid" class="gallery">
             <!-- Gallery items will be dynamically inserted here by script.js -->
@@ -165,9 +171,7 @@
     </div>
 
     <!-- Footer -->
-    <footer>
-        <p data-translate="footer.rights">&copy; 2025 Davide Rosa - Tutti i diritti riservati</p>
-    </footer>
+    <div id="site-footer-container"></div>
 
     <!-- Room View Overlay -->
     <div id="room-view-overlay" class="room-view-overlay">
@@ -215,10 +219,12 @@
     <script src="likes.js"></script>
 
     <!-- JavaScript -->
+    <script src="footer-loader.js"></script>
     <script src="translations.js"></script>
     <script src="language-switcher.js"></script>
     <script src="paintings.js"></script>
     <script src="script.js"></script>
+    <script src="legal-helper.js"></script>
 </body>
 
 </html>

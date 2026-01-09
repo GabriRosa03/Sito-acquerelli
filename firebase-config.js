@@ -14,4 +14,11 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
-const analytics = firebase.analytics();
+
+// Espone la funzione di inizializzazione per il cookie banner
+window.initAnalytics = function () {
+    if (firebase.apps.length && !window.analyticsInstance) {
+        window.analyticsInstance = firebase.analytics();
+        console.log("Firebase Analytics Initialized via Consent");
+    }
+};

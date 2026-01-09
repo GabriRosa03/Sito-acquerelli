@@ -22,6 +22,7 @@ const paintings = [
         dimensions: { width: 38, height: 28 }
     },
 
+
     {
         src: "images/paint3.jpg",
         title: "Sogno in Laguna",
@@ -32,15 +33,6 @@ const paintings = [
         dimensions: { width: 38, height: 28 }
     },
     {
-        src: "images/paint17.jpg",
-        title: "Lago di Montagna",
-        title_en: "Mountain Lake",
-        description: "Acquerello su carta - Acque cristalline circondate da vette innevate",
-        description_en: "Watercolor on paper - Crystal clear waters surrounded by snowy peaks",
-        alt: "Lago di Montagna",
-        dimensions: { width: 28, height: 25 }
-    },
-    {
         src: "images/paint24.jpg",
         title: "Venezia Tramonto",
         title_en: "Ancient Bridge",
@@ -49,7 +41,25 @@ const paintings = [
         alt: "Ponte Antico",
         dimensions: { width: 56, height: 38 }
     },
+    {
+        src: "images/paint17.jpg",
+        title: "Lago di Montagna",
+        title_en: "Mountain Lake",
+        description: "Acquerello su carta - Acque cristalline circondate da vette innevate",
+        description_en: "Watercolor on paper - Crystal clear waters surrounded by snowy peaks",
+        alt: "Lago di Montagna",
+        dimensions: { width: 28, height: 25 }
+    },
 
+    {
+        src: "images/paint28.jpg",
+        title: "Ponte Antico",
+        title_en: "Ancient Bridge",
+        description: "Acquerello su carta - Un vecchio ponte di pietra sopra un torrente di montagna",
+        description_en: "Watercolor on paper - An old stone bridge over a mountain stream",
+        alt: "Ponte Antico",
+        dimensions: { width: 38, height: 28 }
+    },
     {
         src: "images/paint6.jpg",
         title: "Sentiero di Montagna",
@@ -68,6 +78,8 @@ const paintings = [
         alt: "Piazza Antica",
         dimensions: { width: 14, height: 19 }
     },
+
+
     {
         src: "images/paint11.jpg",
         title: "Finestre Veneziane",
@@ -77,6 +89,17 @@ const paintings = [
         alt: "Finestre Veneziane",
         dimensions: { width: 21, height: 29 }
     },
+
+    {
+        src: "images/paint12.jpg",
+        title: "Tramonto sul Mare",
+        title_en: "Sunset on the Sea",
+        description: "Acquerello su carta - Il sole che si tuffa nell'orizzonte marino",
+        description_en: "Watercolor on paper - The sun diving into the marine horizon",
+        alt: "Tramonto sul Mare",
+        dimensions: { width: 29, height: 19 }
+    },
+
 
 
     {
@@ -91,25 +114,6 @@ const paintings = [
 
 
     {
-        src: "images/paint8.jpg",
-        title: "Nebbie Lagunari",
-        title_en: "Lagoon Mists",
-        description: "Acquerello su carta - La laguna avvolta dalla nebbia mattutina",
-        description_en: "Watercolor on paper - The lagoon wrapped in morning mist",
-        alt: "Nebbie Lagunari",
-        dimensions: { width: 29, height: 38 }
-    },
-
-    {
-        src: "images/paint12.jpg",
-        title: "Tramonto sul Mare",
-        title_en: "Sunset on the Sea",
-        description: "Acquerello su carta - Il sole che si tuffa nell'orizzonte marino",
-        description_en: "Watercolor on paper - The sun diving into the marine horizon",
-        alt: "Tramonto sul Mare",
-        dimensions: { width: 29, height: 19 }
-    },
-    {
         src: "images/paint13.jpg",
         title: "Vicolo Silenzioso",
         title_en: "Silent Alley",
@@ -119,13 +123,22 @@ const paintings = [
         dimensions: { width: 38, height: 28 }
     },
     {
+        src: "images/paint26.jpg",
+        title: "Ponte Antico",
+        title_en: "Ancient Bridge",
+        description: "Acquerello su carta - Un vecchio ponte di pietra sopra un torrente di montagna",
+        description_en: "Watercolor on paper - An old stone bridge over a mountain stream",
+        alt: "Ponte Antico",
+        dimensions: { width: 38, height: 28 }
+    },
+    {
         src: "images/paint25.jpg",
         title: "Nebbia Venezia",
         title_en: "Ancient Bridge",
         description: "Acquerello su carta - Un vecchio ponte di pietra sopra un torrente di montagna",
         description_en: "Watercolor on paper - An old stone bridge over a mountain stream",
         alt: "Ponte Antico",
-        dimensions: { width: 56, height: 38 }
+        dimensions: { width: 28, height: 38 }
     },
     {
         src: "images/paint14.jpg",
@@ -145,15 +158,7 @@ const paintings = [
         alt: "Gondole al Tramonto",
         dimensions: { width: 25, height: 28 }
     },
-    {
-        src: "images/paint16.jpg",
-        title: "Borgo Medievale",
-        title_en: "Medieval Village",
-        description: "Acquerello su carta - Le mura e le torri di un antico borgo italiano",
-        description_en: "Watercolor on paper - The walls and towers of an ancient Italian village",
-        alt: "Borgo Medievale",
-        dimensions: { width: 28, height: 25 }
-    },
+
     {
         src: "images/paint4.jpg",
         title: "Giardino Fiorito",
@@ -164,6 +169,25 @@ const paintings = [
         dimensions: { width: 33, height: 23 }
     },
 
+    {
+        src: "images/paint8.jpg",
+        title: "Nebbie Lagunari",
+        title_en: "Lagoon Mists",
+        description: "Acquerello su carta - La laguna avvolta dalla nebbia mattutina",
+        description_en: "Watercolor on paper - The lagoon wrapped in morning mist",
+        alt: "Nebbie Lagunari",
+        dimensions: { width: 29, height: 38 }
+    },
+
+    {
+        src: "images/paint16.jpg",
+        title: "Borgo Medievale",
+        title_en: "Medieval Village",
+        description: "Acquerello su carta - Le mura e le torri di un antico borgo italiano",
+        description_en: "Watercolor on paper - The walls and towers of an ancient Italian village",
+        alt: "Borgo Medievale",
+        dimensions: { width: 28, height: 25 }
+    },
 
     {
         src: "images/paint19.jpg",
@@ -219,6 +243,18 @@ const paintings = [
         alt: "Ponte Antico",
         dimensions: { width: 31, height: 23 }
     },
+
+    {
+        src: "images/paint27.jpg",
+        title: "Ponte Antico",
+        title_en: "Ancient Bridge",
+        description: "Acquerello su carta - Un vecchio ponte di pietra sopra un torrente di montagna",
+        description_en: "Watercolor on paper - An old stone bridge over a mountain stream",
+        alt: "Ponte Antico",
+        dimensions: { width: 38, height: 28 }
+    },
+
+
 
 
 ]

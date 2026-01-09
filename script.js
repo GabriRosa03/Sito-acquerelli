@@ -27,24 +27,61 @@ function loadGallery() {
   const lang = localStorage.getItem('site_lang') || 'it';
   const btnText = (typeof translations !== 'undefined' && translations[lang]) ? translations[lang]['gallery.btn_contact'] : "Richiedi Informazioni";
 
+  // Show loading overlay
+  const loadingOverlay = document.getElementById('gallery-loading');
+  if (loadingOverlay) {
+    loadingOverlay.style.display = 'flex';
+  }
+
+  let loadedCount = 0;
+  const totalImages = paintings.length;
+
   paintings.forEach((painting, index) => {
     const card = document.createElement('div');
     card.className = 'painting-card';
 
     const img = document.createElement('img');
+    const title = painting[titleKey] || painting.title;
+
+    // Create Image Container (for Hover Overlay)
+    const imgContainer = document.createElement('div');
+    imgContainer.className = 'image-container';
+    imgContainer.style.position = 'relative';
+    imgContainer.style.overflow = 'hidden';
+    imgContainer.style.borderRadius = '8px';
+
     // Use thumbnail if available, otherwise full source
     img.src = painting.thumb || painting.src;
-    const title = painting[titleKey] || painting.title;
     img.alt = painting.alt || title;
-    img.loading = "lazy"; // Lazy loading enabled
+
+    // Optimized Loading Strategy: Load first 6 eagerly, others lazy
+    img.loading = index < 6 ? "eager" : "lazy";
+
+    // Handle Image Load - Hide loading when first images are ready
+    img.onload = function () {
+      loadedCount++;
+      // Hide loading overlay after first 6 images are loaded
+      if (loadedCount >= 6 && loadingOverlay) {
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => {
+          loadingOverlay.style.display = 'none';
+        }, 300);
+      }
+    };
 
     // Gestione errore caricamento immagine
     img.onerror = function () {
       this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23999" font-size="16"%3EImmagine non disponibile%3C/text%3E%3C/svg%3E';
+      loadedCount++;
+      if (loadedCount >= 6 && loadingOverlay) {
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => {
+          loadingOverlay.style.display = 'none';
+        }, 300);
+      }
     };
 
     // Display dimensions instead of description with explicit labels
-    // const description = painting[descKey] || painting.description;
     let description = "";
     if (painting.dimensions) {
       const isEn = lang === 'en';
@@ -60,58 +97,38 @@ function loadGallery() {
     const paintingId = likeSystem.getPaintingId(painting);
     const hasLiked = likeSystem.hasUserLiked(paintingId);
 
-    // Mobile info Header (Title + Like Count for Mobile - Read Only)
-    const mobileHeader = document.createElement('div');
-    mobileHeader.className = 'mobile-info-header';
-    mobileHeader.innerHTML = `
+    const hoverOverlay = document.createElement('div');
+    hoverOverlay.className = 'hover-overlay';
+    hoverOverlay.innerHTML = `
+        <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+        </svg>
+        <span>SCOPRI</span>
+    `;
+
+    imgContainer.appendChild(img);
+    imgContainer.appendChild(hoverOverlay);
+
+    // Click on overlay to open lightbox
+    hoverOverlay.addEventListener('click', () => {
+      openLightbox(index);
+    });
+
+    // Universal Info Block (Title + Likes)
+    infoDiv.innerHTML = `
       <h3>${title}</h3>
-      <div class="mobile-heart-display ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" style="display: flex; align-items: center; justify-content: center; min-width: 30px; min-height: 30px;">
-          <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px;">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-          <span class="like-count" data-painting-id="${paintingId}" style="margin-left: 5px; font-size: 0.9rem; color: #8E1C14; font-weight: 700;">0</span>
+      <div class="card-likes-wrapper">
+          <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${index}" aria-label="Mi piace">
+              <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+              <span class="like-count" data-painting-id="${paintingId}">0</span>
+          </button>
       </div>
     `;
 
-    // Standard Desktop Info
-    infoDiv.innerHTML = `
-            <h3>${title}</h3>
-            <p class="painting-description" style="font-style: italic; font-size: 0.9em;">${description}</p>
-            <div class="painting-actions">
-                <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${index}">
-                    <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                    </svg>
-                    <span class="like-count" data-painting-id="${paintingId}">0</span>
-                </button>
-                <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">${btnText}</a>
-            </div>
-        `;
-
-    // Insert mobile header at the top of infoDiv
-    infoDiv.innerHTML = ''; // Reset
-    infoDiv.appendChild(mobileHeader);
-
-    const desktopContent = document.createElement('div');
-    desktopContent.innerHTML = `
-            <h3 class="desktop-title">${title}</h3>
-            <p class="painting-description" style="font-style: italic; font-size: 0.9em;">${description}</p>
-            <div class="painting-actions">
-                <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${index}">
-                   <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                    </svg>
-                    <span class="like-count" data-painting-id="${paintingId}">0</span>
-                </button>
-                <a href="contatti.html?opera=${encodeURIComponent(painting.title)}" class="btn-contact">${btnText}</a>
-            </div>
-    `;
-    // We need to append the children of desktopContent
-    while (desktopContent.firstChild) {
-      infoDiv.appendChild(desktopContent.firstChild);
-    }
-
-    card.appendChild(img);
+    card.appendChild(imgContainer);
     card.appendChild(infoDiv);
 
     // Click per aprire lightbox
@@ -119,9 +136,14 @@ function loadGallery() {
       openLightbox(index);
     });
 
-    mobileHeader.addEventListener('click', () => {
-      openLightbox(index);
-    });
+    // Click on title to open lightbox
+    const titleEl = infoDiv.querySelector('h3');
+    if (titleEl) {
+      titleEl.style.cursor = 'pointer';
+      titleEl.addEventListener('click', () => {
+        openLightbox(index);
+      });
+    }
 
     galleryGrid.appendChild(card);
   });
@@ -785,41 +807,43 @@ document.addEventListener('DOMContentLoaded', () => {
   let magnifier = null;
   let isMagnifying = false;
 
-  lightboxImg.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 1 && !isPinching) {
-      // Single finger touch - activate magnifier
+  if (lightboxImg) {
+    lightboxImg.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1 && !isPinching) {
+        // Single finger touch - activate magnifier
+        createMagnifier();
+        updateMagnifier(e.touches[0]);
+      }
+    });
+
+    lightboxImg.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 1 && magnifier && !isPinching) {
+        e.preventDefault();
+        updateMagnifier(e.touches[0]);
+      }
+    });
+
+    lightboxImg.addEventListener('touchend', () => {
+      removeMagnifier();
+    });
+
+    // MOUSE SUPPORT (Desktop Zoom - Hover)
+    lightboxImg.addEventListener('mouseenter', () => {
       createMagnifier();
-      updateMagnifier(e.touches[0]);
-    }
-  });
+    });
 
-  lightboxImg.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 1 && magnifier && !isPinching) {
-      e.preventDefault();
-      updateMagnifier(e.touches[0]);
-    }
-  });
+    lightboxImg.addEventListener('mouseleave', () => {
+      removeMagnifier();
+    });
 
-  lightboxImg.addEventListener('touchend', () => {
-    removeMagnifier();
-  });
-
-  // MOUSE SUPPORT (Desktop Zoom - Hover)
-  lightboxImg.addEventListener('mouseenter', () => {
-    createMagnifier();
-  });
-
-  lightboxImg.addEventListener('mouseleave', () => {
-    removeMagnifier();
-  });
-
-  lightboxImg.addEventListener('mousemove', (e) => {
-    // Track movement only if magnifier exists
-    if (isMagnifying && magnifier) {
-      e.preventDefault();
-      updateMagnifier(e);
-    }
-  });
+    lightboxImg.addEventListener('mousemove', (e) => {
+      // Track movement only if magnifier exists
+      if (isMagnifying && magnifier) {
+        e.preventDefault();
+        updateMagnifier(e);
+      }
+    });
+  }
 
   // Window listeners removed as we only care about hovering the image directly
 

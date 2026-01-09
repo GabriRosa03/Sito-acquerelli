@@ -11,6 +11,7 @@
     <title>Contatti - Davide Rosa</title>
 
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="cookie-banner.css">
 
     <!-- Preconnect to Google Fonts for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -135,6 +136,7 @@
 
             <!-- Social Media Section -->
             <div class="social-section mt-lg">
+                <h3 class="social-title" data-translate="contact.social">Seguimi sui Social</h3>
                 <div class="social-links">
                     <div class="social-item">
                         <a href="https://www.instagram.com/davide_rosa_watercolors" target="_blank"
@@ -148,16 +150,19 @@
                         </a>
                         <span class="social-label">Instagram</span>
                     </div>
+
                     <div class="social-item">
-                        <a href="mailto:davide.rosa@example.com" class="social-link" aria-label="Email">
+                        <a href="https://www.youtube.com/@DavideRosaWatercolors" target="_blank"
+                            rel="noopener noreferrer" class="social-link" aria-label="YouTube">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round" class="social-svg">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                <path
+                                    d="M22.54 6.42a2.78 2.78 0 0 0-1.97-1.96C18.84 4 12 4 12 4s-6.84 0-8.57.46a2.78 2.78 0 0 0-1.97 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58a2.78 2.78 0 0 0 1.97 1.96c1.73.46 8.57.46 8.57.46s6.84 0 8.57-.46a2.78 2.78 0 0 0 1.97-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z">
                                 </path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
+                                <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon>
                             </svg>
                         </a>
-                        <span class="social-label">Email</span>
+                        <span class="social-label">YouTube</span>
                     </div>
                 </div>
             </div>
@@ -165,16 +170,16 @@
     </main>
 
     <!-- Footer -->
-    <footer>
-        <p data-translate="footer.rights">&copy; 2025 Davide Rosa - Tutti i diritti riservati</p>
-    </footer>
+    <div id="site-footer-container"></div>
 
     <!-- JavaScript -->
+    <script src="footer-loader.js"></script>
     <script src="translations.js"></script>
     <script src="language-switcher.js"></script>
     <script src="paintings.js"></script>
     <script src="script.js"></script>
     <script src="contact.js"></script>
+    <script src="legal-helper.js"></script>
 </body>
 
 </html>

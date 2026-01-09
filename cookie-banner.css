@@ -1,0 +1,113 @@
+/* Cookie Banner Styles */
+#cookie-banner {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    width: 90%;
+    max-width: 1000px;
+    background: #e0e0dfb7;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-family: 'Montserrat', sans-serif;
+}
+
+#cookie-banner.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+#cookie-banner .cookie-content {
+    flex: 1;
+}
+
+#cookie-banner h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    color: var(--color-ink-dark);
+    margin: 0 0 0.5rem 0;
+}
+
+#cookie-banner p {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0;
+    line-height: 1.5;
+}
+
+#cookie-banner a {
+    color: var(--color-primary-red);
+    text-decoration: underline;
+    transition: opacity 0.3s;
+}
+
+#cookie-banner a:hover {
+    opacity: 0.8;
+}
+
+#cookie-banner .cookie-actions {
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+#cookie-banner .btn-cookie {
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+#cookie-banner .btn-accept {
+    background: var(--color-primary-red);
+    color: white;
+    box-shadow: 0 4px 12px rgba(189, 43, 43, 0.3);
+}
+
+#cookie-banner .btn-accept:hover {
+    background: #a31d1d;
+    /* Slightly darker red */
+    transform: translateY(-2px);
+}
+
+#cookie-banner .btn-decline {
+    background: transparent;
+    border: 1px solid #666;
+    color: #555;
+}
+
+#cookie-banner .btn-decline:hover {
+    border-color: #999;
+    color: #333;
+    background: #9999996e;
+}
+
+@media (max-width: 768px) {
+    #cookie-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem;
+        bottom: 1rem;
+        width: 95%;
+    }
+
+    #cookie-banner .cookie-actions {
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 1rem;
+    }
+}
