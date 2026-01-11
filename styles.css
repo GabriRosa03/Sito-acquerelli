@@ -3898,13 +3898,12 @@ header.header-hidden {
   max-width: 1100px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 320px 1fr 240px;
-  gap: 2.5rem;
+  grid-template-columns: 320px 1fr 160px;
+  gap: 8rem;
   align-items: start;
   margin-bottom: 4rem;
   position: relative;
   z-index: 1;
-  padding: 0 1rem;
 }
 
 /* --- Column 1: About --- */
@@ -3954,6 +3953,7 @@ header.header-hidden {
   flex-direction: column;
   gap: 1.5rem;
   align-items: flex-start;
+  margin-top: 1rem;
 }
 
 .footer-nav-detailed .footer-heading {
@@ -4010,6 +4010,7 @@ header.header-hidden {
   flex-direction: column;
   align-items: flex-start;
   gap: 1.5rem;
+  margin-top: 1rem;
 }
 
 .footer-heading {
@@ -4104,6 +4105,7 @@ header.header-hidden {
   padding-left: 1rem;
   padding-right: 1rem;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .footer-legal-links {
