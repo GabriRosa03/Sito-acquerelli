@@ -3922,7 +3922,7 @@ header.header-hidden {
   grid-template-columns: 320px 1fr 240px;
   gap: 2.5rem;
   align-items: start;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
   position: relative;
   z-index: 1;
   padding: 0 1rem;
@@ -3939,13 +3939,13 @@ header.header-hidden {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 0.5rem;
 }
 
 .footer-logo {
   height: 60px;
   width: auto;
   display: block;
+  margin-bottom: 0.5rem;
 }
 
 .footer-brand h3 {
@@ -4183,7 +4183,7 @@ header.header-hidden {
 }
 
 .footer-credit-logo {
-  height: 28px;
+  height: 24px;
   width: auto;
   display: block;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
@@ -4201,7 +4201,7 @@ header.header-hidden {
   font-weight: 700;
   font-size: 0.9rem;
   letter-spacing: 0.02em;
-  gap: 0.4rem;
+  gap: 0.25rem;
 }
 
 .footer-credit-prefix {
@@ -4291,13 +4291,43 @@ header.header-hidden {
     padding: 0;
   }
 
-  .nav-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  /* Hide navigation column on mobile */
+  .footer-nav-detailed {
+    display: none !important;
   }
 
-  .nav-item-detailed {
-    gap: 0.3rem;
+  /* Show description on mobile */
+  .footer-description {
+    display: block !important;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--color-ink-dark);
+    max-width: 80%;
+    text-align: center;
+  }
+
+  /* Simplify social column */
+  .footer-social .footer-heading {
+    display: none;
+  }
+
+
+
+  .footer-social-links {
+    justify-content: center;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .footer-about {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .footer-brand {
+    justify-content: center;
+    width: 100%;
   }
 }
 
@@ -4307,22 +4337,24 @@ header.header-hidden {
   }
 
   .footer-content {
-    gap: 2.5rem;
+    gap: 2rem;
   }
 
   .footer-brand {
-    flex-direction: column;
-    align-items: flex-start;
+    width: 80%;
+    align-items: center;
+    justify-content: start;
     gap: 0.75rem;
+    margin-left: 4rem;
   }
 
   .footer-brand h3 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 
   .footer-social-links {
     gap: 2rem;
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .footer-bottom {
@@ -4347,7 +4379,8 @@ header.header-hidden {
   }
 
   .footer-credit {
-    order: 3;
+    justify-content: center;
+    margin-top: 1rem;
   }
 }
 
