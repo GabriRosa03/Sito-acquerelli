@@ -66,24 +66,6 @@
         .policy-container strong {
             color: var(--color-ink-dark);
         }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 2.5rem;
-            color: var(--color-primary-red);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            padding: 0.8rem 1.5rem;
-            border: 2px solid var(--color-primary-red);
-            border-radius: 30px;
-        }
-
-        .back-link:hover {
-            background: var(--color-primary-red);
-            color: white;
-            transform: translateY(-2px);
-        }
     </style>
 </head>
 
@@ -113,23 +95,23 @@
             </ul>
         </nav>
 
-        <!-- Hamburger Menu Button (Mobile) -->
-        <button class="hamburger" aria-label="Menu" id="hamburger-btn">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <!-- Mobile Navigation -->
-        <nav class="mobile-nav" id="mobile-nav">
-            <ul>
-                <li><a href="biografia.html" data-translate="nav.biography">Biografia</a></li>
-                <li><a href="gallery.html" data-translate="nav.gallery">Galleria</a></li>
-                <li><a href="materiali.html" data-translate="nav.materials">Materiali</a></li>
-                <li><a href="contatti.html" data-translate="nav.contacts">Contatti</a></li>
-            </ul>
-        </nav>
     </header>
+
+    <!-- Mobile UI Elements -->
+    <button class="hamburger" aria-label="Menu" id="hamburger-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <nav class="mobile-nav" id="mobile-nav">
+        <ul>
+            <li><a href="biografia.html" data-translate="nav.biography">Biografia</a></li>
+            <li><a href="gallery.html" data-translate="nav.gallery">Galleria</a></li>
+            <li><a href="materiali.html" data-translate="nav.materials">Materiali</a></li>
+            <li><a href="contatti.html" data-translate="nav.contacts">Contatti</a></li>
+        </ul>
+    </nav>
 
 
 
@@ -184,8 +166,6 @@
             <li>Opporti al trattamento.</li>
         </ul>
         <p>Per esercitare questi diritti, puoi contattare il Titolare all'indirizzo email indicato sopra.</p>
-
-        <a href="index.html" class="back-link">← Torna alla Home</a>
     </div>
 
     <!-- Script per mantenere coerenza visuale se necessario -->
