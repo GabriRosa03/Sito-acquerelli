@@ -629,6 +629,47 @@ function initRoomViewInteractions() {
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
+  // Hamburger Menu Toggle
+  const hamburger = document.getElementById('hamburger-btn');
+  const mobileNav = document.getElementById('mobile-nav');
+
+  console.log('Hamburger initialization:', {
+    foundHamburger: !!hamburger,
+    foundMobileNav: !!mobileNav,
+    currentPage: window.location.pathname
+  });
+
+  if (hamburger && mobileNav) {
+    hamburger.addEventListener('click', () => {
+      console.log('Hamburger clicked!');
+      hamburger.classList.toggle('active');
+      mobileNav.classList.toggle('active');
+
+      const isActive = mobileNav.classList.contains('active');
+      console.log('Menu state:', isActive ? 'OPEN' : 'CLOSED');
+
+      // Prevent body scroll when menu is open
+      if (isActive) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Close menu when clicking a link
+    const navLinks = mobileNav.querySelectorAll('a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        console.log('Mobile nav link clicked, closing menu');
+        hamburger.classList.remove('active');
+        mobileNav.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+  } else {
+    console.warn('Hamburger or MobileNav NOT found on this page!');
+  }
+
   loadGallery();
 
   // Chiudi lightbox
@@ -980,21 +1021,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  lightbox.addEventListener('touchend', (e) => {
-    if (isPinching) {
-      // Reset Zoom on release for creating a "Lens" feel, or stay zoomed?
-      // Current logic: Reset to avoid complex panning logic.
-      if (e.touches.length < 2) {
-        isPinching = false;
-        if (lightboxImg) {
-          lightboxImg.style.transform = '';
-          lightboxImg.classList.remove('zoomed');
-          currentScale = 1;
+  if (lightbox) {
+    lightbox.addEventListener('touchend', (e) => {
+      if (isPinching) {
+        // Reset Zoom on release for creating a "Lens" feel, or stay zoomed?
+        // Current logic: Reset to avoid complex panning logic.
+        if (e.touches.length < 2) {
+          isPinching = false;
+          if (lightboxImg) {
+            lightboxImg.style.transform = '';
+            lightboxImg.classList.remove('zoomed');
+            currentScale = 1;
+          }
         }
+        return;
       }
-      return;
-    }
-  });
+    });
+  }
 
   // Navigation Buttons
   const prevBtn = document.getElementById('lightbox-prev');
@@ -1014,36 +1057,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Hamburger Menu Toggle
-  const hamburger = document.getElementById('hamburger-btn');
-  const mobileNav = document.getElementById('mobile-nav');
 
-  if (hamburger && mobileNav) {
-    hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('active');
-      mobileNav.classList.toggle('active');
-      // Prevent body scroll when menu is open
-      if (mobileNav.classList.contains('active')) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
-    });
-
-    // Close menu when clicking a link
-    const navLinks = mobileNav.querySelectorAll('a');
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        mobileNav.classList.remove('active');
-        document.body.style.overflow = '';
-      });
-    });
-  }
 
   // Keys navigation
   document.addEventListener('keydown', (e) => {
-    if (document.getElementById('lightbox').classList.contains('active')) {
+    const lb = document.getElementById('lightbox');
+    if (lb && lb.classList.contains('active')) {
       if (e.key === 'Escape') {
         closeLightbox();
       } else if (e.key === 'ArrowLeft') {
@@ -1053,12 +1072,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       // Allow escape for menu even if lightbox not active
-      const hamburger = document.getElementById('hamburger-btn');
-      const mobileNav = document.getElementById('mobile-nav');
+      const ham = document.getElementById('hamburger-btn');
+      const mob = document.getElementById('mobile-nav');
       if (e.key === 'Escape') {
-        if (hamburger && hamburger.classList.contains('active')) {
-          hamburger.classList.remove('active');
-          mobileNav.classList.remove('active');
+        if (ham && ham.classList.contains('active')) {
+          ham.classList.remove('active');
+          mob.classList.remove('active');
           document.body.style.overflow = '';
         }
       }
@@ -1086,7 +1105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
     const scrollBottom = documentHeight - (scrollTop + windowHeight);
-    
+
     // Hide button when near bottom of page (within 200px of footer)
     const bottomThreshold = 200;
 
