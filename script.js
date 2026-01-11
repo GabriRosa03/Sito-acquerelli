@@ -847,42 +847,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, { passive: false });
 
-    // Double-tap to Like functionality
-    let lastTap = 0;
-    const doubleTapDelay = 300; // ms
 
-    lightboxImg.addEventListener('touchend', (e) => {
-      const currentTime = new Date().getTime();
-      const tapLength = currentTime - lastTap;
 
-      if (tapLength < doubleTapDelay && tapLength > 0) {
-        // Double tap detected!
-        e.preventDefault();
-        handleDoubleTapLike();
-        lastTap = 0; // Reset to avoid triple-tap
-      } else {
-        lastTap = currentTime;
-      }
-    });
 
-    function handleDoubleTapLike() {
-      const likeBtn = document.querySelector('#lightbox-like-container .btn-like');
-      if (!likeBtn) return;
 
-      // Check current like state BEFORE clicking
-      const wasLiked = likeBtn.classList.contains('liked');
 
-      // Trigger like action
-      likeBtn.click();
-
-      // Show animated heart overlay with appropriate color
-      showLikeAnimation(!wasLiked); // Pass new state
-    }
-
-    function showLikeAnimation(isLiked) {
-      const likeBtn = document.querySelector('#lightbox-like-container .btn-like');
-      triggerLikeCelebration(likeBtn || document.body, isLiked);
-    }
   }
 
   // Magnifying Glass functionality
