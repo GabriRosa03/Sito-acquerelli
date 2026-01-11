@@ -640,30 +640,45 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   if (hamburger && mobileNav) {
-    hamburger.addEventListener('click', () => {
-      console.log('Hamburger clicked!');
+    // Dynamically create overlay if it doesn't exist
+    let overlay = document.querySelector('.mobile-nav-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'mobile-nav-overlay';
+      // Insert as first child so it's behind header in DOM order
+      document.body.insertBefore(overlay, document.body.firstChild);
+    }
+
+    function toggleMenu() {
       hamburger.classList.toggle('active');
       mobileNav.classList.toggle('active');
+      overlay.classList.toggle('active');
 
       const isActive = mobileNav.classList.contains('active');
-      console.log('Menu state:', isActive ? 'OPEN' : 'CLOSED');
-
       // Prevent body scroll when menu is open
-      if (isActive) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
+      document.body.style.overflow = isActive ? 'hidden' : '';
+    }
+
+    function closeMenu() {
+      hamburger.classList.remove('active');
+      mobileNav.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMenu();
     });
+
+    // Close when clicking overlay (the darkened area)
+    overlay.addEventListener('click', closeMenu);
 
     // Close menu when clicking a link
     const navLinks = mobileNav.querySelectorAll('a');
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
-        console.log('Mobile nav link clicked, closing menu');
-        hamburger.classList.remove('active');
-        mobileNav.classList.remove('active');
-        document.body.style.overflow = '';
+        closeMenu();
       });
     });
   } else {
