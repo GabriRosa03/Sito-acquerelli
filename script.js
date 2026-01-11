@@ -681,6 +681,32 @@ document.addEventListener('DOMContentLoaded', () => {
         closeMenu();
       });
     });
+
+    // Sync hamburger visibility with header on mobile
+    // Only run on mobile screens
+    if (window.innerWidth <= 768) {
+      const header = document.querySelector('header');
+      if (header) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            // When header is not visible, hide hamburger
+            if (entry.isIntersecting) {
+              hamburger.style.opacity = '1';
+              hamburger.style.pointerEvents = 'auto';
+            } else {
+              hamburger.style.opacity = '0';
+              hamburger.style.pointerEvents = 'none';
+              // Also close menu if it's open
+              closeMenu();
+            }
+          });
+        }, {
+          threshold: 0.1 // Trigger when at least 10% of header is visible
+        });
+
+        observer.observe(header);
+      }
+    }
   } else {
     console.warn('Hamburger or MobileNav NOT found on this page!');
   }

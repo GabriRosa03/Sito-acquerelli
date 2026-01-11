@@ -1916,8 +1916,8 @@ footer {
   display: none;
   flex-direction: column;
   justify-content: space-around;
-  width: 30px;
-  height: 25px;
+  width: 29px;
+  height: 29px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -1973,9 +1973,10 @@ footer {
     /* 50% of header height (90px) */
     transform: translateY(-50%);
     z-index: 1200;
+    transition: opacity 0.3s ease;
   }
 
-  /* Hide Desktop Navigation on Mobile */
+  /* Hide Desktop Navigation on Mobil e */
   .nav-left,
   .nav-right {
     display: none;
@@ -2563,7 +2564,6 @@ header.header-hidden {
 }
 
 .btn-like:hover:not(:disabled) {
-  background: rgba(142, 28, 20, 0.05);
   transform: translateY(-2px);
   box-shadow: none;
   /* No shadow when not liked */
@@ -2576,8 +2576,7 @@ header.header-hidden {
 
 /* Heart Icon */
 .btn-like .heart-icon {
-  width: 18px;
-  height: 18px;
+
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -2586,23 +2585,16 @@ header.header-hidden {
   transition: all 0.3s ease;
 }
 
-/* Liked State */
-.btn-like.liked {
-  background: var(--color-primary-red);
-  color: white;
-  border-color: var(--color-primary-red);
-}
 
+
+/* Liked State: Only red fill for the heart */
 .btn-like.liked .heart-icon {
-  fill: white;
-  stroke: white;
+  fill: var(--color-primary-red);
+  stroke: var(--color-primary-red);
 }
 
 .btn-like.liked:hover:not(:disabled) {
-  background: var(--color-primary-red-dark);
-  border-color: var(--color-primary-red-dark);
-  box-shadow: 0 4px 12px rgba(142, 28, 20, 0.3);
-  /* Shadow only when liked */
+  transform: translateY(-2px);
 }
 
 /* Heart Pop Animation */
@@ -2639,10 +2631,7 @@ header.header-hidden {
     font-size: 0.85rem;
   }
 
-  .btn-like .heart-icon {
-    width: 16px;
-    height: 16px;
-  }
+
 
   .like-count {
     font-size: 0.9rem;
