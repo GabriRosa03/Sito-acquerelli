@@ -93,7 +93,7 @@ const translations = {
         "bio.p11": "I therefore try to tell a story every time, a moment lived, an emotion felt. I hope that through my works you can also appreciate the charm of these extraordinary places with the ambition of being able to give you even the smallest emotion.",
 
         // Materials
-        "bio.title": "Materials",
+        "mat.title": "Materials",
         "mat.intro": "To capture the magic and transparency of my paintings, the choice of materials is as fundamental as the technique itself. I use only the highest quality products to ensure that each work maintains its beauty and vibrancy over time.",
         "mat.paper": "The Paper",
         "mat.paper_desc": "The support is the soul of watercolor. I mainly use <strong><a href=\"https://www.baohongart.com/\" target=\"_blank\" rel=\"noopener noreferrer\">BAOHONG MASTERCHOICE</a></strong> Chinese paper, 100% pure cotton, with a weight of 300g. Its texture, which I prefer rough, allows to obtain unique granulation effects and to work with large quantities of water without the sheet deforming.",
