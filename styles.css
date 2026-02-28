@@ -2329,8 +2329,8 @@ main:not(.home-fullscreen) {
 
   .lightbox-handle {
     width: 40px;
-    height: 5px;
-    background-color: #54545281;
+    height: 3px;
+    background-color: #565655ba;
     border-radius: 10px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
