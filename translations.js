@@ -40,6 +40,7 @@ const translations = {
         "mat.quote": "\"La qualità del materiale è il primo passo verso l'eccellenza dell'opera.\"",
 
         // Contact
+        "contact.title": "Contatti",
         "contact.name": "Nome *",
         "contact.email": "Email *",
         "contact.interest": "Quadro di Interesse (opzionale)",
@@ -106,6 +107,7 @@ const translations = {
         "mat.quote": "\"The quality of the material is the first step towards the excellence of the work.\"",
 
         // Contact
+        "contact.title": "Contacts",
         "contact.name": "Name *",
         "contact.email": "Email *",
         "contact.interest": "Painting of Interest (optional)",

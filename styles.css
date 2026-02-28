@@ -1214,7 +1214,7 @@ h2 {
 
 .content-section p {
   font-size: 1rem;
-  line-height: 1.8;
+  line-height: 1.6;
 }
 
 .content-section a {
@@ -1258,13 +1258,10 @@ h2 {
 
 .page-header-title h2 {
   font-family: var(--font-serif);
-  font-size: 1.5rem;
   color: var(--color-primary-red);
-  font-weight: 600;
   margin-bottom: 0;
   margin-left: 0;
   padding-left: 0;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
@@ -1279,20 +1276,18 @@ h2 {
 
 @media (max-width: 600px) {
   .page-header-title {
-    margin-bottom: 1.5rem;
+    margin-bottom: 6rem;
     gap: 0.3rem;
-    margin-top: 4rem;
+    margin-top: 2rem;
   }
 
   .page-header-title h2 {
-    font-size: 1.1rem;
     letter-spacing: 0.05em;
   }
 
   .page-description {
     font-size: 0.9rem;
-    padding: 0 1.2rem;
-    line-height: 1.5;
+    line-height: 1;
     color: #666;
   }
 }
@@ -2353,12 +2348,14 @@ main:not(.home-fullscreen) {
   .lightbox-header .header-icon-btn {
     pointer-events: auto;
     /* Re-enable buttons */
+    z-index: 2101;
+    /* Ensure buttons are above lightbox-handle-wrapper (z-index: 2050) */
   }
 
   /* Optimize Close Button for Mobile (Arrow Down Style) */
   #lightbox-close-btn {
-    width: 44px;
-    height: 44px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     box-shadow: none;
     background-color: transparent;
@@ -2367,9 +2364,8 @@ main:not(.home-fullscreen) {
     /* Force display on mobile */
     align-items: center;
     justify-content: center;
-    top: 5px;
     /* Adjust top position */
-    right: 15px;
+    right: 8px;
     position: absolute;
     /* Fix position relative to header or container */
     pointer-events: auto;
@@ -2383,9 +2379,9 @@ main:not(.home-fullscreen) {
   #lightbox-close-btn svg {
     opacity: 1;
     /* SVG itself has color #545452, no need for opacity dimming unless requested */
-    width: 19px !important;
+    width: 22px !important;
     /* Larger arrow */
-    height: 19px !important;
+    height: 22px !important;
     transform: rotate(180deg);
     /* Rotate Up arrow to point Down */
     opacity: 0.85;
@@ -2461,7 +2457,7 @@ main:not(.home-fullscreen) {
   }
 
   .content-section {
-    padding: 1.5rem 1rem;
+    padding: 1rem 0.8rem;
   }
 }
 
