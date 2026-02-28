@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span>&copy; 2025 Davide Rosa</span>
                 </div>
                 <div class="footer-credit">
-                    <a href="https://www.instagram.com/gabrielerosa_/" target="_blank" rel="noopener noreferrer" class="footer-credit-link">
+                    <a href="www.gabrielerosa.it" target="_blank" rel="noopener noreferrer" class="footer-credit-link">
                         <span class="footer-credit-text">
                             <span class="footer-credit-prefix">sviluppato da</span>
                             <span class="footer-credit-name-red">Gabriele</span>
