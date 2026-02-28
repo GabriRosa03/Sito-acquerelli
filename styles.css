@@ -563,8 +563,6 @@ h1 {
 h2 {
   font-size: 2.2rem;
   font-weight: 400;
-  /* Più leggero ed elegante */
-  border-bottom: 1px solid var(--color-border-light);
   padding-bottom: 0.5rem;
   display: inline-block;
   margin-left: 0;
@@ -2338,7 +2336,7 @@ main:not(.home-fullscreen) {
   .lightbox-handle {
     width: 40px;
     height: 5px;
-    background-color: #54545259;
+    background-color: #54545281;
     border-radius: 10px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
@@ -2379,11 +2377,12 @@ main:not(.home-fullscreen) {
   #lightbox-close-btn svg {
     opacity: 1;
     /* SVG itself has color #545452, no need for opacity dimming unless requested */
-    width: 24px !important;
+    width: 19px !important;
     /* Larger arrow */
-    height: 24px !important;
+    height: 19px !important;
     transform: rotate(180deg);
     /* Rotate Up arrow to point Down */
+    opacity: 0.85;
   }
 
   /* Reduce Padding for Content */
@@ -3640,8 +3639,8 @@ header.header-hidden {
   }
 
   .close-arrow-icon {
-    width: 10px;
-    height: 10px;
+    width: 7px;
+    height: 7px;
   }
 
   /* Hide Close Button AND Header Share/Room Buttons on Desktop */
