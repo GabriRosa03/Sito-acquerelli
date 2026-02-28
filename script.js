@@ -854,6 +854,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
+  // Initialize Gestures
+  initLightboxGestures();
+
   // Magnifying Glass functionality
   let magnifier = null;
   let isMagnifying = false;
@@ -920,8 +923,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const y = touch.clientY - rect.top;
 
     // Larger magnifier size
-    const lensSize = 170;
-    const offset = 80; // Distance from finger
+    const lensSize = 250;
+    const offset = 20; // Distance from finger (Mobile)
 
     // Direct position is the touch point (snappy follow)
     magnifier.style.left = `${x}px`;
@@ -964,47 +967,76 @@ document.addEventListener('DOMContentLoaded', () => {
       // DESKTOP: Quadrant Logic to keep lens on screen
       const isTopHalf = y < rect.height / 2;
 
+      // General closer distance (0px - touches cursor)
+      let desktopOffset = 0;
+
+      // Exception: Top-Left Corner (Strict Corner, not just quadrant)
+      // "in questo caso si deve distaccare un po"
+      const isTopLeftCorner = x < rect.width / 3 && y < rect.height / 3;
+
+      if (isTopLeftCorner) {
+        desktopOffset = 60; // Larger distance to avoid obscuring
+      }
+
       // Horizontal Logic (Left/Right flip)
       if (isRightSide) {
         // Cursor on Right -> Lens on Left
-        // User requested more detachment (was 15px, increasing to 30px)
-        targetOffsetX = -lensSize - 30;
+        targetOffsetX = -lensSize - desktopOffset;
       } else {
         // Cursor on Left -> Lens on Right
-        targetOffsetX = 30;
+        targetOffsetX = desktopOffset;
       }
 
       // Vertical Logic (Top/Bottom flip)
       if (isTopHalf) {
         // Cursor on Top -> Lens Below
-        // Position 30px below cursor
-        targetOffsetY = 30;
+        targetOffsetY = desktopOffset;
       } else {
         // Cursor on Bottom -> Lens Above
-        // Position bottom of lens 30px above cursor
-        targetOffsetY = -lensSize - 30;
+        targetOffsetY = -lensSize - desktopOffset;
       }
     } else {
-      // MOBILE: Offset to avoid finger obstruction
-      if (isRightSide) {
+      // MOBILE: Corner-specific logic
+      const isTopLeft = y < rect.height / 3 && x < rect.width / 2;
+      const isTopRight = y < rect.height / 3 && isRightSide;
+
+      if (isTopLeft) {
+        // Top-Left: "sotto al pollice verso l'angolo in basso a sinistra"
+        // Position below finger and slightly left
+        targetOffsetX = -40; // Slight left
+        targetOffsetY = offset + 20; // Below finger
+      } else if (isRightSide) {
+        // Right Side (including Top-Right): "sulla sinistra rispetto al pollice"
+        // Position to the left of the finger
         targetOffsetX = -lensSize - offset;
+        targetOffsetY = -lensSize / 2 - offset; // Vertically centered-ish
       } else {
-        targetOffsetX = offset;
+        // Standard Left Side (Middle/Bottom): Above finger
+        targetOffsetX = -lensSize / 2;
+        targetOffsetY = -lensSize - offset;
       }
-      // Vertical offset: slightly above the finger center
-      targetOffsetY = -lensSize / 2 - offset;
     }
 
-    // Boundary clamping: ensure the lens stays within the image rectangle
-    // Adjust min/max based on the calculated target offsets relative to cursor X/Y?
-    // Actually, standard clamping is complex with offsets. 
-    // Let's just keep the lens fully visible if possible, or allow it to go to edge.
-    // For now, relax clamping for mouse to ensure smooth tracking
+    // Boundary clamping: ensure the lens stays REASONABLY within the image rectangle
+    // but allow top override for the "Top-Left" case to avoid thumb overlap
+    // Relax clamping for mouse to ensure smooth tracking as well
+    // Boundary clamping
     if (!isMouse) {
       const minOffsetX = -x;
       const maxOffsetX = rect.width - lensSize - x;
-      const minOffsetY = -y;
-      const maxOffsetY = rect.height - lensSize - y;
+
+      // RELAXED CLAMPING
+      // Top-Left case pushes lens DOWN, so we need to allow positive Y offsets (no max limit effectively?)
+      // Actually, standard clamp is: min (top edge), max (bottom edge)
+      // targetOffsetY relative to touch Y.
+      // Top edge limit: -y
+      // Bottom edge limit: rect.height - lensSize - y
+
+      const minOffsetY = -y - lensSize; // Allow going off-top (for standard cases)
+
+      // For Top-Left (Below finger), we need to allow going down towards bottom edge
+      // The lens might hit bottom edge.
+      const maxOffsetY = rect.height - lensSize - y + 100; // Allow slight overflow bottom if needed
 
       targetOffsetX = Math.max(minOffsetX, Math.min(targetOffsetX, maxOffsetX));
       targetOffsetY = Math.max(minOffsetY, Math.min(targetOffsetY, maxOffsetY));
@@ -1213,4 +1245,71 @@ function triggerLikeCelebration(originNode, isLiked = true) {
 
   // Cleanup
   setTimeout(() => overlay.remove(), 1000);
+}
+
+// --- MOBILE GESTURES: Swipe to Dismiss ---
+function initLightboxGestures() {
+  const scrollContainer = document.querySelector('.lightbox-scroll-container');
+  const lightbox = document.getElementById('lightbox');
+
+  if (!scrollContainer || !lightbox) return;
+
+  let startY = 0;
+  let currentY = 0;
+  let isDragging = false;
+  const ATTACH_THRESHOLD = 5; // Pixel movement before we consider it a drag
+  const DISMISS_THRESHOLD = 150; // Pixels to pull down to dismiss
+
+  // Touch Start
+  scrollContainer.addEventListener('touchstart', (e) => {
+    // Only allow drag if we are at the very top of the scroll (prevent conflict with internal scrolling)
+    if (scrollContainer.scrollTop > 0) return;
+
+    startY = e.touches[0].clientY;
+    isDragging = false;
+    // Remove transition during drag for direct 1:1 movement
+    scrollContainer.style.transition = 'none';
+  }, { passive: true });
+
+  // Touch Move
+  scrollContainer.addEventListener('touchmove', (e) => {
+    if (scrollContainer.scrollTop > 0) return;
+
+    currentY = e.touches[0].clientY;
+    const deltaY = currentY - startY;
+
+    // Only handle pull DOWN
+    if (deltaY > ATTACH_THRESHOLD) {
+      if (e.cancelable) e.preventDefault(); // Prevent page scroll / refresh
+
+      isDragging = true;
+      // Resistance effect: moves slower than finger
+      const translateY = deltaY * 0.8;
+      scrollContainer.style.transform = `translateY(${translateY}px)`;
+    }
+  }, { passive: false });
+
+  // Touch End
+  scrollContainer.addEventListener('touchend', (e) => {
+    if (!isDragging) return;
+
+    const deltaY = currentY - startY;
+
+    // Restore transition for smooth snap back or exit
+    scrollContainer.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+
+    if (deltaY > DISMISS_THRESHOLD) {
+      // Dismiss
+      closeLightbox();
+      // Reset transform after a delay (after close animation)
+      setTimeout(() => {
+        scrollContainer.style.transform = '';
+      }, 300);
+    } else {
+      // Snap back
+      scrollContainer.style.transform = '';
+    }
+
+    isDragging = false;
+  }, { passive: true });
 }

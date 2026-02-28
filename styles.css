@@ -1135,6 +1135,13 @@ h2 {
   color: white;
 }
 
+@media (max-width: 768px) {
+  .btn-inquiry-primary {
+    width: 85%;
+    margin: 0 auto;
+  }
+}
+
 /* Secondary Nav: PINNED TO ABSOLUTE BOTTOM */
 .lightbox-secondary-nav {
   position: fixed;
@@ -2275,35 +2282,118 @@ main:not(.home-fullscreen) {
     margin-bottom: 0.3rem;
   }
 
+
   /* --- LIGHTBOX MOBILE OPTIMIZATION --- */
 
-  /* Make lightbox taller on mobile (95% height) */
+  /* Darker Backdrop for Mobile */
+  .lightbox {
+    background: rgba(0, 0, 0, 0.9) !important;
+    /* Extremely dark for focus */
+  }
+
+  /* Hide Desktop Sidebar Close Area on Mobile */
+  .lightbox-sidebar-left {
+    display: none !important;
+  }
+
+  /* Make lightbox taller on mobile (but show backdrop) */
   .lightbox-scroll-container {
-    height: 98%;
+    height: 92%;
+    /* Leave space at top for backdrop visibility */
     /* Increased from 90% */
     border-radius: 15px 15px 0 0;
-    padding-top: 20px;
+    padding-top: 10px;
     /* Reduced from 50px/standard to give more space to image */
     padding-bottom: 100px;
     /* Space for bottom nav */
+    margin-top: 8%;
+    /* Push down to reveal backdrop */
+    width: 100% !important;
+    /* Ensure it takes full width */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Smooth drag release */
+    overflow-y: auto !important;
+    /* Enable scrolling for content */
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth iOS scrolling */
+  }
+
+  /* Drag Handle Styling */
+  .lightbox-handle-wrapper {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Align to top */
+    padding-top: 12px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2050;
+    cursor: grab;
+  }
+
+  .lightbox-handle {
+    width: 40px;
+    height: 5px;
+    background-color: #54545259;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 
   /* Adjust header position to match new height */
   .lightbox-header {
-    top: 5%;
-    /* Matches the 100% - 95% gap */
-    height: 70px;
-    /* Slightly more compact */
+    top: 0;
+    padding: 0 15px 0px 15px !important;
+    z-index: 2040;
+    pointer-events: none;
+    /* Let clicks pass through if needed, but buttons need pointer-events: auto */
+  }
+
+  .lightbox-header .header-icon-btn {
+    pointer-events: auto;
+    /* Re-enable buttons */
+  }
+
+  /* Optimize Close Button for Mobile (Arrow Down Style) */
+  #lightbox-close-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: none;
+    background-color: transparent;
+    border: none;
+    display: flex !important;
+    /* Force display on mobile */
+    align-items: center;
+    justify-content: center;
+    top: 5px;
+    /* Adjust top position */
+    right: 15px;
+    position: absolute;
+    /* Fix position relative to header or container */
+  }
+
+  #lightbox-close-btn svg {
+    opacity: 1;
+    /* SVG itself has color #545452, no need for opacity dimming unless requested */
+    width: 24px !important;
+    /* Larger arrow */
+    height: 24px !important;
+    transform: rotate(180deg);
+    /* Rotate Up arrow to point Down */
   }
 
   /* Reduce Padding for Content */
   .lightbox-content {
-    padding: 0 15px 0px 15px !important;
+    padding: 0 10px 0px 10px !important;
     /* Minimize side padding */
     height: 100%;
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    margin-top: 0;
     justify-content: center;
     /* Center title + image vertically */
   }
@@ -3547,6 +3637,11 @@ header.header-hidden {
     align-items: center;
     z-index: 20;
     align-self: center;
+  }
+
+  .close-arrow-icon {
+    width: 10px;
+    height: 10px;
   }
 
   /* Hide Close Button AND Header Share/Room Buttons on Desktop */
