@@ -716,7 +716,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // Chiudi lightbox
   const lightboxClose = document.getElementById('lightbox-close-btn');
   if (lightboxClose) {
-    lightboxClose.addEventListener('click', closeLightbox);
+    // Add click listener with proper event delegation
+    lightboxClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeLightbox();
+    });
+    
+    // Also add listener to SVG inside to ensure clicks propagate
+    const closeSvg = lightboxClose.querySelector('svg');
+    if (closeSvg) {
+      closeSvg.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeLightbox();
+      });
+    }
+    
+    // Force cursor pointer style
+    lightboxClose.style.cursor = 'pointer';
   }
 
   // Sidebar Close Action (Desktop)
@@ -1250,31 +1266,42 @@ function triggerLikeCelebration(originNode, isLiked = true) {
 // --- MOBILE GESTURES: Swipe to Dismiss ---
 function initLightboxGestures() {
   const scrollContainer = document.querySelector('.lightbox-scroll-container');
+  const handleWrapper = document.querySelector('.lightbox-handle-wrapper');
   const lightbox = document.getElementById('lightbox');
 
-  if (!scrollContainer || !lightbox) return;
+  if (!scrollContainer || !handleWrapper || !lightbox) return;
 
   let startY = 0;
   let currentY = 0;
   let isDragging = false;
+  let animationFrameId = null;
   const ATTACH_THRESHOLD = 5; // Pixel movement before we consider it a drag
   const DISMISS_THRESHOLD = 150; // Pixels to pull down to dismiss
 
-  // Touch Start
-  scrollContainer.addEventListener('touchstart', (e) => {
-    // Only allow drag if we are at the very top of the scroll (prevent conflict with internal scrolling)
-    if (scrollContainer.scrollTop > 0) return;
+  // Apply will-change during drag for better performance
+  function enableDragOptimization() {
+    scrollContainer.style.willChange = 'transform';
+  }
 
+  function disableDragOptimization() {
+    scrollContainer.style.willChange = 'auto';
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  }
+
+  // Touch Start - ONLY on the handle wrapper to prevent conflict with zoom
+  handleWrapper.addEventListener('touchstart', (e) => {
     startY = e.touches[0].clientY;
     isDragging = false;
     // Remove transition during drag for direct 1:1 movement
     scrollContainer.style.transition = 'none';
+    enableDragOptimization();
   }, { passive: true });
 
-  // Touch Move
-  scrollContainer.addEventListener('touchmove', (e) => {
-    if (scrollContainer.scrollTop > 0) return;
-
+  // Touch Move - Use requestAnimationFrame for smooth, non-laggy dragging
+  handleWrapper.addEventListener('touchmove', (e) => {
     currentY = e.touches[0].clientY;
     const deltaY = currentY - startY;
 
@@ -1283,15 +1310,26 @@ function initLightboxGestures() {
       if (e.cancelable) e.preventDefault(); // Prevent page scroll / refresh
 
       isDragging = true;
-      // Resistance effect: moves slower than finger
-      const translateY = deltaY * 0.8;
-      scrollContainer.style.transform = `translateY(${translateY}px)`;
+
+      // Use requestAnimationFrame to avoid frame drops
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+
+      animationFrameId = requestAnimationFrame(() => {
+        // Resistance effect: moves slower than finger
+        const translateY = deltaY * 0.8;
+        scrollContainer.style.transform = `translateY(${translateY}px)`;
+      });
     }
   }, { passive: false });
 
   // Touch End
-  scrollContainer.addEventListener('touchend', (e) => {
-    if (!isDragging) return;
+  handleWrapper.addEventListener('touchend', (e) => {
+    if (!isDragging) {
+      disableDragOptimization();
+      return;
+    }
 
     const deltaY = currentY - startY;
 
@@ -1304,10 +1342,12 @@ function initLightboxGestures() {
       // Reset transform after a delay (after close animation)
       setTimeout(() => {
         scrollContainer.style.transform = '';
+        disableDragOptimization();
       }, 300);
     } else {
       // Snap back
       scrollContainer.style.transform = '';
+      disableDragOptimization();
     }
 
     isDragging = false;

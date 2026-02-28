@@ -2372,6 +2372,12 @@ main:not(.home-fullscreen) {
     right: 15px;
     position: absolute;
     /* Fix position relative to header or container */
+    pointer-events: auto;
+    /* Ensure button is clickable */
+    z-index: 2100;
+    /* Ensure it's above other elements */
+    cursor: pointer;
+    /* Visual feedback that it's clickable */
   }
 
   #lightbox-close-btn svg {
@@ -2383,6 +2389,8 @@ main:not(.home-fullscreen) {
     transform: rotate(180deg);
     /* Rotate Up arrow to point Down */
     opacity: 0.85;
+    pointer-events: auto;
+    /* Allow SVG to receive click events */
   }
 
   /* Reduce Padding for Content */
