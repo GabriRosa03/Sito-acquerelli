@@ -472,6 +472,27 @@ function closeLightbox() {
   const scrollContainer = lightbox.querySelector('.lightbox-scroll-container');
   const sidebar = document.getElementById('lightbox-sidebar-action');
 
+  // If close was already animated from a drag gesture, skip adding CSS animations
+  if (window.__lightboxClosingFromDrag) {
+    window.__lightboxClosingFromDrag = false;
+    // Immediate cleanup after inline transition finished
+    lightbox.classList.remove('active');
+    if (scrollContainer) {
+      scrollContainer.classList.remove('closing');
+      scrollContainer.style.transform = '';
+      scrollContainer.style.transition = '';
+    }
+    if (sidebar) sidebar.classList.remove('closing');
+    document.body.style.overflow = '';
+    // Handle History State
+    if (history.state && history.state.lightboxOpen) {
+      history.back();
+    } else if (window.location.hash === '#lightbox') {
+      history.back();
+    }
+    return;
+  }
+
   if (sidebar) {
     sidebar.classList.add('closing');
   }
@@ -1292,13 +1313,57 @@ function initLightboxGestures() {
   }
 
   // Touch Start - ONLY on the handle wrapper to prevent conflict with zoom
-  handleWrapper.addEventListener('touchstart', (e) => {
-    startY = e.touches[0].clientY;
-    isDragging = false;
-    // Remove transition during drag for direct 1:1 movement
-    scrollContainer.style.transition = 'none';
-    enableDragOptimization();
-  }, { passive: true });
+  // --- Touch End Modificato ---
+handleWrapper.addEventListener('touchend', (e) => {
+  if (!isDragging) {
+    disableDragOptimization();
+    return;
+  }
+
+  const deltaY = currentY - startY;
+
+  if (deltaY > DISMISS_THRESHOLD) {
+    // 1. Segnaliamo che stiamo chiudendo via drag
+    window.__lightboxClosingFromDrag = true;
+
+    // 2. Calcoliamo l'offset attuale per evitare salti
+    const currentTransform = getComputedStyle(scrollContainer).transform;
+
+    requestAnimationFrame(() => {
+      // Applichiamo la transizione fluida
+      scrollContainer.style.transition = 'transform 0.4s cubic-bezier(0.32, 1, 0.23, 1)';
+      
+      // Portiamo la finestra fuori dallo schermo partendo da dove si trova ora
+      scrollContainer.style.transform = 'translateY(100%)'; 
+    });
+
+    // 3. Gestione della chiusura effettiva al termine dell'animazione
+    const onTransitionEnd = (ev) => {
+      if (ev.propertyName !== 'transform') return;
+      
+      // Pulizia stili per evitare che la prossima volta che apri sia rotto
+      scrollContainer.style.transition = '';
+      scrollContainer.style.transform = '';
+      
+      closeLightbox(); // Questa funzione deve gestire la rimozione della classe "open" o dell'overlay
+      disableDragOptimization();
+    };
+
+    scrollContainer.addEventListener('transitionend', onTransitionEnd, { once: true });
+
+  } else {
+    // Snap back se non ha superato la soglia
+    scrollContainer.style.transition = 'transform 0.3s ease-out';
+    scrollContainer.style.transform = 'translateY(0px)';
+    
+    setTimeout(() => {
+       scrollContainer.style.transition = '';
+       disableDragOptimization();
+    }, 300);
+  }
+
+  isDragging = false;
+}, { passive: true });
 
   // Touch Move - Use requestAnimationFrame for smooth, non-laggy dragging
   handleWrapper.addEventListener('touchmove', (e) => {
@@ -1337,13 +1402,25 @@ function initLightboxGestures() {
     scrollContainer.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
 
     if (deltaY > DISMISS_THRESHOLD) {
-      // Dismiss
-      closeLightbox();
-      // Reset transform after a delay (after close animation)
-      setTimeout(() => {
-        scrollContainer.style.transform = '';
+      // Dismiss: animate the current sheet from its dragged position (already inline transform) to off-screen
+      // The key is to set transition and transform in the SAME rAF frame to ensure smooth animation
+      window.__lightboxClosingFromDrag = true;
+
+      // Use rAF to batch the style changes and ensure they happen together
+      requestAnimationFrame(() => {
+        scrollContainer.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
+        scrollContainer.style.transform = 'translateY(calc(100vh))';
+      });
+
+      // After animation completes, cleanup
+      const onTransitionEnd = (ev) => {
+        if (ev.propertyName !== 'transform') return;
+        scrollContainer.removeEventListener('transitionend', onTransitionEnd);
+        closeLightbox();
         disableDragOptimization();
-      }, 300);
+      };
+
+      scrollContainer.addEventListener('transitionend', onTransitionEnd, { once: true });
     } else {
       // Snap back
       scrollContainer.style.transform = '';
