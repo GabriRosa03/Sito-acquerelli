@@ -885,7 +885,6 @@ h2 {
   width: 20px;
   height: 20px;
   display: block;
-  opacity: 0.6;
 }
 
 .header-icon-btn:hover {
@@ -2349,13 +2348,13 @@ main:not(.home-fullscreen) {
     pointer-events: auto;
     /* Re-enable buttons */
     z-index: 2101;
-    /* Ensure buttons are above lightbox-handle-wrapper (z-index: 2050) */
+    opacity: 0.85;
   }
 
   /* Optimize Close Button for Mobile (Arrow Down Style) */
   #lightbox-close-btn {
-    width: 64px;
-    height: 64px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     box-shadow: none;
     background-color: transparent;
@@ -2876,8 +2875,8 @@ header.header-hidden {
   cursor: pointer;
   color: white;
   font-size: 2rem;
-  width: 44px;
-  height: 44px;
+  width: 47px;
+  height: 47px;
   display: flex;
   align-items: center;
   justify-content: center;
