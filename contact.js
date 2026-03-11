@@ -212,21 +212,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Data to send
             const data = {
-                _subject: `Nuovo messaggio da ${name} - Sito Acquerelli`,
-                _template: "box", // 'box' invia una mail più ordinata rispetto a 'table'
-                _captcha: "false",
-                _replyto: email, // Fondamentale per far funzionare il tasto "Rispondi" se rinominiamo il campo email
-
-                // I nomi di queste proprietà saranno le "etichette" nella mail che ricevi
-                "Nome Cliente": name,
-                "Indirizzo Email": email,
-                "Messaggio": message,
-                "Quadri Selezionati": paintingsList
+                email: email, // Fondamentale per far funzionare il tasto "Rispondi"
+                name: name,
+                message: message,
+                Quadri_Selezionati: paintingsList,
+                _subject: `Nuovo messaggio da ${name} - Sito Acquerelli`
             };
 
             console.log('Preparing to send data:', data);
 
-            fetch("https://formsubmit.co/ajax/drixtrb@gmail.com", {
+            fetch("https://formspree.io/f/xqeyqkqy", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -236,6 +231,11 @@ document.addEventListener('DOMContentLoaded', function () {
             })
                 .then(response => {
                     console.log('Server responded with status:', response.status);
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.error || "Errore durante l'invio");
+                        });
+                    }
                     return response.json();
                 })
                 .then(data => {
