@@ -10,13 +10,6 @@
   <meta name="author" content="Davide Rosa">
 
   <title>Davide Rosa - Acquerelli Veneziani</title>
-  <meta http-equiv="refresh" content="0;url=gallery.html">
-  <style>
-    body { display: none; }
-  </style>
-  <script>
-    window.location.href = 'gallery.html';
-  </script>
 
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="cookie-banner.css">
@@ -40,7 +33,7 @@
 
     <!-- Center Logo -->
     <div class="logo-container">
-      <a href="#">
+      <a href="index.html">
         <img src="images/logoPapiPng.png" alt="Logo Davide Rosa" class="header-logo">
       </a>
     </div>
@@ -74,8 +67,11 @@
 
   <!-- Main Content -->
   <main class="home-main home-fullscreen">
-    <img src="images/final18.png" alt="Acquerello Veneziano" class="hero-fullscreen-image"
-      data-translate-alt="index.alt_hero">
+    <picture>
+      <source media="(max-width: 768px)" srcset="images/final17.png">
+      <img src="images/final17.png" alt="Acquerello Veneziano" class="hero-fullscreen-image"
+        data-translate-alt="index.alt_hero">
+    </picture>
   </main>
 
   <!-- Footer -->
