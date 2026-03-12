@@ -87,7 +87,7 @@ const paintings = [
         description: "Acquerello su carta - Dettagli architettonici di antichi palazzi veneziani",
         description_en: "Watercolor on paper - Architectural details of ancient Venetian palaces",
         alt: "Finestre Veneziane",
-        dimensions: { width: 21, height: 29 }
+        dimensions: { width: 21, height: 28 }
     },
 
     {
@@ -97,7 +97,7 @@ const paintings = [
         description: "Acquerello su carta - Il sole che si tuffa nell'orizzonte marino",
         description_en: "Watercolor on paper - The sun diving into the marine horizon",
         alt: "Tramonto sul Mare",
-        dimensions: { width: 29, height: 19 }
+        dimensions: { width: 28, height: 19 }
     },
 
 
@@ -196,11 +196,11 @@ const paintings = [
         description: "Acquerello su carta - La laguna avvolta dalla nebbia mattutina",
         description_en: "Watercolor on paper - The lagoon wrapped in morning mist",
         alt: "Nebbie Lagunari",
-        dimensions: { width: 29, height: 38 }
+        dimensions: { width: 28, height: 38 }
     },
 
     {
-        src: "images/paint29.jpeg",
+        src: "images/paint28.jpeg",
         title: "Lussino piccolo - Croazia",
         title_en: "Ancient Bridge",
         description: "Acquerello su carta - Un vecchio ponte di pietra sopra un torrente di montagna",
@@ -226,7 +226,7 @@ const paintings = [
         description: "Acquerello su carta - La quiete di un antico chiostro monastico",
         description_en: "Watercolor on paper - The quiet of an ancient monastic cloister",
         alt: "Chiostro Francescano",
-        dimensions: { width: 29, height: 21 }
+        dimensions: { width: 28, height: 21 }
     },
 
     {
