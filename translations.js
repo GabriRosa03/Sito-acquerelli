@@ -64,7 +64,7 @@ const translations = {
         "gallery.room_hint": "Puoi pizzicare per zoomare o trascinare per spostare il quadro sul muro",
 
         // Footer
-        "footer.rights": "&copy; 2025 Davide Rosa - Tutti i diritti riservati"
+        "footer.rights": "&copy; 2026 Davide Rosa - Tutti i diritti riservati"
     },
     en: {
         // Navigation
@@ -132,6 +132,6 @@ const translations = {
         "gallery.room_hint": "Pinch to zoom or drag to move the painting on the wall",
 
         // Footer
-        "footer.rights": "&copy; 2025 Davide Rosa - All rights reserved"
+        "footer.rights": "&copy; 2026 Davide Rosa - All rights reserved"
     }
 };

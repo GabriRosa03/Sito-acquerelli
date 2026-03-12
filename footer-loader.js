@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="cookie-policy.html">Cookie Policy</a>
                 </div>
                 <div class="footer-copyright">
-                    <span>&copy; 2025 Davide Rosa</span>
+                    <span>&copy; 2026 Davide Rosa</span>
                 </div>
                 <div class="footer-credit">
                     <a href="https://www.gabrielerosa.it" target="_blank" rel="noopener noreferrer" class="footer-credit-link">
