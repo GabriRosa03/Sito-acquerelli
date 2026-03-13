@@ -3,6 +3,11 @@
 // Lightbox state
 let currentPaintingIndex = 0;
 
+// Sorting state
+let currentSort = 'default'; // 'default' or 'likes'
+let allLikesCache = {};
+
+
 
 
 
@@ -13,6 +18,26 @@ function getLangKeys() {
     titleKey: lang === 'it' ? 'title' : 'title_en',
     descKey: lang === 'it' ? 'description' : 'description_en'
   };
+}
+
+// Get sorted paintings based on viewport
+function getSortedPaintings() {
+  // Mobile: auto-sort by likes
+  // Desktop: keep original order
+  const isMobile = window.innerWidth <= 768;
+  
+  if (isMobile) {
+    // Sort by likes (most liked first)
+    return [...paintings].sort((a, b) => {
+      const idA = likeSystem.getPaintingId(a);
+      const idB = likeSystem.getPaintingId(b);
+      const likesA = allLikesCache[idA] || 0;
+      const likesB = allLikesCache[idB] || 0;
+      return likesB - likesA;
+    });
+  }
+  // Desktop: return original order
+  return paintings;
 }
 
 function loadGallery() {
@@ -36,12 +61,15 @@ function loadGallery() {
   let loadedCount = 0;
   const totalImages = paintings.length;
 
-  paintings.forEach((painting, index) => {
+  getSortedPaintings().forEach((painting, index) => {
     const card = document.createElement('div');
     card.className = 'painting-card';
 
     const img = document.createElement('img');
     const title = painting[titleKey] || painting.title;
+
+    // Find original index in the paintings array (important for lightbox)
+    const originalIndex = paintings.indexOf(painting);
 
     // Create Image Container (for Hover Overlay)
     const imgContainer = document.createElement('div');
@@ -112,14 +140,14 @@ function loadGallery() {
 
     // Click on overlay to open lightbox
     hoverOverlay.addEventListener('click', () => {
-      openLightbox(index);
+      openLightbox(originalIndex);
     });
 
     // Universal Info Block (Title + Likes)
     infoDiv.innerHTML = `
       <h3>${title}</h3>
       <div class="card-likes-wrapper">
-          <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${index}" aria-label="Mi piace">
+          <button class="btn-like ${hasLiked ? 'liked' : ''}" data-painting-id="${paintingId}" data-index="${originalIndex}" aria-label="Mi piace">
               <svg class="heart-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
               </svg>
@@ -133,7 +161,7 @@ function loadGallery() {
 
     // Click per aprire lightbox
     img.addEventListener('click', () => {
-      openLightbox(index);
+      openLightbox(originalIndex);
     });
 
     // Click on title to open lightbox
@@ -141,15 +169,12 @@ function loadGallery() {
     if (titleEl) {
       titleEl.style.cursor = 'pointer';
       titleEl.addEventListener('click', () => {
-        openLightbox(index);
+        openLightbox(originalIndex);
       });
     }
 
     galleryGrid.appendChild(card);
   });
-
-  // Load all likes from Firebase and update counters
-  loadAllLikes();
 
   // Add click listeners to like buttons
   setupLikeButtons();
@@ -176,6 +201,9 @@ function loadGallery() {
 async function loadAllLikes() {
   try {
     const allLikes = await likeSystem.getAllLikes();
+    
+    // Update cache for sorting
+    allLikesCache = allLikes || {};
 
     // Update all like counters
     Object.keys(allLikes).forEach(paintingId => {
@@ -185,6 +213,9 @@ async function loadAllLikes() {
 
     // Listen for real-time updates
     likeSystem.onAllLikesChange((allLikes) => {
+      // Update cache
+      allLikesCache = allLikes || {};
+      
       Object.keys(allLikes).forEach(paintingId => {
         const count = allLikes[paintingId];
         updateLikeCounter(paintingId, count);
@@ -732,7 +763,10 @@ document.addEventListener('DOMContentLoaded', () => {
     console.warn('Hamburger or MobileNav NOT found on this page!');
   }
 
-  loadGallery();
+  // Load likes first, then render gallery (important for mobile sorting)
+  loadAllLikes().then(() => {
+    loadGallery();
+  });
 
   // Chiudi lightbox
   const lightboxClose = document.getElementById('lightbox-close-btn');
