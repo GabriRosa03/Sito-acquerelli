@@ -2270,8 +2270,6 @@ footer {
 }
 
 .cta-discover-mobile-hero:hover {
-  background-color: rgba(142, 28, 20, 0.85);
-  color: white;
   box-shadow: 0 0 0 2px var(--color-primary-red), 0 4px 12px rgba(142, 28, 20, 0.3);
   transform: translateY(-2px);
   animation: none;
