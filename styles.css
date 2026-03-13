@@ -553,7 +553,6 @@ h1 {
   font-size: 4rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: var(--spacing-lg);
   color: var(--color-primary-red);
   text-shadow: none;
   /* Minimal: via l'ombra */
@@ -1372,7 +1371,7 @@ h2 {
    ======================================== */
 .contact-form {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 2rem auto 0;
   color: var(--color-ink-dark);
 }
 
@@ -1382,7 +1381,8 @@ h2 {
 }
 
 .page-header-title {
-  margin-bottom: 2.5rem;
+  margin-bottom: 5rem !important;
+  margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1411,8 +1411,12 @@ h2 {
 }
 
 @media (max-width: 600px) {
+  .contact-form {
+    margin: 0 auto;
+  }
+
   .page-header-title {
-    margin-bottom: 6rem;
+    margin-bottom: 4rem;
     gap: 0.3rem;
     margin-top: 2rem;
   }
@@ -1425,6 +1429,7 @@ h2 {
     font-size: 0.9rem;
     line-height: 1;
     color: #666;
+    margin-bottom: 0;
   }
 }
 
