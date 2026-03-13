@@ -8,6 +8,7 @@ const translations = {
 
         // Index
         "index.alt_hero": "Acquerello Veneziano",
+        "cta.discover": "Scopri i miei quadri",
 
         // Biography
         "bio.title": "Biografia",
@@ -41,6 +42,7 @@ const translations = {
 
         // Contact
         "contact.title": "Contatti",
+        "contact.description": "Questo sito è una galleria digitale delle mie opere. Non è previsto l'acquisto diretto online. Per informazioni su disponibilità, dettagli tecnici o collaborazioni, non esitare a contattarmi. Sarò felice di risponderti al più presto.",
         "contact.name": "Nome *",
         "contact.email": "Email *",
         "contact.interest": "Quadro di Interesse (opzionale)",
@@ -54,6 +56,7 @@ const translations = {
         "contact.form_error": "Errore nell'invio. Riprova.",
 
         // Gallery
+        "lightbox.back": "GALLERIA",
         "gallery.btn_contact": "Richiedi Informazioni",
         "gallery.btn_share": "Condividi",
         "gallery.share_success": "Condiviso con successo",
@@ -64,6 +67,16 @@ const translations = {
         "gallery.room_hint": "Puoi pizzicare per zoomare o trascinare per spostare il quadro sul muro",
 
         // Footer
+        "footer.explore": "Esplora",
+        "footer.description": "Esploro le atmosfere di Venezia attraverso la trasparenza dell'acquerello, catturando la luce, l'acqua e il silenzio della Laguna. Questo portfolio digitale raccoglie la mia visione artistica e le opere che celebrano la nostra città.",
+        "footer.gallery_desc": "Tutte le opere e collezioni",
+        "footer.biography_desc": "La mia storia e ispirazione",
+        "footer.materials_desc": "Strumenti e tecniche",
+        "footer.contacts_desc": "Scrivimi per info o acquisti",
+        "footer.social_heading": "Seguimi sui Social",
+        "footer.privacy": "Privacy Policy",
+        "footer.cookies": "Cookie Policy",
+        "footer.credit_prefix": "sviluppato da",
         "footer.rights": "&copy; 2026 Davide Rosa - Tutti i diritti riservati"
     },
     en: {
@@ -74,6 +87,7 @@ const translations = {
         "nav.contacts": "Contacts",
 
         // Index
+        "cta.discover": "Discover my paintings",
         "index.alt_hero": "Venetian Watercolor",
 
         // Biography
@@ -107,6 +121,7 @@ const translations = {
         "mat.quote": "\"The quality of the material is the first step towards the excellence of the work.\"",
 
         // Contact
+        "contact.description": "This site is a digital gallery of my works. Direct online purchase is not available. For information on availability, technical details or collaborations, feel free to contact me. I will be happy to reply to you as soon as possible.",
         "contact.title": "Contacts",
         "contact.name": "Name *",
         "contact.email": "Email *",
@@ -122,6 +137,7 @@ const translations = {
         "contact.form_error": "Error sending message. Please try again.",
 
         // Gallery
+        "lightbox.back": "GALLERY",
         "gallery.btn_contact": "Request Info",
         "gallery.btn_share": "Share",
         "gallery.share_success": "Shared successfully",
@@ -132,6 +148,16 @@ const translations = {
         "gallery.room_hint": "Pinch to zoom or drag to move the painting on the wall",
 
         // Footer
+        "footer.explore": "Explore",
+        "footer.description": "I explore the atmospheres of Venice through the transparency of watercolor, capturing the light, water and silence of the Lagoon. This digital portfolio showcases my artistic vision and works that celebrate our city.",
+        "footer.gallery_desc": "All works and collections",
+        "footer.biography_desc": "My story and inspiration",
+        "footer.materials_desc": "Tools and techniques",
+        "footer.contacts_desc": "Write to me for info or purchases",
+        "footer.social_heading": "Follow me on Social Media",
+        "footer.privacy": "Privacy Policy",
+        "footer.cookies": "Cookie Policy",
+        "footer.credit_prefix": "developed by",
         "footer.rights": "&copy; 2026 Davide Rosa - All rights reserved"
     }
 };

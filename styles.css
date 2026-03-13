@@ -2142,7 +2142,7 @@ footer {
 
 /* Mobile Hero Content Section */
 .mobile-hero-content {
-  display: none;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -2175,7 +2175,7 @@ footer {
 }
 
 .cta-discover-mobile-hero {
-  display: none;
+  display: block;
   position: static;
   transform: none;
   width: auto;
@@ -2193,8 +2193,8 @@ footer {
   text-decoration: none;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  margin-top: 0.5rem;
   animation: subtle-pulse 2.5s ease-in-out infinite;
   box-shadow: 0 2px 8px rgba(142, 28, 20, 0.15);
 }
@@ -2275,22 +2275,14 @@ footer {
 }
 
 .cta-discover-mobile-hero:hover {
-  box-shadow: 0 4px 12px rgba(142, 28, 20, 0.3);
-  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.642);
+  transform: scale(1.05);
   animation: none;
+
 }
 
 /* Mobile Display Rules */
 @media (max-width: 768px) {
-  .mobile-hero-content {
-    display: flex;
-  }
-
-  .cta-discover-mobile-hero {
-    display: block;
-  }
-
-  /* Hide old CTA button */
   .cta-discover-mobile {
     display: none;
   }
@@ -3005,6 +2997,11 @@ header.header-hidden {
   .lang-switcher-mobile {
     display: none;
   }
+}
+
+/* Hide language switcher on home page desktop */
+.home-body .lang-switcher-desktop {
+  display: none;
 }
 
 /* =========================================

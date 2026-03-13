@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <img src="images/logoPapiPng.png" alt="Davide Rosa Logo" class="footer-logo">
                         <h3>Davide Rosa</h3>
                     </div>
-                    <p class="footer-description">
+                    <p class="footer-description" data-translate="footer.description">
                         Esploro le atmosfere di Venezia attraverso la trasparenza dell'acquerello, 
                         catturando la luce, l'acqua e il silenzio della Laguna. 
                         Questo portfolio digitale raccoglie la mia visione artistica e le opere che celebrano la nostra città.
@@ -28,30 +28,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- Column 2: Navigation with Details -->
                 <div class="footer-column footer-nav-detailed">
-                    <h4 class="footer-heading">Esplora</h4>
+                    <h4 class="footer-heading" data-translate="footer.explore">Esplora</h4>
                     <div class="nav-grid">
                         <div class="nav-item-detailed">
                             <a href="gallery.html" class="nav-title" data-translate="nav.gallery">Galleria</a>
-                            <span class="nav-desc">Tutte le opere e collezioni</span>
+                            <span class="nav-desc" data-translate="footer.gallery_desc">Tutte le opere e collezioni</span>
                         </div>
                         <div class="nav-item-detailed">
                             <a href="biografia.html" class="nav-title" data-translate="nav.biography">Biografia</a>
-                            <span class="nav-desc">La mia storia e ispirazione</span>
+                            <span class="nav-desc" data-translate="footer.biography_desc">La mia storia e ispirazione</span>
                         </div>
                         <div class="nav-item-detailed">
                             <a href="materiali.html" class="nav-title" data-translate="nav.materials">Materiali</a>
-                            <span class="nav-desc">Strumenti e tecniche</span>
+                            <span class="nav-desc" data-translate="footer.materials_desc">Strumenti e tecniche</span>
                         </div>
                         <div class="nav-item-detailed">
                             <a href="contatti.html" class="nav-title" data-translate="nav.contacts">Contatti</a>
-                            <span class="nav-desc">Scrivimi per info o acquisti</span>
+                            <span class="nav-desc" data-translate="footer.contacts_desc">Scrivimi per info o acquisti</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Column 3: Social -->
                 <div class="footer-column footer-social">
-                    <h4 class="footer-heading">Seguimi sui Social</h4>
+                    <h4 class="footer-heading" data-translate="footer.social_heading">Seguimi sui Social</h4>
                     <div class="footer-social-links">
                         <div class="footer-social-item">
                             <a href="https://www.instagram.com/davide_rosa_watercolors" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Instagram">
@@ -79,9 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- Bottom Bar: Legal & Signature -->
             <div class="footer-bottom">
                 <div class="footer-legal-links">
-                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="privacy.html" data-translate="footer.privacy">Privacy Policy</a>
                     <span class="separator">•</span>
-                    <a href="cookie-policy.html">Cookie Policy</a>
+                    <a href="cookie-policy.html" data-translate="footer.cookies">Cookie Policy</a>
                 </div>
                 <div class="footer-copyright">
                     <span>&copy; 2026 Davide Rosa</span>
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="footer-credit">
                     <a href="https://www.gabrielerosa.it" target="_blank" rel="noopener noreferrer" class="footer-credit-link">
                         <span class="footer-credit-text">
-                            <span class="footer-credit-prefix">sviluppato da</span>
+                            <span class="footer-credit-prefix" data-translate="footer.credit_prefix">sviluppato da</span>
                             <span class="footer-credit-name-red">Gabriele</span>
                             <span class="footer-credit-name-red">Rosa</span>
                         </span>
