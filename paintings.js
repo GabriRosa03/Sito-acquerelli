@@ -19,7 +19,13 @@ const paintings = [
         alt: "Three Ports of Venice",
         dimensions: { width: 38, height: 28 }
     },
-
+    {   
+        src: "images/paint24.jpg",
+        title: "Punta della Dogana Venezia",
+        title_en: "Punta della Dogana Venice",
+        alt: "Venice Customs Point",
+        dimensions: { width: 56, height: 38 }
+    },
 
     {
         src: "images/paint3.jpg",
@@ -28,13 +34,7 @@ const paintings = [
         alt: "Bibione Lagoon Dream",
         dimensions: { width: 38, height: 28 }
     },
-    {
-        src: "images/paint24.jpg",
-        title: "Punta della Dogana Venezia",
-        title_en: "Punta della Dogana Venice",
-        alt: "Venice Customs Point",
-        dimensions: { width: 56, height: 38 }
-    },
+    
     {
         src: "images/paint17.jpg",
         title: "Riflessi, contrasti",
@@ -74,6 +74,27 @@ const paintings = [
         dimensions: { width: 21, height: 28 }
     },
 
+    
+
+
+    {
+        src: "images/paint2.jpg",
+        title: "Laguna di Bibione - Venezia",
+        title_en: "Bibione Lagoon - Venice",
+        alt: "Bibione Lagoon",
+        dimensions: { width: 38, height: 28 }
+    },
+
+    {
+        src: "images/paint13.jpg",
+        title: "Emulazione Jan Min",
+        title_en: "Jan Min Emulation",
+        alt: "Jan Min Emulation",
+        dimensions: { width: 38, height: 28 }
+    },
+
+
+
     {
         src: "images/paint12.jpg",
         title: "Scorcio dietro a San Trovaso - Venezia",
@@ -82,13 +103,12 @@ const paintings = [
         dimensions: { width: 28, height: 19 }
     },
 
-
-
+    
     {
-        src: "images/paint2.jpg",
-        title: "Laguna di Bibione - Venezia",
-        title_en: "Bibione Lagoon - Venice",
-        alt: "Bibione Lagoon",
+        src: "images/paint29.jpeg",
+        title: "Lussino piccolo - Croazia",
+        title_en: "Lussinpiccolo - Croatia",
+        alt: "Lussinpiccolo Croatia",
         dimensions: { width: 38, height: 28 }
     },
 
@@ -101,13 +121,7 @@ const paintings = [
     },
 
 
-    {
-        src: "images/paint13.jpg",
-        title: "Emulazione Jan Min",
-        title_en: "Jan Min Emulation",
-        alt: "Jan Min Emulation",
-        dimensions: { width: 38, height: 28 }
-    },
+    
     {
         src: "images/paint26.jpg",
         title: "Al mare - Sicilia",
@@ -161,13 +175,7 @@ const paintings = [
         dimensions: { width: 28, height: 38 }
     },
 
-    {
-        src: "images/paint28.jpeg",
-        title: "Lussino piccolo - Croazia",
-        title_en: "Lussinpiccolo - Croatia",
-        alt: "Lussinpiccolo Croatia",
-        dimensions: { width: 38, height: 28 }
-    },
+    
 
     {
         src: "images/paint16.jpg",
