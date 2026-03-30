@@ -20,23 +20,18 @@ function getLangKeys() {
   };
 }
 
+// Funzione per rimescolare un array (Fisher-Yates shuffle)
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 // Get sorted paintings based on viewport
 function getSortedPaintings() {
-  // Mobile: auto-sort by likes
-  // Desktop: keep original order
-  const isMobile = window.innerWidth <= 768;
-  
-  if (isMobile) {
-    // Sort by likes (most liked first)
-    return [...paintings].sort((a, b) => {
-      const idA = likeSystem.getPaintingId(a);
-      const idB = likeSystem.getPaintingId(b);
-      const likesA = allLikesCache[idA] || 0;
-      const likesB = allLikesCache[idB] || 0;
-      return likesB - likesA;
-    });
-  }
-  // Desktop: return original order
+  // Ora restituiamo l'array così com'è (che è già stato rimescolato all'avvio)
+  // sia su mobile che su desktop per garantire l'ordine casuale ovunque.
   return paintings;
 }
 
@@ -762,6 +757,9 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.warn('Hamburger or MobileNav NOT found on this page!');
   }
+
+  // Rimescola i quadri all'avvio
+  shuffleArray(paintings);
 
   // Load likes first, then render gallery (important for mobile sorting)
   loadAllLikes().then(() => {
