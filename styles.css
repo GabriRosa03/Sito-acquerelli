@@ -2334,6 +2334,10 @@ footer {
   .artist-name-mobile {
     display: block;
   }
+
+  .hover-overlay {
+    display: none !important;
+  }
 }
 
 
