@@ -17,9 +17,9 @@ const paintings = [
         title: "Mesole - Tre Porti Venezia",
         title_en: "Mesole - Three Ports Venice",
         alt: "Three Ports of Venice",
-        dimensions: { width: 38, height: 28 }
+        dimensions: { width: 38, height: 28 },
     },
-    {   
+    {
         src: "images/paint24.jpg",
         title: "Punta della Dogana Venezia",
         title_en: "Punta della Dogana Venice",
@@ -34,7 +34,7 @@ const paintings = [
         alt: "Bibione Lagoon Dream",
         dimensions: { width: 38, height: 28 }
     },
-    
+
     {
         src: "images/paint17.jpg",
         title: "Riflessi, contrasti",
@@ -55,7 +55,7 @@ const paintings = [
         title: "Isola della Certosa - Venezia",
         title_en: "Certosa Island - Venice",
         alt: "Certosa Island",
-        dimensions: { width: 28, height: 25 }
+        dimensions: { width: 28, height: 25 },
     },
     {
         src: "images/paint7.jpg",
@@ -74,7 +74,7 @@ const paintings = [
         dimensions: { width: 21, height: 28 }
     },
 
-    
+
 
 
     {
@@ -103,7 +103,7 @@ const paintings = [
         dimensions: { width: 28, height: 19 }
     },
 
-    
+
     {
         src: "images/paint29.jpeg",
         title: "Lussino piccolo - Croazia",
@@ -121,7 +121,7 @@ const paintings = [
     },
 
 
-    
+
     {
         src: "images/paint26.jpg",
         title: "Al mare - Sicilia",
@@ -175,7 +175,7 @@ const paintings = [
         dimensions: { width: 28, height: 38 }
     },
 
-    
+
 
     {
         src: "images/paint16.jpg",
@@ -246,7 +246,14 @@ const paintings = [
         dimensions: { width: 38, height: 28 }
     },
 
-
+    {
+        src: "images/paint33.jpeg",
+        title: "Passeggiata al mare",
+        title_en: "Walk to the beach",
+        alt: "Walk to the beach",
+        dimensions: { width: 38, height: 28 },
+        date: "2026-03-30"
+    },
 
 
 

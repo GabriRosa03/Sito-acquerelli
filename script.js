@@ -131,6 +131,22 @@ function loadGallery() {
     `;
 
     imgContainer.appendChild(img);
+
+    // Gestione Etichetta "NUOVO" (ultime 2 settimane)
+    if (painting.date) {
+      const addedDate = new Date(painting.date);
+      const today = new Date();
+      const diffTime = Math.abs(today - addedDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays <= 14) {
+        const label = document.createElement('div');
+        label.className = 'new-label';
+        label.textContent = lang === 'it' ? 'Nuovo' : 'NEW';
+        imgContainer.appendChild(label);
+      }
+    }
+
     imgContainer.appendChild(hoverOverlay);
 
     // Click on overlay to open lightbox
@@ -196,7 +212,7 @@ function loadGallery() {
 async function loadAllLikes() {
   try {
     const allLikes = await likeSystem.getAllLikes();
-    
+
     // Update cache for sorting
     allLikesCache = allLikes || {};
 
@@ -210,7 +226,7 @@ async function loadAllLikes() {
     likeSystem.onAllLikesChange((allLikes) => {
       // Update cache
       allLikesCache = allLikes || {};
-      
+
       Object.keys(allLikes).forEach(paintingId => {
         const count = allLikes[paintingId];
         updateLikeCounter(paintingId, count);
@@ -774,7 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.stopPropagation();
       closeLightbox();
     });
-    
+
     // Also add listener to SVG inside to ensure clicks propagate
     const closeSvg = lightboxClose.querySelector('svg');
     if (closeSvg) {
@@ -783,7 +799,7 @@ document.addEventListener('DOMContentLoaded', () => {
         closeLightbox();
       });
     }
-    
+
     // Force cursor pointer style
     lightboxClose.style.cursor = 'pointer';
   }
@@ -1346,56 +1362,56 @@ function initLightboxGestures() {
 
   // Touch Start - ONLY on the handle wrapper to prevent conflict with zoom
   // --- Touch End Modificato ---
-handleWrapper.addEventListener('touchend', (e) => {
-  if (!isDragging) {
-    disableDragOptimization();
-    return;
-  }
-
-  const deltaY = currentY - startY;
-
-  if (deltaY > DISMISS_THRESHOLD) {
-    // 1. Segnaliamo che stiamo chiudendo via drag
-    window.__lightboxClosingFromDrag = true;
-
-    // 2. Calcoliamo l'offset attuale per evitare salti
-    const currentTransform = getComputedStyle(scrollContainer).transform;
-
-    requestAnimationFrame(() => {
-      // Applichiamo la transizione fluida
-      scrollContainer.style.transition = 'transform 0.4s cubic-bezier(0.32, 1, 0.23, 1)';
-      
-      // Portiamo la finestra fuori dallo schermo partendo da dove si trova ora
-      scrollContainer.style.transform = 'translateY(100%)'; 
-    });
-
-    // 3. Gestione della chiusura effettiva al termine dell'animazione
-    const onTransitionEnd = (ev) => {
-      if (ev.propertyName !== 'transform') return;
-      
-      // Pulizia stili per evitare che la prossima volta che apri sia rotto
-      scrollContainer.style.transition = '';
-      scrollContainer.style.transform = '';
-      
-      closeLightbox(); // Questa funzione deve gestire la rimozione della classe "open" o dell'overlay
+  handleWrapper.addEventListener('touchend', (e) => {
+    if (!isDragging) {
       disableDragOptimization();
-    };
+      return;
+    }
 
-    scrollContainer.addEventListener('transitionend', onTransitionEnd, { once: true });
+    const deltaY = currentY - startY;
 
-  } else {
-    // Snap back se non ha superato la soglia
-    scrollContainer.style.transition = 'transform 0.3s ease-out';
-    scrollContainer.style.transform = 'translateY(0px)';
-    
-    setTimeout(() => {
-       scrollContainer.style.transition = '';
-       disableDragOptimization();
-    }, 300);
-  }
+    if (deltaY > DISMISS_THRESHOLD) {
+      // 1. Segnaliamo che stiamo chiudendo via drag
+      window.__lightboxClosingFromDrag = true;
 
-  isDragging = false;
-}, { passive: true });
+      // 2. Calcoliamo l'offset attuale per evitare salti
+      const currentTransform = getComputedStyle(scrollContainer).transform;
+
+      requestAnimationFrame(() => {
+        // Applichiamo la transizione fluida
+        scrollContainer.style.transition = 'transform 0.4s cubic-bezier(0.32, 1, 0.23, 1)';
+
+        // Portiamo la finestra fuori dallo schermo partendo da dove si trova ora
+        scrollContainer.style.transform = 'translateY(100%)';
+      });
+
+      // 3. Gestione della chiusura effettiva al termine dell'animazione
+      const onTransitionEnd = (ev) => {
+        if (ev.propertyName !== 'transform') return;
+
+        // Pulizia stili per evitare che la prossima volta che apri sia rotto
+        scrollContainer.style.transition = '';
+        scrollContainer.style.transform = '';
+
+        closeLightbox(); // Questa funzione deve gestire la rimozione della classe "open" o dell'overlay
+        disableDragOptimization();
+      };
+
+      scrollContainer.addEventListener('transitionend', onTransitionEnd, { once: true });
+
+    } else {
+      // Snap back se non ha superato la soglia
+      scrollContainer.style.transition = 'transform 0.3s ease-out';
+      scrollContainer.style.transform = 'translateY(0px)';
+
+      setTimeout(() => {
+        scrollContainer.style.transition = '';
+        disableDragOptimization();
+      }, 300);
+    }
+
+    isDragging = false;
+  }, { passive: true });
 
   // Touch Move - Use requestAnimationFrame for smooth, non-laggy dragging
   handleWrapper.addEventListener('touchmove', (e) => {
