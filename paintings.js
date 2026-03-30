@@ -248,8 +248,8 @@ const paintings = [
 
     {
         src: "images/paint33.jpeg",
-        title: "Passeggiata al mare",
-        title_en: "Walk to the beach",
+        title: "Passeggiata al mare - Omaggio a Jan Min",
+        title_en: "Walk to the beach - Homage to Jan Min",
         alt: "Walk to the beach",
         dimensions: { width: 38, height: 28 },
         date: "2026-03-30"
