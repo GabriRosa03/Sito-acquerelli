@@ -699,7 +699,7 @@ h2 {
   z-index: 3;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   pointer-events: none;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
   animation: labelAppear 0.5s ease-out;
 }
 
