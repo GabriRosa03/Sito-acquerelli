@@ -255,6 +255,15 @@ const paintings = [
         date: "2026-03-30"
     },
 
+    {
+        src: "images/paint34.jpeg",
+        title: "Punta della Dogana-Chiesa della Salute-Giudecca",
+        title_en: "Punta della Dogana-St. Mary of Health Basilica",
+        alt: "Punta della Dogana-St. Mary of Health Basilica",
+        dimensions: { width: 38, height: 28 },
+        date: "2026-04-30"
+    },
+
 
 
 ]
