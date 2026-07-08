@@ -264,6 +264,15 @@ const paintings = [
         date: "2026-04-30"
     },
 
+    {
+        src: "images/paint35.jpeg",
+        title: "Bologna - Sotto i portici dopo la pioggia",
+        title_en: "Bologna - Under the porticoes after the rain",
+        alt: "Bologna - Under the porticoes after the rain",
+        dimensions: { width: 56, height: 38 },
+        date: "2026-07-08"
+    },
+
 
 
 ]
