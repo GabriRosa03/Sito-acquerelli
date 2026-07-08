@@ -316,9 +316,9 @@ header {
    ======================================== */
 
 .home-main {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 /* Hero Section */
@@ -2179,28 +2179,32 @@ footer {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 35vh;
-  z-index: 10;
-  position: relative;
-  gap: 0;
-  padding: 0;
-  margin-top: -5vh;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+  width: min(90vw, 420px);
+  z-index: 3;
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  gap: 0.6rem;
+  padding: 1rem 1.25rem;
+  margin: 0;
+  text-align: center;
+  pointer-events: none;
+  background: transparent;
+  border-radius: 0;
 }
 
 .mobile-logo {
-  width: 90px;
-  height: 50px;
+  width: 110px;
+  height: auto;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-  margin-top: 4rem;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .mobile-artist-name {
   font-family: 'AMORIA';
-  font-size: 2.8rem;
+  font-size: clamp(2.2rem, 4.2vw, 3.2rem);
   font-weight: 500;
   color: var(--color-primary-red);
   margin: 0;
@@ -2208,12 +2212,14 @@ footer {
 }
 
 .cta-discover-mobile-hero {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   position: static;
   transform: none;
   width: auto;
   max-width: none;
-  padding: 0.7rem 2rem;
+  padding: 0.7rem 1.5rem;
   background-color: rgba(255, 255, 255, 0.3);
   color: var(--color-primary-red);
   border: 2px solid var(--color-primary-red);
@@ -2227,9 +2233,10 @@ footer {
   text-align: center;
   cursor: pointer;
   transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   animation: subtle-pulse 2.5s ease-in-out infinite;
   box-shadow: 0 2px 8px rgba(142, 28, 20, 0.15);
+  pointer-events: auto;
 }
 
 @keyframes subtle-pulse {
@@ -2621,6 +2628,7 @@ footer {
   padding: 0;
   margin: 0;
   overflow: hidden;
+  position: relative;
 }
 
 .hero-fullscreen-image {
@@ -2631,12 +2639,9 @@ footer {
   height: 100vh;
   object-fit: cover;
   object-position: center top;
-  /* Ancora l'immagine in alto al centro */
   z-index: 1;
-  /* Sotto l'header (z-index 10) ma sopra il background base */
   pointer-events: none;
   display: block;
-  /* Rimuove comportamenti inline */
   margin: 0;
 }
 
