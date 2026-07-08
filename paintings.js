@@ -273,6 +273,15 @@ const paintings = [
         date: "2026-07-08"
     },
 
+    {
+        src: "images/paint36.jpeg",
+        title: "Vista della Darsena di S.Giorgio all’alba - Venezia",
+        title_en: "View of the Darsena di San Giorgio at dawn - Venice",
+        alt: "View of the Darsena di San Giorgio at dawn - Venice",
+        dimensions: { width: 38, height: 28 },
+        date: "2026-07-08"
+    },
+
 
 
 ]
