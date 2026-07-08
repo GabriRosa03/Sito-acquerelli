@@ -2334,6 +2334,10 @@ footer {
 
 /* Mobile Display Rules */
 @media (max-width: 768px) {
+  .mobile-hero-content {
+    top: 6%;
+  }
+
   .cta-discover-mobile {
     display: none;
   }
@@ -2344,6 +2348,18 @@ footer {
 
   .hover-overlay {
     display: none !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mobile-hero-content {
+    top: 10%;
+  }
+}
+
+@media (min-width: 1025px) {
+  .mobile-hero-content {
+    top: 20%;
   }
 }
 
