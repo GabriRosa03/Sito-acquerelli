@@ -2357,9 +2357,24 @@ footer {
   }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1025px) and (max-width: 1440px) {
   .mobile-hero-content {
-    top: 8%;
+    width: min(85vw, 340px);
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .mobile-logo {
+    width: 85px;
+  }
+
+  .mobile-artist-name {
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  }
+
+  .cta-discover-mobile-hero {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
   }
 }
 
