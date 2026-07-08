@@ -1263,7 +1263,7 @@ h2 {
 
 .content-section a:hover {
   color: var(--color-primary-red-dark);
-  border-bottom-color: var(--color-primary-red);
+  border-bottom-color: transparent;
 }
 
 /* ========================================
@@ -1327,6 +1327,110 @@ h2 {
 .photo-gallery img:hover {
   transform: scale(1.02);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.bio-profile-card {
+  background: rgba(245, 242, 238, 0.385);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 25px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  margin: var(--spacing-lg) 0;
+}
+
+.bio-profile-card:hover {
+  box-shadow: var(--shadow-medium);
+}
+
+.bio-profile-card {
+  background: rgba(245, 242, 238, 0.385);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 25px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  margin: var(--spacing-lg) 0;
+}
+
+.bio-profile-card a {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: var(--spacing-md);
+  align-items: center;
+  padding: var(--spacing-md);
+  text-decoration: none;
+  color: inherit;
+}
+
+.bio-profile-image {
+  width: 100%;
+  max-width: 140px;
+  height: auto;
+  border-radius: 14px;
+  object-fit: cover;
+  display: block;
+}
+
+.bio-profile-content h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.2rem;
+  color: var(--color-text-main);
+}
+
+.bio-profile-content p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.bio-profile-link {
+  display: inline-flex;
+  margin-top: 1rem;
+  font-weight: 700;
+  color: var(--color-primary-red);
+}
+
+@media (max-width: 820px) {
+  .bio-profile-card {
+    max-width: 380px;
+    margin: var(--spacing-lg) auto;
+    padding: 1rem;
+    border: 1px solid rgba(120, 100, 90, 0.15);
+  }
+
+  .bio-profile-card a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 0;
+  }
+
+  .bio-profile-image {
+    width: 84px;
+    height: 84px;
+    border-radius: 20px;
+    object-fit: cover;
+  }
+
+  .bio-profile-content {
+    text-align: center;
+  }
+
+  .bio-profile-content h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .bio-profile-content p {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .bio-profile-link {
+    margin-top: 0.75rem;
+  }
 }
 
 /* ========================================
